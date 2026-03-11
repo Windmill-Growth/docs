@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "traxy docs",
   "colors": {
-    "primary": "#18181B",
-    "light": "#3F3F46",
-    "dark": "#09090B"
+    "primary": "#B59ADB",
+    "light": "#FFA7B3",
+    "dark": "#685BFF"
   },
   "favicon": "/favicon.svg",
   "logo": {
@@ -19,7 +19,8 @@
         "pages": [
           "index",
           "quickstart",
-          "getting-started/define-your-icp"
+          "getting-started/define-your-icp",
+          "getting-started/join-a-workspace"
         ]
       },
       {

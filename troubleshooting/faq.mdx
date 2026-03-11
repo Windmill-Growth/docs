@@ -10,14 +10,23 @@ description: "Answers to common public user questions about traxy."
   <Accordion title="What is a qualified engagement?">
     Qualified engagement is engagement from people who meet your workspace fit criteria closely enough to matter for lead qualification.
   </Accordion>
+  <Accordion title="Why did credits change even when I did not get new qualified leads?">
+    Qualification credits can be used when `traxy` evaluates a unique person during the current billing period, even if that person does not end up as a qualified lead.
+  </Accordion>
   <Accordion title="Where do I update my ICP?">
     You can update your ICP during onboarding or later in **Settings** > **ICP Configuration**.
   </Accordion>
   <Accordion title="Why is Slack connected but not sending alerts?">
-    Slack notifications stay disabled until you select a channel and enable the trigger.
+    Slack notifications stay disabled until you select a channel and enable the trigger. If you chose a private channel, invite the `traxy` Slack app to that channel before you test it.
   </Accordion>
   <Accordion title="What does the Webhook integration do?">
     Webhook sends qualified lead events from `traxy` to your endpoint so another system can receive and act on them.
+  </Accordion>
+  <Accordion title="Why is auto-send not delivering older leads?">
+    Auto-send only applies to leads that qualify after it is enabled. Use manual delivery from the leads table if you want to send existing leads.
+  </Accordion>
+  <Accordion title="Can I use more than one Webhook?">
+    No. Each workspace supports one active Webhook integration at a time.
   </Accordion>
   <Accordion title="Why can I not qualify a post?">
     The post may have no engagement, qualification data may still be refreshing, or your workspace may not have enough credits for the action.
