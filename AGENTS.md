@@ -14,20 +14,33 @@
 
 ## Terminology
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+- Always use `traxy` in lowercase
+- Use `workspace`, not `organization` or `project`, in user-facing docs unless the UI label requires otherwise
+- Use `member` for workspace participants
+- Use `admin` for members with elevated workspace permissions
+- Use `ICP` for ideal customer profile
+- Use `qualified lead` and `qualified engagement` when describing lead matching and engagement review
+- Treat `trace-frontend` as an internal codebase name only, never a public product name
 
 ## Style preferences
 
-{/* Add any project-specific style rules below */}
-
 - Use active voice and second person ("you")
-- Keep sentences concise — one idea per sentence
+- Keep sentences concise - one idea per sentence
 - Use sentence case for headings
 - Bold for UI elements: Click **Settings**
 - Code formatting for file names, commands, paths, and code references
+- Lead with the user goal, then explain the steps
+- Prefer durable guidance over temporary specifics
+- Keep examples public and non-sensitive
+- Do not guess at pricing details, limits, or roadmap items
 
 ## Content boundaries
 
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+- Document only current public, user-facing behavior
+- Keep docs fully public
+- Do not document internal admin, developer, testing, or unfinished pages
+- Do not document roadmap items or future features
+- Do not document backend architecture or implementation details
+- Do not expose private, internal, or customer-specific information
+- Scope this repo to user docs only for now; do not publish API docs
+- You may read from `/Users/benbuaron/Documents/GitHub/trace-frontend` to understand the product, but do not make changes there
