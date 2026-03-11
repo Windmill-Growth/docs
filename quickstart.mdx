@@ -1,80 +1,54 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Get from signup to your first qualified leads in traxy."
 ---
 
-## Get started in three steps
+Use this page to move from onboarding to your first review of qualified leads.
 
-Get your documentation site running locally and make your first customization.
+## Before you begin
 
-### Step 1: Set up your local environment
+- You need access to a `traxy` workspace.
+- You should have your personal LinkedIn profile URL ready.
+- You should know the people and companies you want to target.
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+## Complete setup
 
-### Step 2: Deploy your changes
+1. Add your personal LinkedIn profile during onboarding.
+   traxy verifies your profile before you can continue.
+2. Review the ICP traxy generates for your workspace.
+   Adjust it before you activate it if the target audience is too broad or too narrow.
+3. Wait for workspace setup to finish.
+   The setup page stays open while traxy prepares your workspace and starts background processing.
+4. Open **Dashboard**.
+   Use it to monitor lead volume, fit quality, and top-performing posts.
+5. Open **Leads**.
+   Use it to review the people traxy has identified and take action.
+6. Connect **Slack** or **Webhook** if you want lead alerts or downstream delivery.
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+## What happens next
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+- Your dashboard updates as new activity is processed.
+- Your leads list grows as traxy finds more people who match your ICP.
+- Your content calendar lets you qualify engagement from specific posts by day.
+- Your billing area shows credit usage, subscription details, and payment methods.
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+<Info>
+  If you do not see qualified leads yet, start with the [no qualified leads yet](/troubleshooting/no-qualified-leads-yet) troubleshooting guide.
+</Info>
 
 ## Next steps
 
-Now that you have your docs running, explore these key features:
-
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Define your ICP" icon="target" href="/getting-started/define-your-icp">
+    Improve lead quality by refining who counts as a fit.
+  </Card>
+  <Card title="Use the dashboard" icon="layout-dashboard" href="/using-traxy/dashboard">
+    Track lead volume, fit quality, and post performance.
+  </Card>
+  <Card title="Work in leads" icon="users-round" href="/using-traxy/leads">
+    Search, filter, enrich, export, and route qualified leads.
+  </Card>
+  <Card title="Set up integrations" icon="plug" href="/using-traxy/integrations">
+    Connect Slack or a Webhook for alerts and delivery.
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

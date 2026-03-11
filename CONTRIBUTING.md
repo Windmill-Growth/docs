@@ -1,8 +1,6 @@
-> **Customize this file**: Tailor this template to your project by noting specific contribution types you're looking for, adding a Code of Conduct, or adjusting the writing guidelines to match your style.
-
 # Contribute to the documentation
 
-Thank you for your interest in contributing to our documentation! This guide will help you get started.
+Thank you for contributing to the `traxy` docs. This guide explains how to preview changes and keep the content aligned with the product.
 
 ## How to contribute
 
@@ -20,9 +18,8 @@ Thank you for your interest in contributing to our documentation! This guide wil
 4. Make changes
 5. Navigate to the docs directory and run `mint dev`
 6. Preview your changes at `http://localhost:3000`
-7. Commit your changes and submit a pull request
-
-For more details on local development, see our [development guide](development.mdx).
+7. Run `mint broken-links`
+8. Commit your changes and submit a pull request
 
 ## Writing guidelines
 
@@ -31,4 +28,5 @@ For more details on local development, see our [development guide](development.m
 - **Keep sentences concise**: Aim for one idea per sentence
 - **Lead with the goal**: Start instructions with what the user wants to accomplish
 - **Use consistent terminology**: Don't alternate between synonyms for the same concept
-- **Include examples**: Show, don't just tell
+- **Use `traxy` in lowercase**: Avoid internal names or legacy product labels
+- **Keep docs public**: Do not publish private, internal, unfinished, or implementation-specific details
