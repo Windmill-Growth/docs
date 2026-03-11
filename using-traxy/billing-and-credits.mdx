@@ -13,18 +13,39 @@ In **Settings** > **Billing**, you can manage:
 - payment methods
 - billing history
 - plan changes
+- pay-as-you-go settings when your plan supports them
 
 Your workspace sidebar also shows credit usage so you can track consumption without leaving your day-to-day workflow.
 
-## How credits affect work in traxy
+Everyone in the workspace can follow usage from the product, but owners and admins manage billing changes.
 
-Credits affect lead qualification and related actions across the workspace.
+## How credits are used
 
-When credits are low or unavailable, some actions may pause until:
+Credits affect lead qualification and contact enrichment across the workspace.
+
+- Qualification usage is counted per unique person or profile during your current billing period, not per lead row.
+- A person can still use qualification credits even if they do not end up as a qualified lead, because `traxy` still completed the evaluation.
+- During onboarding, the first qualification run is free.
+
+## How periods and resets work
+
+Included credits reset with your workspace billing period.
+
+When credits are low or unavailable, some actions pause until:
 
 - your billing period resets
 - you update billing settings
 - you change plan or credit behavior
+
+Use the billing summary in your workspace as the source of truth for the current period and remaining usage.
+
+## Pay-as-you-go
+
+If your workspace is on a paid plan, admins and owners can choose whether `traxy` keeps working after included credits are used.
+
+- Pay-as-you-go is available on paid plans only.
+- Lite workspaces stay inside included credits.
+- If overage charges are already waiting to be billed, you may need to let that billing finish before you can turn pay-as-you-go off.
 
 ## Common billing tasks
 

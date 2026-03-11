@@ -1,11 +1,18 @@
-<svg width="112" height="32" viewBox="0 0 112 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="156" height="40" viewBox="0 0 156 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="traxy">
+  <defs>
+    <linearGradient id="traxyGradientLight" x1="8" y1="8" x2="148" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B59ADB"/>
+      <stop offset="1" stop-color="#FFA7B3"/>
+    </linearGradient>
+  </defs>
   <text
     x="0"
-    y="23"
-    fill="#09090B"
-    font-family="Helvetica, Arial, sans-serif"
-    font-size="24"
+    y="30"
+    fill="url(#traxyGradientLight)"
+    font-family="'Plus Jakarta Sans', 'Manrope', Arial, sans-serif"
+    font-size="34"
     font-weight="700"
+    letter-spacing="-0.04em"
   >
     traxy
   </text>

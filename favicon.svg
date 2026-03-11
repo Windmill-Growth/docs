@@ -1,11 +1,17 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="16" fill="#09090B"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="traxy">
+  <defs>
+    <linearGradient id="traxyGradientIcon" x1="12" y1="12" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B59ADB"/>
+      <stop offset="1" stop-color="#FFA7B3"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="#0D0D0D"/>
   <text
-    x="20"
-    y="43"
-    fill="white"
-    font-family="Helvetica, Arial, sans-serif"
-    font-size="32"
+    x="18"
+    y="44"
+    fill="url(#traxyGradientIcon)"
+    font-family="'Plus Jakarta Sans', 'Manrope', Arial, sans-serif"
+    font-size="34"
     font-weight="700"
   >
     t

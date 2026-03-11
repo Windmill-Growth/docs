@@ -5,6 +5,10 @@ description: "Connect Slack and Webhook to route qualified leads out of traxy."
 
 Use integrations to send qualified leads and lead alerts into the tools your team already uses.
 
+## Before you connect anything
+
+Owners and admins set up integrations and change delivery settings.
+
 ## Available integrations
 
 The current public integrations are:
@@ -21,8 +25,9 @@ To set it up:
 1. Open **Integrations**.
 2. Connect your Slack workspace.
 3. Select the channel that should receive notifications.
-4. Enable the trigger once the channel is set.
-5. Send a test notification before you rely on it.
+4. If you want a private channel, invite the `traxy` Slack app to that channel before you test it.
+5. Enable the trigger once the channel is set.
+6. Send a test notification before you rely on it.
 
 If you connect Slack but do not select a channel, Slack stays disabled.
 
@@ -40,11 +45,19 @@ To set it up:
 
 Webhook delivery is designed for qualified lead workflows. Keep the receiver focused on public lead data and downstream automation.
 
+Each workspace supports one active Webhook integration. If you need to change destinations, update the existing Webhook instead of creating parallel ones.
+
+Webhook requests are signed so your receiver can verify they came from `traxy`.
+
 ## Manual vs automatic delivery
 
 You can work in two ways:
 
 - **Manual delivery** from the leads table when you want to review each lead first
 - **Automatic delivery** when you want `traxy` to route qualified leads as soon as they meet your threshold
+
+Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
+
+Use test sends before you go live. Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
 
 Review automatic settings carefully before you enable them for a shared workspace.
