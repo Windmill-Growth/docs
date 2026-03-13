@@ -28,6 +28,7 @@
         "pages": [
           "using-traxy/dashboard",
           "using-traxy/leads",
+          "using-traxy/outbound-to-signal-based-leads",
           "using-traxy/content-calendar",
           "using-traxy/integrations",
           "using-traxy/workspace-and-team",
