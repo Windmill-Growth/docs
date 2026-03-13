@@ -28,11 +28,21 @@
         "pages": [
           "using-traxy/dashboard",
           "using-traxy/leads",
-          "using-traxy/outbound-to-signal-based-leads",
           "using-traxy/content-calendar",
           "using-traxy/integrations",
           "using-traxy/workspace-and-team",
           "using-traxy/billing-and-credits"
+        ]
+      },
+      {
+        "group": "Outbound playbooks",
+        "pages": [
+          "using-traxy/outbound-to-signal-based-leads",
+          "using-traxy/signal-cheat-sheet",
+          "using-traxy/outbound-playbook-content-led",
+          "using-traxy/outbound-playbook-saas",
+          "using-traxy/outbound-playbook-agencies",
+          "using-traxy/outbound-playbook-events"
         ]
       },
       {
