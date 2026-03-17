@@ -23,8 +23,9 @@ The main filters include:
 
 - search
 - ICP match
-- intent
+- relationship strength
 - owner
+- post source
 
 Open **Advanced Filters** when you need more control. Advanced filters include:
 
@@ -44,6 +45,13 @@ You can sort the table, change visible columns, and open a full lead detail view
 
 Use **Edit Columns** when your team wants a tighter working view for qualification, enrichment, or routing.
 
+The lead detail view is the best place to:
+
+- review engagement history
+- inspect match quality
+- enrich email or phone
+- send an individual lead to Slack or Webhook
+
 ## Take action on leads
 
 Depending on your workspace setup, you can:
@@ -57,8 +65,18 @@ If you want automatic delivery, connect your workspace in [Integrations](/using-
 
 Automatic delivery only applies to leads that qualify after auto-send is enabled. It does not backfill older leads that were already in your workspace.
 
+## Understand locked or paused lead states
+
+If your workspace runs out of available qualification credits, `traxy` can pause new qualification work.
+
+When that happens:
+
+- some new leads may stay locked or hidden
+- qualification actions may stop until credits reset
+- admins may need to upgrade or turn on [usage-based credits](/using-traxy/usage-based-credits)
+
 <Info>
-  Credits can affect qualification and enrichment actions. If an action is unavailable, check [billing and credits](/using-traxy/billing-and-credits).
+  Credits can affect qualification and enrichment actions. If an action is unavailable, check [Billing & Plans](/using-traxy/billing-and-credits).
 </Info>
 
 If you want a practical outreach workflow after `traxy` surfaces a lead, use [outbound to signal-based leads](/using-traxy/outbound-to-signal-based-leads).

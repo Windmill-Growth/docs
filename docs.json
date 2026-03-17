@@ -27,11 +27,13 @@
         "group": "Using traxy",
         "pages": [
           "using-traxy/dashboard",
+          "using-traxy/icp-configuration",
           "using-traxy/leads",
           "using-traxy/content-calendar",
           "using-traxy/integrations",
           "using-traxy/workspace-and-team",
-          "using-traxy/billing-and-credits"
+          "using-traxy/billing-and-credits",
+          "using-traxy/usage-based-credits"
         ]
       },
       {
