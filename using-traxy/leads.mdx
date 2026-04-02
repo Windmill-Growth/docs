@@ -3,7 +3,7 @@ title: "Leads"
 description: "Search, filter, review, enrich, export, and route qualified leads in traxy."
 ---
 
-The leads area is where you work through the people `traxy` has identified from LinkedIn engagement.
+The leads area is where you review, classify, enrich, and route the people `traxy` identified from LinkedIn engagement.
 
 <Frame>
   ![Leads 3](/images/Leads-3.png)
@@ -11,11 +11,12 @@ The leads area is where you work through the people `traxy` has identified from 
 
 ## Use the main tabs
 
-`traxy` separates leads into three main views:
+`traxy` separates leads into four main views:
 
-- **All Leads** for the full working set
-- **Enriched** for leads with added contact data
-- **Archive** for leads you want to remove from the active queue
+- **Active** for leads you are working now
+- **Clients** for people you already closed or want to treat as customers
+- **Snoozed** for leads you want to pause
+- **Bad fit** for people you do not want in your active review flow
 
 ## Search and filter leads
 
@@ -25,8 +26,11 @@ The main filters include:
 
 - search
 - ICP match
+- intent
 - relationship strength
 - owner
+- monitored profile
+- engaged with
 - post source
 
 Open **Advanced Filters** when you need more control. Advanced filters include:
@@ -41,24 +45,71 @@ Open **Advanced Filters** when you need more control. Advanced filters include:
 - **Funding**
 - **Keywords & Niches**
 
+If your workspace tracks more than one profile, use the selector at the top of **Leads** before you filter. That keeps counts and results aligned to the profile scope you want to review.
+
 ## Work inside the table
 
 You can sort the table, change visible columns, and open a full lead detail view from the list.
 
 Use **Edit Columns** when your team wants a tighter working view for qualification, enrichment, or routing.
 
+Useful fields include:
+
+- **Last engagement** to see the most recent like, comment, or repost
+- delivery status columns when you use Slack or Webhook
+- contact fields after enrichment
+
 The lead detail view is the best place to:
 
 - review engagement history
-- inspect match quality
+- inspect the qualification summary
+- review fit feedback and notes
 - enrich email or phone
 - send an individual lead to Slack or Webhook
 
-## Take action on leads
+## Review and move leads quickly
+
+You can review leads directly from the table without opening each record.
+
+Use quick actions or the detail panel to:
+
+- mark a lead as a good fit
+- mark a lead as a bad fit
+- mark a lead as a client
+- snooze a lead
+- undo a recent classification change
+
+You can also apply these actions in bulk after you select multiple leads.
+
+## Use Auto-Enrich
+
+Owners and admins can manage **Auto-Enrich** from the leads page.
+
+When you turn it on, `traxy` can automatically enrich newly qualified leads that meet your minimum ICP score.
+
+You can choose whether `traxy` looks for:
+
+- email
+- phone
+- both
+
+Credits are charged only when contact data is found.
+
+Auto-Enrich does not backfill older posts. Use [Post Signals](/using-traxy/content-calendar) when you want to find leads from older engagement.
+
+## Manage company exclusions
+
+From a company's hover card in the leads table, you can add that company to your **Blacklist**.
+
+When you do that, future leads from that company stop appearing in your workspace.
+
+You can manage blocked domains later in **Settings** > **Blacklist**.
+
+## Send and route leads
 
 Depending on your workspace setup, you can:
 
-- archive or unarchive leads
+- snooze or restore leads
 - export selected leads
 - enrich leads
 - send leads to Slack or Webhook

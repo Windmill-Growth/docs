@@ -30,9 +30,10 @@ To set it up:
 2. Connect your Slack workspace.
 3. Select the channel that should receive notifications.
 4. If you want a private channel, invite `traxy.ai` into that channel first with `/invite @traxy.ai`.
-5. Enable the trigger once the channel is set.
+5. Enable the **Qualified Lead Detected** trigger once the channel is set.
 6. Decide whether you want auto-send on or off.
-7. Send a test notification before you rely on it.
+7. If you turn on auto-send, set the ICP match threshold that should trigger delivery.
+8. Send a test event before you rely on it.
 
 If you connect Slack but do not select a channel, Slack stays disabled.
 
@@ -46,14 +47,19 @@ To set it up:
 2. Add an integration name.
 3. Add a secure `https://` endpoint.
 4. Add an auth header if your receiver expects one.
-5. Decide whether you want auto-send on or off.
-6. Enable the qualified lead trigger and test delivery.
+5. Enable the **Qualified Lead Detected** trigger.
+6. Decide whether you want auto-send on or off.
+7. If you turn on auto-send, set the ICP match threshold that should trigger delivery.
+8. Open **Payload & Help** if you want to review the sample payload and signing guidance.
+9. Send a test payload before you rely on it.
 
-Webhook delivery is designed for qualified lead workflows. Keep the receiver focused on public lead data and downstream automation.
+Webhook delivery is designed for qualified lead workflows. Keep the receiver focused on lead routing and downstream automation.
 
 Each workspace supports one active Webhook integration. If you need to change destinations, update the existing Webhook instead of creating parallel ones.
 
-Webhook requests are signed so your receiver can verify they came from `traxy`.
+The Webhook UI includes a payload browser and sample JSON. The payload includes event metadata plus lead, profile, company, contact, and engagement data.
+
+Webhook requests are signed. Each request includes `X-traxy-Signature` and `X-traxy-Timestamp` so your receiver can verify that it came from `traxy`.
 
 ## Manual vs automatic delivery
 
