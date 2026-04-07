@@ -50,7 +50,13 @@ This is useful when:
 - you want to prioritize a post with strong buyer signals
 - you want to refresh lead discovery after a high-performing post
 
-Before you confirm, `traxy` previews the credit use for that action. Only posts with engagement can be used to find leads, and the action can be blocked if credits are unavailable.
+Before you confirm, `traxy` starts with an estimated credit range for that action.
+
+Use **Calculate exact credits** when you want the exact count before you continue.
+
+The estimate can end up lower in practice because people `traxy` already qualified in the last 30 days are excluded from billing.
+
+Only posts with engagement can be used to find leads. The action can stay blocked if credits are unavailable, Pay-as-you-go is off, or the workspace monthly budget cap has been reached.
 
 The credit preview reflects your current profile scope.
 
