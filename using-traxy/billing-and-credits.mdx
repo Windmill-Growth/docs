@@ -1,6 +1,6 @@
 ---
 title: "Billing & Plans"
-description: "Manage subscription details, payment methods, invoices, and plan changes in traxy."
+description: "Manage subscription details, credit usage history, payment methods, invoices, and plan changes in traxy."
 ---
 
 Use Billing & Plans when you need to manage your workspace subscription and billing records.
@@ -14,6 +14,7 @@ Use Billing & Plans when you need to manage your workspace subscription and bill
 In **Settings** \> **Billing**, you can manage:
 
 - your current subscription
+- credit usage history
 - payment methods
 - billing history
 - plan changes
@@ -28,31 +29,54 @@ Everyone in the workspace can follow usage from the product, but owners and admi
 Billing & Plans includes the public areas most teams need:
 
 - **Overview** for your current plan and billing period
+- **Credit Usage** for the billing-window credit ledger
 - **Payment Methods** for saved cards
 - **Billing History** for invoices
 - **Manage Subscription** for upgrades, downgrades, and interval changes
 
 ## How periods and resets work
 
-Included credits reset with your workspace billing period.
+Included credits reset monthly.
 
 When credits are low or unavailable, some product actions can pause until:
 
-- your billing period resets
+- your next monthly reset
 - you update billing settings
 - you change plan or credit behavior
 
-Use the billing summary in your workspace as the source of truth for the current period and remaining usage.
+Use the billing summary in your workspace as the source of truth for the next reset date and remaining usage.
+
+## Review credit usage history
+
+Open **Credit Usage** when you want a ledger of credit charges in the current billing window.
+
+Use it to:
+
+- review qualification, post run, and enrichment charges
+- search by person, post, or lead details
+- filter by activity type, credit type, and date range
+- sort and page through billing-window activity
 
 ## Common billing tasks
 
 Use the billing area when you need to:
 
 - review current plan details
+- review credit usage history
 - update a card
 - view invoices and payment history
 - change subscription level
 - open the billing portal for additional billing tasks
+
+## Handle payment issues
+
+If a renewal or upgrade payment fails, Billing & Plans shows recovery guidance in the billing area.
+
+Use it to:
+
+- retry checkout verification if Stripe sync is still catching up
+- update your payment method
+- confirm whether your current plan changed or stayed the same
 
 ## Keep billing guidance durable
 

@@ -1,6 +1,6 @@
 ---
 title: "Watchlist"
-description: "Monitor teammate, competitor, and investor profiles to turn their engagement into qualified leads in traxy. "
+description: "Monitor teammate, competitor, investor, and custom profiles to turn their engagement into qualified leads in traxy."
 ---
 
 Use Watchlist when you want `traxy` to monitor important LinkedIn profiles and surface leads from their engagement.
@@ -11,11 +11,14 @@ Use Watchlist when you want `traxy` to monitor important LinkedIn profiles and s
 
 ## What Watchlist tracks
 
-Watchlist can monitor three profile types:
+Watchlist can monitor four profile types:
 
 - **Teammates**
 - **Competitors**
 - **Investors**
+- **Custom**
+
+Use **Custom** when the built-in relationship types do not fit. `traxy` stores custom relationship labels so you can reuse them later.
 
 When a watched profile posts and gets engagement, `traxy` can turn that activity into qualified leads for your workspace.
 
@@ -23,44 +26,68 @@ When a watched profile posts and gets engagement, `traxy` can turn that activity
   High-engagement profiles can create more signal and may increase credit usage.
 </Info>
 
-## Add a profile
+## Add one profile
 
 1. Open **Watchlist**.
 2. Click **Add LinkedIn Profile**.
-3. Paste the LinkedIn profile URL and verify it.
-4. Review the detected company and profile type.
+3. Paste the LinkedIn profile URL and click **Verify**.
+4. Review the detected company and relationship.
 5. If more than one company is detected, choose the company you want to use.
-6. Choose the right relationship if `traxy` gives you options.
-7. Save the profile to start monitoring it.
+6. If needed, switch the relationship type to **Teammate**, **Competitor**, **Investor**, or **Custom**.
+7. If `traxy` finds a latest post, decide whether to leave **Qualify latest post** turned on.
+8. Save the profile.
 
-If the profile belongs to your company, `traxy` usually tracks it as a teammate. Other profiles can be tracked as competitors or investors.
+If the profile belongs to your company, `traxy` usually tracks it as a teammate. Other profiles can be tracked as competitors, investors, or custom relationships.
+
+If **Qualify latest post** stays on, `traxy` queues that profile's latest post in the background so leads can start appearing right away.
+
+## Add profiles in batches
+
+Use **Add in batches** when you want to add more than one profile at once.
+
+You can verify up to 20 LinkedIn profile URLs in one pass, review each preview row, choose the relationship for each profile, and then add the verified set together.
 
 ## Review tabs and summary cards
 
-Use the tabs to switch between **All**, **Competitors**, **Teammates**, and **Investors**.
+Use the tabs to switch between **All Profiles**, **Competitors**, **Teammates**, **Investors**, and **Custom**.
 
 Watchlist shows four summary cards:
 
-- **Profiles monitored**
+- the current tab's monitored profile count
 - **Posts qualified**
 - **Qualified engagements**
 - **Qualified leads**
 
 Use them to see whether the profiles you are tracking are creating useful signal for your workspace.
 
-The first card updates to match the tab you are viewing.
-
 ## Work in the table
 
-Each row shows the profile, type, company, qualified posts, qualified leads, status, and date added.
+Each row shows the profile, type, company, **Qualified Posts**, **Qualified Leads**, **CPL**, status, and date added.
+
+`CPL` means credits per lead for the current billing cycle.
 
 Use the table to:
 
+- open the profile details sheet
 - open the LinkedIn profile
 - pause monitoring
 - resume monitoring
 - remove manually added profiles
 - compare which watched profiles are producing the most useful results
+
+## Open the profile details sheet
+
+Click a profile row to open its details sheet.
+
+Use it when you want profile-level analytics without leaving Watchlist.
+
+The sheet includes:
+
+- an **Overview** tab with audience ICP match, qualified posts, qualified leads, credits used this billing cycle, and best post performance
+- a **Top Leads** tab with recent qualified leads for that profile
+- a **Posts** tab with the profile's tracked posts and qualification status
+
+You can change the time range to **Last 7 days**, **Last 30 days**, **Last 90 days**, or **All time** while you review leads and posts.
 
 ## Understand teammate rows
 
@@ -72,14 +99,16 @@ Teammate rows can show your workspace company name instead of a generic teammate
 
 ## Know how post qualification works
 
-Watchlist qualifies new posts after a profile is added.
+For manual profiles, `traxy` can optionally qualify the latest detected post when you add the profile.
 
-Posts published before a profile was added must be qualified manually unless the profile is a teammate.
+After that, Watchlist qualifies new posts automatically.
+
+Older posts outside that flow still need to be qualified manually unless the profile is a teammate.
 
 Use [Post Signals](/using-traxy/content-calendar) when you want to find leads from older posts one post at a time.
 
 ## Plan and access notes
 
-Owners and admins can manage Watchlist for the workspace.
+Admins can manage Watchlist for the workspace.
 
 If your current plan does not include Watchlist, `traxy` prompts you to upgrade before you add more profiles.
