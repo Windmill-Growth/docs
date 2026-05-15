@@ -33,7 +33,8 @@ To set it up:
 5. Enable the **Qualified Lead Detected** trigger once the channel is set.
 6. Decide whether you want auto-send on or off.
 7. If you turn on auto-send, set the ICP match threshold that should trigger delivery.
-8. Send a test event before you rely on it.
+8. Decide whether to enable **Send repeat engagement from qualified leads**.
+9. Send a test event before you rely on it.
 
 If you connect Slack but do not select a channel, Slack stays disabled.
 
@@ -50,14 +51,17 @@ To set it up:
 5. Enable the **Qualified Lead Detected** trigger.
 6. Decide whether you want auto-send on or off.
 7. If you turn on auto-send, set the ICP match threshold that should trigger delivery.
-8. Open **Payload & Help** if you want to review the sample payload and signing guidance.
-9. Send a test payload before you rely on it.
+8. Decide whether to enable **Send repeat engagement from qualified leads**.
+9. Open **Payload & Help** if you want to review the sample payload and signing guidance.
+10. Send a test payload before you rely on it.
 
 Webhook delivery is designed for qualified lead workflows. Keep the receiver focused on lead routing and downstream automation.
 
 Each workspace supports one active Webhook integration. If you need to change destinations, update the existing Webhook instead of creating parallel ones.
 
 The Webhook UI includes a payload browser and sample JSON. The payload includes event metadata plus lead, profile, company, contact, and engagement data.
+
+Use the payload samples in the app as the source of truth for your receiver. They cover first qualified lead delivery and repeat engagement delivery.
 
 Webhook requests are signed. Each request includes `X-traxy-Signature` and `X-traxy-Timestamp` so your receiver can verify that it came from `traxy`.
 
@@ -67,8 +71,11 @@ You can work in two ways:
 
 - **Manual delivery** from the leads table when you want to review each lead first
 - **Automatic delivery** when you want `traxy` to route qualified leads as soon as they meet your threshold
+- **Repeat engagement delivery** when you want another alert after an existing qualified lead engages again
 
 Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
+
+Repeat engagement delivery only works when the integration trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
 
 Use test sends before you go live. Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
 

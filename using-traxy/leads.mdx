@@ -37,7 +37,8 @@ Open **Advanced Filters** when you need more control. Advanced filters include:
 
 - **People Criteria** with **Job Titles**, **Departments**, and **Location**
 - **Lead Criteria** with **Engaged in Last 24 Hours** and **First Seen**
-- **Company Criteria** with **Company Name**, **Industries**, **Company Size**, and **Keywords & Niches**
+- **Company Criteria** with **Company Name**, **Industries**, **Company Size**, **Revenue**, **Funding**, and **Keywords & Niches**
+- **Sent Integration** filters for Slack and Webhook delivery status
 
 If your workspace tracks more than one profile, use the selector at the top of **Leads** before you filter. That keeps counts and results aligned to the profile scope you want to review.
 
@@ -75,6 +76,8 @@ Use quick actions or the detail panel to:
 
 You can also apply these actions in bulk after you select multiple leads.
 
+Bulk actions can also help you enrich, export, send, snooze, restore, or delete selected leads. Use delete when you want to remove leads from the current workflow, and use snooze when you may want to return to them later.
+
 ## Use Auto-Enrich
 
 Owners and admins can manage **Auto-Enrich** from the leads page.
@@ -93,11 +96,11 @@ Auto-Enrich does not backfill older posts. Use [Post Signals](/using-traxy/conte
 
 ## Manage company exclusions
 
-From a company's hover card in the leads table, you can add that company to your **Blacklist**.
+From a company's hover card in the leads table, you can add that company to your **Blocklist**.
 
 When you do that, future leads from that company stop appearing in your workspace.
 
-You can manage blocked domains later in **Settings** \> **Blacklist**.
+You can manage blocked domains later in **Settings** \> **Blocklist**.
 
 ## Send and route leads
 
@@ -107,6 +110,8 @@ Depending on your workspace setup, you can:
 - export selected leads
 - enrich leads
 - send leads to Slack or Webhook
+
+When you export, choose the columns that matter for your workflow. If your workspace has available enrichment, you can enrich selected leads before exporting them.
 
 If you want automatic delivery, connect your workspace in [Integrations](/using-traxy/integrations). If you prefer more control, send leads manually from the leads table after review.
 
