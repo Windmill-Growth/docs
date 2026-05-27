@@ -1,0 +1,65 @@
+---
+title: "Webhook"
+description: "Send qualified lead events from traxy to another system with a signed Webhook request."
+---
+
+Use the Webhook integration when you want traxy to send qualified lead events to another system.
+
+Webhook delivery is designed for qualified lead workflows. Keep the receiver focused on lead routing and downstream automation.
+
+## Before you connect Webhook
+
+Owners and admins can create or change the Webhook integration.
+
+Make sure you have a secure `https://` endpoint ready before you start. If your receiver expects authentication, prepare the auth header value your team wants to use.
+
+Each workspace supports one active Webhook integration. If you need to change destinations, update the existing Webhook instead of creating parallel ones.
+
+## Connect Webhook
+
+1. Open **Integrations**.
+2. Open **Webhook**.
+3. Add an integration name.
+4. Add a secure `https://` endpoint.
+5. Add an auth header if your receiver expects one.
+6. Enable the **Qualified Lead Detected** trigger.
+7. Decide whether you want auto-send on or off.
+8. If you turn on auto-send, set the ICP match threshold that should trigger delivery.
+9. Decide whether to enable **Send repeat engagement from qualified leads**.
+10. Open **Payload & Help** if you want to review the sample payload and signing guidance.
+11. Send a test payload before you rely on it.
+
+## Review the payload
+
+The Webhook UI includes a payload browser and sample JSON.
+
+The payload includes event metadata plus lead, profile, company, contact, and engagement data.
+
+Use the payload samples in the app as the source of truth for your receiver. They cover first qualified lead delivery and repeat engagement delivery.
+
+## Verify requests
+
+Webhook requests are signed.
+
+Each request includes `X-traxy-Signature` and `X-traxy-Timestamp` so your receiver can verify that it came from traxy.
+
+## Choose manual or automatic delivery
+
+Webhook can work in two ways:
+
+- **Manual delivery** from the leads table when you want to review each lead first
+- **Automatic delivery** when you want traxy to send qualified lead events as soon as leads meet your threshold
+
+Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
+
+Repeat engagement delivery only works when the integration trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
+
+## Test and troubleshoot
+
+Use a test payload before you go live.
+
+Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
+
+If you send manually from **Leads**, you may see states such as queued, delivered, or failed. Fix the underlying Webhook issue first, then retry from the lead.
+
+Review automatic settings carefully before you enable them for a shared workspace.
