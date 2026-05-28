@@ -1,0 +1,121 @@
+---
+title: "HeyReach"
+description: "Send qualified leads from traxy to a HeyReach campaign or lead list."
+---
+
+Use the HeyReach integration when you want to move qualified leads from traxy into a HeyReach outbound workflow.
+
+You can send leads to a campaign or to a lead list. Use a campaign when you want leads to enter an active outreach sequence. Use a lead list when you want to collect leads in HeyReach before you decide how to use them.
+
+## Before you connect HeyReach
+
+Owners and admins can connect HeyReach and change delivery settings.
+
+Make sure you have:
+
+- a HeyReach account
+- a HeyReach API key
+- a campaign or lead list you want to use, unless you plan to create one from traxy
+- at least one active HeyReach sender account if you plan to create a campaign from traxy
+
+traxy sends leads to HeyReach by LinkedIn profile URL. If a lead is missing a LinkedIn profile URL, HeyReach delivery cannot complete for that lead.
+
+## Connect HeyReach
+
+1. Open **Integrations**.
+2. Open **HeyReach**.
+3. Paste your **HeyReach API key**.
+4. Click **Connect**.
+5. Choose a **Destination type**.
+6. Select **Campaign** or **Lead list**.
+7. Choose an existing destination, or create a new one from traxy.
+8. Choose **Manual** or **Auto** delivery.
+9. Click **Save settings**.
+
+If you connect HeyReach but do not select a destination, HeyReach delivery stays disabled.
+
+## Choose a destination
+
+Use **Campaign** when you want qualified leads to go directly into a HeyReach campaign.
+
+When you select a campaign, traxy sends leads to that campaign and adds traxy tracking fields and tags for reporting.
+
+Use **Lead list** when you want traxy to add qualified leads to a list first.
+
+Lead lists are useful when you want to review, segment, or attach leads to campaigns inside HeyReach later.
+
+## Create a lead list from traxy
+
+1. In the HeyReach integration, set **Destination type** to **Lead list**.
+2. Click **Create new lead list**.
+3. Add a list name.
+4. Click **Create list**.
+5. Save the HeyReach settings.
+
+traxy creates an empty HeyReach lead list and selects it as the destination.
+
+## Create a campaign from traxy
+
+1. In the HeyReach integration, set **Destination type** to **Campaign**.
+2. Click **Create new campaign**.
+3. Add a campaign name.
+4. Select a lead list, or create a new lead list.
+5. Select one or more sender accounts.
+6. Click **Create campaign**.
+7. Click **Finish setup in HeyReach**.
+8. Finish the sequence setup in HeyReach.
+9. Return to traxy and click **Done**.
+10. Save the HeyReach settings.
+
+Campaigns created from traxy start as drafts. Finish the campaign sequence in HeyReach before you turn on **Auto** delivery.
+
+## Choose manual or automatic delivery
+
+HeyReach can work in two ways:
+
+- **Manual delivery** from the leads table when you want to review each lead first
+- **Automatic delivery** when you want traxy to send new qualified leads to HeyReach as soon as they meet the workspace ICP threshold
+
+Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
+
+Auto-send requires a saved HeyReach destination. If the selected campaign is still a draft, finish the campaign setup in HeyReach before you enable **Auto**.
+
+## Send leads manually
+
+Use manual delivery when you want more control over who enters HeyReach.
+
+1. Open **Leads**.
+2. Select one or more leads.
+3. Choose the send action.
+4. Select **HeyReach**.
+5. Confirm the send.
+
+traxy queues the selected leads for delivery to the configured HeyReach destination.
+
+## Track performance
+
+After HeyReach is connected, the integration page shows performance for the selected destination.
+
+For campaign destinations, you can review:
+
+- total campaign leads
+- acceptance rate
+- reply rate
+- traxy-sent leads
+- accepted connections
+- replies
+- interested replies when HeyReach sync data is available
+
+For lead list destinations, traxy shows list totals and delivery counts. Campaign acceptance and reply stats appear after you send to a campaign destination.
+
+## What traxy sends
+
+traxy sends the lead's LinkedIn profile URL, name, company, role, location, summary, and email when available.
+
+traxy also adds tracking fields such as lead ID, lead URL, ICP score, lead tier, intent level, source, and sent time. HeyReach leads can also receive traxy tags so you can find them later in HeyReach.
+
+## Disconnect HeyReach
+
+Use **Disconnect** when you want traxy to stop sending leads to HeyReach.
+
+Disconnecting HeyReach does not change existing HeyReach leads, lead lists, or campaigns.

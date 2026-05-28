@@ -43,6 +43,7 @@
           "using-traxy/integrations",
           "using-traxy/integrations/slack",
           "using-traxy/integrations/webhook",
+          "using-traxy/integrations/heyreach",
           "using-traxy/integrations/meta-ads"
         ]
       },

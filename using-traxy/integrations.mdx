@@ -1,9 +1,9 @@
 ---
 title: "Integrations"
-description: "Connect Slack, Webhook, and Meta Ads to route qualified leads and audiences out of traxy."
+description: "Connect Slack, Webhook, HeyReach, and Meta Ads to route qualified leads and audiences out of traxy."
 ---
 
-Use integrations to send qualified leads, lead alerts, and audience exports into the tools your team already uses.
+Use integrations to send qualified leads, lead alerts, outbound destinations, and audience exports into the tools your team already uses.
 
 <Frame>
   ![Integrationv4](/images/Integrationv4.png)
@@ -19,6 +19,7 @@ The current public integrations are:
 
 - **Slack** for qualified lead alerts and workspace activity notifications
 - **Webhook** for signed qualified lead events sent to another system
+- **HeyReach** for sending qualified leads to a campaign or lead list
 - **Meta Ads** for customer-list and lookalike audience workflows
 
 <CardGroup cols={2}>
@@ -30,6 +31,10 @@ The current public integrations are:
     Send signed qualified lead events to another system.
   </Card>
 
+  <Card title="HeyReach" icon="send" href="/using-traxy/integrations/heyreach">
+    Send qualified leads to a HeyReach campaign or lead list.
+  </Card>
+
   <Card title="Meta Ads" icon="megaphone" href="/using-traxy/integrations/meta-ads">
     Export qualified leads for Meta customer lists and lookalike audiences.
   </Card>
@@ -37,20 +42,22 @@ The current public integrations are:
 
 ## Manual vs automatic delivery
 
-Slack and Webhook delivery can work in two ways:
+Slack, Webhook, and HeyReach delivery can work in two ways:
 
 - **Manual delivery** from the leads table when you want to review each lead first
 - **Automatic delivery** when you want `traxy` to route qualified leads as soon as they meet your threshold
-- **Repeat engagement delivery** when you want another alert after an existing qualified lead engages again
+- **Repeat engagement delivery** for Slack and Webhook when you want another alert after an existing qualified lead engages again
 
 Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
 
-Repeat engagement delivery only works when the integration trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
+Repeat engagement delivery only works when the Slack or Webhook trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
 
 Use test sends before you go live. Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
 
 If you send manually from **Leads**, you may see states such as queued, delivered, or failed. Fix the underlying integration issue first, then retry from the lead.
 
 Review automatic settings carefully before you enable them for a shared workspace.
+
+HeyReach requires a configured campaign or lead list before traxy can send leads. Use [HeyReach](/using-traxy/integrations/heyreach) when you want qualified leads to enter an outbound workflow.
 
 Meta Ads uses an audience export workflow instead of automatic lead delivery. Use [Meta Ads](/using-traxy/integrations/meta-ads) when you want to upload a traxy list to Meta and create a lookalike audience.
