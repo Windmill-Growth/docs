@@ -43,6 +43,9 @@
           "using-traxy/integrations",
           "using-traxy/integrations/slack",
           "using-traxy/integrations/webhook",
+          "using-traxy/integrations/zapier",
+          "using-traxy/integrations/clay",
+          "using-traxy/integrations/n8n",
           "using-traxy/integrations/heyreach",
           "using-traxy/integrations/meta-ads"
         ]

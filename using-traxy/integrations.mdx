@@ -1,6 +1,6 @@
 ---
 title: "Integrations"
-description: "Connect Slack, Webhook, HeyReach, and Meta Ads to route qualified leads and audiences out of traxy."
+description: "Connect Slack, Webhook, Zapier, Clay, n8n, HeyReach, and Meta Ads to route qualified leads and audiences out of traxy."
 ---
 
 Use integrations to send qualified leads, lead alerts, outbound destinations, and audience exports into the tools your team already uses.
@@ -19,6 +19,9 @@ The current public integrations are:
 
 - **Slack** for qualified lead alerts and workspace activity notifications
 - **Webhook** for signed qualified lead events sent to another system
+- **Zapier** for sending qualified lead events to a Zapier webhook
+- **Clay** for sending qualified lead events to a Clay webhook
+- **n8n** for sending qualified lead events to an n8n webhook
 - **HeyReach** for sending qualified leads to a campaign or lead list
 - **Meta Ads** for customer-list and lookalike audience workflows
 
@@ -29,6 +32,18 @@ The current public integrations are:
 
   <Card title="Webhook" icon="webhook" href="/using-traxy/integrations/webhook">
     Send signed qualified lead events to another system.
+  </Card>
+
+  <Card title="Zapier" icon="zap" href="/using-traxy/integrations/zapier">
+    Send qualified lead events to a Zapier webhook.
+  </Card>
+
+  <Card title="Clay" icon="database" href="/using-traxy/integrations/clay">
+    Send qualified lead events to a Clay webhook.
+  </Card>
+
+  <Card title="n8n" icon="workflow" href="/using-traxy/integrations/n8n">
+    Send qualified lead events to an n8n webhook.
   </Card>
 
   <Card title="HeyReach" icon="send" href="/using-traxy/integrations/heyreach">
@@ -42,15 +57,15 @@ The current public integrations are:
 
 ## Manual vs automatic delivery
 
-Slack, Webhook, and HeyReach delivery can work in two ways:
+Slack, Webhook, Zapier, Clay, n8n, and HeyReach delivery can work in two ways:
 
 - **Manual delivery** from the leads table when you want to review each lead first
 - **Automatic delivery** when you want `traxy` to route qualified leads as soon as they meet your threshold
-- **Repeat engagement delivery** for Slack and Webhook when you want another alert after an existing qualified lead engages again
+- **Repeat engagement delivery** for Slack, Webhook, Zapier, Clay, and n8n when you want another alert after an existing qualified lead engages again
 
 Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
 
-Repeat engagement delivery only works when the Slack or Webhook trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
+Repeat engagement delivery only works when the Slack, Webhook, Zapier, Clay, or n8n trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
 
 Use test sends before you go live. Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
 

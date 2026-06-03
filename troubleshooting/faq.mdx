@@ -22,14 +22,17 @@ description: "Answers to common public user questions about traxy."
   <Accordion title="What does the Webhook integration do?">
     Webhook sends qualified lead events from `traxy` to your endpoint so another system can receive and act on them.
   </Accordion>
+  <Accordion title="How are Zapier, Clay, and n8n different from Webhook?">
+    Zapier, Clay, and n8n use the same signed webhook delivery model, but each has its own integration page, connection state, and manual send option.
+  </Accordion>
   <Accordion title="Why is auto-send not delivering older leads?">
     Auto-send only applies to leads that qualify after it is enabled. Use manual delivery from the leads table if you want to send existing leads.
   </Accordion>
   <Accordion title="Why am I not getting repeat engagement alerts?">
     Repeat engagement alerts only send when the integration trigger, auto-send, and **Send repeat engagement from qualified leads** are all enabled.
   </Accordion>
-  <Accordion title="Can I use more than one Webhook?">
-    No. Each workspace supports one active Webhook integration at a time.
+  <Accordion title="Can I use more than one webhook-style integration?">
+    Yes. Each workspace can configure Webhook, Zapier, Clay, and n8n separately.
   </Accordion>
   <Accordion title="Why can I not qualify a post?">
     The post may have no engagement, qualification data may still be refreshing, or your workspace may not have enough credits for the action.
