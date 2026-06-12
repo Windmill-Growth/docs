@@ -1,0 +1,107 @@
+---
+title: "API reference"
+description: "Use the traxy public API to read workspace data and connect approved audience workflows."
+---
+
+Use the traxy public API when you need programmatic access to workspace data outside the app.
+
+The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, sync status, and approved Audience Analytics workflows.
+
+<Info>
+  Create API keys from [API & MCP](/using-traxy/integrations/api-mcp). MCP clients use OAuth instead of API keys.
+</Info>
+
+## Base URL
+
+Use the production API base URL for public integrations:
+
+```text
+https://api.traxy.ai/api/v1
+```
+
+All endpoint paths in this reference are relative to that base URL.
+
+## Authentication
+
+Send your API key as a bearer token.
+
+```http
+Authorization: Bearer trxy_live_...
+```
+
+Do not send a workspace ID in public API requests. traxy resolves the workspace from the API key.
+
+## Scopes
+
+Each API key has scopes. Choose the smallest scope set your integration needs.
+
+- `workspace:read` for workspace access status
+- `leads:read` for visible lead data
+- `leads:contact_read` for contact fields
+- `analytics:read` for dashboard and post analytics
+- `icp:read` for the active ICP summary
+- `watchlist:read` for Watchlist profiles and summaries
+- `content:read` for visible content feed posts
+- `integrations:read` for integration connection and delivery status
+- `sync:read` for sync and qualification run status
+- `audience_analytics:read` for approved aggregate audience analytics
+- `audience_analytics:request` for approved audience discovery requests
+
+Contact data and Audience Analytics scopes are sensitive. Only select them when your workflow needs them.
+
+## Pagination
+
+List endpoints use cursor pagination.
+
+<ParamField query="limit" type="integer">
+  Number of items to return. The maximum value is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Cursor returned by the previous response.
+</ParamField>
+
+## Endpoint groups
+
+The generated API reference includes:
+
+- **Customer REST** endpoints for workspace data, leads, engagement summaries, ICP, Watchlist, analytics, content, integrations, and sync status
+- **Audience Analytics** endpoints for approved aggregate audience workflows
+- **MCP OAuth** endpoints used by remote MCP clients
+- **MCP** Streamable HTTP endpoint for JSON-RPC tool calls
+
+Use Customer REST endpoints for server-to-server integrations. Use MCP setup from the [API & MCP](/using-traxy/integrations/api-mcp) page when an AI client should connect to traxy tools.
+
+## Errors
+
+REST errors use a stable envelope.
+
+```json
+{
+  "error": {
+    "code": "invalid_api_key",
+    "message": "Invalid API key.",
+    "status": 401,
+    "request_id": "req_..."
+  }
+}
+```
+
+Common status codes include:
+
+- `400` for validation errors
+- `401` for invalid, expired, or revoked credentials
+- `402` for insufficient credits or missing capability
+- `404` when a resource is not visible to the key workspace
+- `409` for malformed or unsupported LinkedIn post URNs
+- `429` for rate limits
+
+MCP errors use JSON-RPC error envelopes.
+
+## Privacy
+
+Default public responses do not include secrets, authorization headers, raw request bodies, raw scraped data, or hidden trial leads.
+
+Contact fields require `leads:contact_read`.
+
+Audience Analytics responses are aggregate-only. They do not include individual people, emails, phone numbers, LinkedIn profile URLs, raw comments, raw scraped data, or raw provider errors.

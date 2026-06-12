@@ -1,0 +1,127 @@
+---
+title: "API & MCP"
+description: "Create API keys and connect traxy to MCP clients with OAuth."
+---
+
+Use API & MCP when you want another tool to read workspace data from traxy or when you want an AI coding client to use traxy tools through MCP.
+
+API keys are for public REST API calls. MCP uses OAuth, so you do not need to paste an API key into your MCP client.
+
+## Before you connect API & MCP
+
+Owners and admins can create or revoke API keys.
+
+Make sure you know:
+
+- which external system will use the API key
+- which scopes the system needs
+- where your team stores production secrets
+- which MCP client you want to connect
+
+Default API keys include standard read access for leads, analytics, ICP, Watchlist, content, integrations, sync status, and workspace access.
+
+Contact data and audience analytics scopes are sensitive. Select them only when the integration needs them and your workspace has access.
+
+## Create an API key
+
+1. Open **Integrations**.
+2. Open **API & MCP**.
+3. Open the **API keys** tab.
+4. Click **Create key**.
+5. Add a clear name, such as `Production integration`.
+6. Select the scopes the integration needs.
+7. Click **Create key**.
+8. Copy the key from the **API key created** dialog.
+9. Store the key in your team's secret manager.
+
+traxy shows the full key only once. After you close the dialog, you can see the key name, status, scopes, preview, created date, and last used date, but not the full secret.
+
+Use the key as a bearer token for traxy public API calls.
+
+```http
+Authorization: Bearer trxy_live_...
+```
+
+Open the [API reference](/using-traxy/integrations/api-mcp/reference) when you are ready to review endpoints, parameters, scopes, and response shapes.
+
+## Choose API scopes
+
+Use the smallest scope set that supports your workflow.
+
+- **Leads** lets the integration read visible lead data.
+- **Lead contact data** lets the integration read contact fields. This scope is sensitive.
+- **Analytics** lets the integration read dashboard and post analytics.
+- **ICP** lets the integration read the active ICP summary.
+- **Watchlist** lets the integration read watched profiles and summaries.
+- **Content feed** lets the integration read visible content feed posts.
+- **Integrations** lets the integration read safe integration connection and delivery status.
+- **Sync status** lets the integration read qualification and engagement sync status.
+- **Workspace access** lets the integration read workspace access status.
+- **Audience analytics** and **Audience discovery** are for approved audience workflows only.
+
+## Revoke an API key
+
+Revoke a key when it is no longer used, when a vendor changes, or when you think the key was exposed.
+
+1. Open **Integrations**.
+2. Open **API & MCP**.
+3. Open the **API keys** tab.
+4. Find the key.
+5. Click **Revoke**.
+6. Confirm the change.
+
+Existing clients using that key lose access immediately.
+
+## Connect MCP
+
+Use MCP when you want an AI client to ask traxy for workspace context through tools.
+
+The **MCP** tab supports:
+
+- Claude Code
+- Codex
+- Cursor
+- OpenCode
+
+1. Open **Integrations**.
+2. Open **API & MCP**.
+3. Open the **MCP** tab.
+4. Choose your client.
+5. Copy the command or config from traxy.
+6. Add it to your MCP client.
+7. Sign in when the client opens traxy OAuth.
+8. Approve the workspace.
+
+After OAuth approval, the client can list and run traxy tools based on your workspace permissions.
+
+## Client setup notes
+
+For Claude Code, copy the Claude command from traxy, run it in your terminal, open Claude Code, use `/mcp`, and approve traxy in the browser when OAuth starts.
+
+For Codex, copy the Codex command from traxy, run it in your terminal, then run:
+
+```sh
+codex mcp login traxy
+```
+
+For Cursor, copy the config into `.cursor/mcp.json`, restart Cursor, and approve traxy when Cursor starts OAuth.
+
+For OpenCode, copy the config into `~/.config/opencode/opencode.json`. If OpenCode does not prompt automatically, run:
+
+```sh
+opencode mcp auth traxy
+```
+
+Use the command or config shown in traxy as the source of truth. It includes the correct MCP endpoint for your environment.
+
+## Keep access safe
+
+Treat API keys like passwords.
+
+- Store API keys in a secret manager.
+- Do not paste API keys into MCP config.
+- Revoke keys you no longer use.
+- Create separate keys for production and testing.
+- Review **Last used** before removing old keys.
+
+MCP grants use OAuth instead of API keys. If you no longer want a client to access traxy, remove the MCP connection in that client and reconnect only when needed.

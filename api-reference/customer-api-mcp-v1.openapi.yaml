@@ -1,0 +1,1083 @@
+openapi: 3.0.3
+info:
+  title: traxy public API and MCP V1
+  version: 1.0.0
+  description: |
+    Public customer-facing read API, Audience Analytics endpoints, and
+    remote MCP Streamable HTTP endpoint. Customer REST and Audience Analytics requests use
+    bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
+    resource; API-key fallback is disabled by default. Public REST clients must
+    not send a workspace ID. Default API keys cover the general read API.
+    Audience Analytics requires workspace access from traxy and explicitly
+    selected audience_analytics scopes on the key.
+servers:
+  - url: https://api.traxy.ai/api/v1
+    description: Production
+  - url: http://localhost:4000/api/v1
+    description: Local development
+security:
+  - CustomerApiKey: []
+tags:
+  - name: Customer REST
+  - name: Audience Analytics
+  - name: MCP OAuth
+  - name: MCP
+paths:
+  /customer/workspace-access:
+    get:
+      tags: ["Customer REST"]
+      summary: Get workspace access and commercial visibility.
+      security:
+        - CustomerApiKey: ["workspace:read"]
+      responses:
+        "200":
+          description: Workspace access state.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkspaceAccess"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /customer/leads:
+    get:
+      tags: ["Customer REST"]
+      summary: List API-visible leads.
+      security:
+        - CustomerApiKey: ["leads:read"]
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+        - name: tier
+          in: query
+          schema:
+            type: string
+        - name: minIcpMatchPercent
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 100
+      responses:
+        "200":
+          description: Lead page. Contact fields are null unless the key has leads:contact_read.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeadPage"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /customer/leads/counts:
+    get:
+      tags: ["Customer REST"]
+      summary: Get API-visible lead counts.
+      security:
+        - CustomerApiKey: ["leads:read"]
+      responses:
+        "200":
+          description: Lead counts grouped by tier/status.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+  /customer/leads/stats:
+    get:
+      tags: ["Customer REST"]
+      summary: Get aggregate lead stats.
+      security:
+        - CustomerApiKey: ["leads:read"]
+      responses:
+        "200":
+          description: Aggregate lead stats.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+  /customer/leads/{leadId}:
+    get:
+      tags: ["Customer REST"]
+      summary: Get one API-visible lead.
+      security:
+        - CustomerApiKey: ["leads:read"]
+      parameters:
+        - $ref: "#/components/parameters/LeadId"
+      responses:
+        "200":
+          description: Lead detail.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Lead"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /customer/leads/{leadId}/engagements:
+    get:
+      tags: ["Customer REST"]
+      summary: List safe engagement summaries for one lead.
+      security:
+        - CustomerApiKey: ["leads:read"]
+      parameters:
+        - $ref: "#/components/parameters/LeadId"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+        - name: engagementType
+          in: query
+          schema:
+            type: string
+            enum: [LIKE, COMMENT, REPOST]
+      responses:
+        "200":
+          description: Engagement page.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageEnvelope"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /customer/icp:
+    get:
+      tags: ["Customer REST"]
+      summary: Get active ICP configuration.
+      security:
+        - CustomerApiKey: ["icp:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+  /customer/icp/active:
+    get:
+      tags: ["Customer REST"]
+      summary: Get active ICP configuration.
+      security:
+        - CustomerApiKey: ["icp:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+  /customer/watchlist/profiles:
+    get:
+      tags: ["Customer REST"]
+      summary: List watchlist profiles.
+      security:
+        - CustomerApiKey: ["watchlist:read"]
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+      responses:
+        "200":
+          $ref: "#/components/responses/PageObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+  /customer/watchlist/summary:
+    get:
+      tags: ["Customer REST"]
+      summary: Get watchlist summary.
+      security:
+        - CustomerApiKey: ["watchlist:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/watchlist/recommendations:
+    get:
+      tags: ["Customer REST"]
+      summary: List watchlist recommendations.
+      security:
+        - CustomerApiKey: ["watchlist:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/analytics/dashboard:
+    get:
+      tags: ["Customer REST"]
+      summary: Get aggregate analytics dashboard.
+      security:
+        - CustomerApiKey: ["analytics:read"]
+      parameters:
+        - $ref: "#/components/parameters/Range"
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/analytics/posts:
+    get:
+      tags: ["Customer REST"]
+      summary: List post analytics.
+      security:
+        - CustomerApiKey: ["analytics:read"]
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+      responses:
+        "200":
+          $ref: "#/components/responses/PageObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/analytics/posts/{postId}/summary:
+    get:
+      tags: ["Customer REST"]
+      summary: Get one post summary.
+      security:
+        - CustomerApiKey: ["analytics:read"]
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /customer/analytics/posts/{postId}/qualified-leads:
+    get:
+      tags: ["Customer REST"]
+      summary: List qualified leads for one post.
+      security:
+        - CustomerApiKey: ["analytics:read"]
+      parameters:
+        - $ref: "#/components/parameters/PostId"
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+      responses:
+        "200":
+          $ref: "#/components/responses/PageObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /customer/content-feed:
+    get:
+      tags: ["Customer REST"]
+      summary: List content feed posts.
+      security:
+        - CustomerApiKey: ["content:read"]
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+      responses:
+        "200":
+          $ref: "#/components/responses/PageObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/content/feed:
+    get:
+      tags: ["Customer REST"]
+      summary: List content feed posts.
+      security:
+        - CustomerApiKey: ["content:read"]
+      parameters:
+        - $ref: "#/components/parameters/Limit"
+        - $ref: "#/components/parameters/Cursor"
+      responses:
+        "200":
+          $ref: "#/components/responses/PageObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/integrations:
+    get:
+      tags: ["Customer REST"]
+      summary: Get safe integration status.
+      security:
+        - CustomerApiKey: ["integrations:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/integrations/status:
+    get:
+      tags: ["Customer REST"]
+      summary: Get safe integration status.
+      security:
+        - CustomerApiKey: ["integrations:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/integrations/leads/{leadId}/delivery:
+    get:
+      tags: ["Customer REST"]
+      summary: Get lead delivery state.
+      security:
+        - CustomerApiKey: ["integrations:read"]
+      parameters:
+        - $ref: "#/components/parameters/LeadId"
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+  /customer/integrations/lead-delivery-state:
+    get:
+      tags: ["Customer REST"]
+      summary: Get lead delivery state.
+      security:
+        - CustomerApiKey: ["integrations:read"]
+      parameters:
+        - name: leadId
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+  /customer/sync/status:
+    get:
+      tags: ["Customer REST"]
+      summary: Get sync status.
+      security:
+        - CustomerApiKey: ["sync:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /customer/qualification/runs/latest:
+    get:
+      tags: ["Customer REST"]
+      summary: Get latest qualification run.
+      security:
+        - CustomerApiKey: ["sync:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/DataObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /audience-analytics/health:
+    get:
+      tags: ["Audience Analytics"]
+      summary: Check Audience Analytics readiness for the key workspace.
+      security:
+        - CustomerApiKey: ["audience_analytics:read"]
+      responses:
+        "200":
+          $ref: "#/components/responses/AudienceObject"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+  /audience-analytics/linkedin-posts:
+    get:
+      tags: ["Audience Analytics"]
+      summary: Get aggregate-only audience analytics for a LinkedIn post.
+      security:
+        - CustomerApiKey: ["audience_analytics:read"]
+      parameters:
+        - name: postUrn
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/AudienceObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/UnresolvedUrn"
+  /audience-analytics/linkedin-posts/find-audience:
+    post:
+      tags: ["Audience Analytics"]
+      summary: Queue on-demand audience discovery for a LinkedIn post.
+      security:
+        - CustomerApiKey: ["audience_analytics:request"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [postUrn]
+              additionalProperties: false
+              properties:
+                postUrn:
+                  type: string
+                idempotencyKey:
+                  type: string
+                  maxLength: 120
+      responses:
+        "202":
+          $ref: "#/components/responses/AudienceObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/UnresolvedUrn"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /audience-analytics/organization:
+    get:
+      tags: ["Audience Analytics"]
+      summary: Get aggregate audience breakdown for the key workspace.
+      security:
+        - CustomerApiKey: ["audience_analytics:read"]
+      parameters:
+        - $ref: "#/components/parameters/Range"
+        - name: dimension
+          in: query
+          schema:
+            type: string
+            enum: [title, companySize, location, industry]
+            default: industry
+      responses:
+        "200":
+          $ref: "#/components/responses/AudienceObject"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+  /mcp/oauth/register:
+    post:
+      tags: ["MCP OAuth"]
+      summary: Register a public MCP OAuth client.
+      description: Dynamic Client Registration for public clients. Redirect URIs must be safe loopback URIs or explicitly allowlisted HTTPS origins.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/McpOAuthClientRegistrationRequest"
+      responses:
+        "201":
+          description: Registered public client metadata.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/McpOAuthClientRegistrationResponse"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+  /mcp/oauth/authorize:
+    get:
+      tags: ["MCP OAuth"]
+      summary: Start MCP OAuth authorization.
+      description: Validates client, redirect URI, resource, scopes, and PKCE challenge, then redirects to the traxy consent screen.
+      security: []
+      parameters:
+        - name: response_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [code]
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+        - name: code_challenge
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: code_challenge_method
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [S256]
+        - name: scope
+          in: query
+          schema:
+            type: string
+        - name: resource
+          in: query
+          schema:
+            type: string
+            format: uri
+        - name: state
+          in: query
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Redirect to traxy consent screen.
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+  /mcp/oauth/token:
+    post:
+      tags: ["MCP OAuth"]
+      summary: Exchange an authorization code or refresh token.
+      description: Supports authorization_code with PKCE S256 and refresh_token with rotation.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/McpOAuthTokenRequest"
+      responses:
+        "200":
+          description: MCP OAuth token response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/McpOAuthTokenResponse"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/McpUnauthorized"
+  /mcp/oauth/revoke:
+    post:
+      tags: ["MCP OAuth"]
+      summary: Revoke an MCP OAuth token.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/McpOAuthRevokeRequest"
+      responses:
+        "200":
+          description: Token revoke accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+  /mcp:
+    get:
+      tags: ["MCP"]
+      summary: MCP GET sessions are not enabled in V1.
+      security:
+        - McpOAuth: []
+      responses:
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+    post:
+      tags: ["MCP"]
+      summary: Streamable HTTP JSON-RPC endpoint for remote MCP clients.
+      security:
+        - McpOAuth: []
+      parameters:
+        - name: Accept
+          in: header
+          required: true
+          schema:
+            type: string
+            example: "application/json, text/event-stream"
+        - name: MCP-Protocol-Version
+          in: header
+          required: true
+          schema:
+            type: string
+            example: "2025-06-18"
+        - name: Origin
+          in: header
+          schema:
+            type: string
+          description: Browser origins must match an allowed MCP origin.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/McpJsonRpcRequest"
+      responses:
+        "200":
+          description: JSON-RPC response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/McpJsonRpcResponse"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/McpUnauthorized"
+        "403":
+          $ref: "#/components/responses/McpOriginNotAllowed"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+components:
+  securitySchemes:
+    CustomerApiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: trxy_live_<public_id>_<secret>
+      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST and Audience Analytics, not MCP OAuth.
+    McpOAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Short-lived OAuth access token issued by traxy for the MCP resource.
+    SupabaseUserJwt:
+      type: http
+      scheme: bearer
+      bearerFormat: Supabase JWT
+      description: Authenticated traxy app session token used by the consent screen.
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+    Cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+    Range:
+      name: range
+      in: query
+      schema:
+        type: string
+        enum: [7d, 30d, 90d]
+        default: 30d
+    LeadId:
+      name: leadId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PostId:
+      name: postId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    DataObject:
+      description: Data envelope.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true
+    PageObject:
+      description: Paginated data envelope.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PageEnvelope"
+    AudienceObject:
+      description: Aggregate-only audience response.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true
+    Unauthorized:
+      description: Invalid, expired, or revoked API key.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    McpUnauthorized:
+      description: Invalid, expired, revoked, or wrong-audience MCP OAuth token. Response includes a WWW-Authenticate challenge with resource metadata.
+      headers:
+        WWW-Authenticate:
+          schema:
+            type: string
+            example: Bearer resource_metadata="https://api.traxy.ai/.well-known/oauth-protected-resource/api/v1/mcp" scope="workspace:read leads:read"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    InsufficientCapability:
+      description: Key lacks the required scope or workspace capability.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    ValidationFailed:
+      description: Request failed boundary validation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    NotFound:
+      description: Resource not found for the key workspace.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    UnresolvedUrn:
+      description: Malformed or unsupported LinkedIn URN. Valid absent and cross-workspace post URNs use NotFound.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    McpOriginNotAllowed:
+      description: Browser Origin is not allowed for MCP.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    MethodNotAllowed:
+      description: HTTP method not supported for this endpoint.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    RateLimited:
+      description: Customer API rate limit exceeded. Production-like runtimes fail closed with this response if the distributed limiter is unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+  schemas:
+    McpOAuthClientRegistrationRequest:
+      type: object
+      additionalProperties: false
+      required: [redirect_uris]
+      properties:
+        client_name:
+          type: string
+          example: Codex
+        redirect_uris:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uri
+          example: ["http://localhost:1455/callback"]
+        grant_types:
+          type: array
+          items:
+            type: string
+            enum: [authorization_code, refresh_token]
+        response_types:
+          type: array
+          items:
+            type: string
+            enum: [code]
+        scope:
+          oneOf:
+            - type: string
+              example: "workspace:read leads:read"
+            - type: array
+              items:
+                type: string
+        token_endpoint_auth_method:
+          type: string
+          enum: [none]
+          default: none
+    McpOAuthClientRegistrationResponse:
+      type: object
+      required:
+        - client_id
+        - client_name
+        - redirect_uris
+        - grant_types
+        - response_types
+        - token_endpoint_auth_method
+        - scope
+      properties:
+        client_id:
+          type: string
+          example: mcp_abc123
+        client_name:
+          type: string
+          example: Codex
+        redirect_uris:
+          type: array
+          items:
+            type: string
+            format: uri
+        grant_types:
+          type: array
+          items:
+            type: string
+        response_types:
+          type: array
+          items:
+            type: string
+        token_endpoint_auth_method:
+          type: string
+          enum: [none]
+        scope:
+          type: string
+          example: "workspace:read leads:read analytics:read"
+    McpOAuthTokenRequest:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required:
+            - grant_type
+            - code
+            - redirect_uri
+            - client_id
+            - code_verifier
+          properties:
+            grant_type:
+              type: string
+              enum: [authorization_code]
+            code:
+              type: string
+            redirect_uri:
+              type: string
+              format: uri
+            client_id:
+              type: string
+            code_verifier:
+              type: string
+              minLength: 43
+              maxLength: 128
+            resource:
+              type: string
+              format: uri
+        - type: object
+          additionalProperties: false
+          required: [grant_type, refresh_token, client_id]
+          properties:
+            grant_type:
+              type: string
+              enum: [refresh_token]
+            refresh_token:
+              type: string
+            client_id:
+              type: string
+            scope:
+              type: string
+            resource:
+              type: string
+              format: uri
+    McpOAuthTokenResponse:
+      type: object
+      required: [access_token, token_type, expires_in, refresh_token, scope]
+      properties:
+        access_token:
+          type: string
+          description: Short-lived JWT for `/api/v1/mcp`.
+        token_type:
+          type: string
+          enum: [Bearer]
+        expires_in:
+          type: integer
+          example: 900
+        refresh_token:
+          type: string
+          description: Opaque refresh token. Store securely; traxy stores only a hash.
+        scope:
+          type: string
+          example: "workspace:read leads:read analytics:read"
+    McpOAuthRevokeRequest:
+      type: object
+      additionalProperties: false
+      required: [token]
+      properties:
+        token:
+          type: string
+        token_type_hint:
+          type: string
+          enum: [access_token, refresh_token]
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, status, request_id]
+          properties:
+            code:
+              type: string
+              example: invalid_api_key
+            message:
+              type: string
+              example: Invalid API key.
+            status:
+              type: integer
+              example: 401
+            request_id:
+              type: string
+    WorkspaceAccess:
+      type: object
+      required:
+        - organizationId
+        - commercialMode
+        - accessState
+        - permissions
+      properties:
+        organizationId:
+          type: string
+          format: uuid
+        commercialMode:
+          type: string
+          example: conversion_v2
+        accessState:
+          type: string
+          example: PAID_ACTIVE
+        discoveryState:
+          type: string
+          nullable: true
+        visibleLeadCount:
+          type: integer
+        hiddenLeadCount:
+          type: integer
+        totalLeadCount:
+          type: integer
+        permissions:
+          type: object
+          additionalProperties:
+            type: boolean
+    LeadPage:
+      allOf:
+        - $ref: "#/components/schemas/PageEnvelope"
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Lead"
+    Lead:
+      type: object
+      required:
+        - id
+        - profile
+        - contact
+      properties:
+        id:
+          type: string
+          format: uuid
+        icpMatchPercent:
+          type: integer
+          nullable: true
+        intentScore:
+          type: number
+        leadTier:
+          type: string
+          nullable: true
+        trialBucket:
+          type: string
+          nullable: true
+        profile:
+          type: object
+          additionalProperties: true
+        contact:
+          nullable: true
+          description: Null unless the key has leads:contact_read.
+          type: object
+          additionalProperties: true
+    PageEnvelope:
+      type: object
+      required: [data, page]
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        page:
+          type: object
+          required: [limit, nextCursor]
+          properties:
+            limit:
+              type: integer
+            cursor:
+              type: string
+              nullable: true
+            nextCursor:
+              type: string
+              nullable: true
+    McpJsonRpcRequest:
+      type: object
+      required: [jsonrpc, method]
+      additionalProperties: false
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          nullable: true
+          oneOf:
+            - type: string
+            - type: number
+        method:
+          type: string
+          enum: [initialize, tools/list, tools/call]
+        params:
+          type: object
+          additionalProperties: true
+    McpJsonRpcResponse:
+      type: object
+      required: [jsonrpc]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          nullable: true
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          additionalProperties: true
+        error:
+          type: object
+          additionalProperties: true

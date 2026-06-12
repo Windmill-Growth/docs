@@ -1,0 +1,109 @@
+---
+title: "HubSpot"
+description: "Create or update HubSpot contacts from qualified traxy leads."
+---
+
+Use the HubSpot integration when you want qualified leads and new engagement activity from traxy to appear in HubSpot.
+
+traxy can create or update contacts, create companies when there is a company domain, associate contacts with companies, and add activity notes.
+
+## Before you connect HubSpot
+
+Owners and admins can connect HubSpot and change delivery settings.
+
+Make sure you have:
+
+- access to the HubSpot account you want to connect
+- permission to authorize HubSpot apps
+- a clear policy for creating new contacts and companies
+- a plan for leads that do not have an email address
+
+## Connect HubSpot
+
+1. Open **Integrations**.
+2. Open **HubSpot**.
+3. Click **Connect**.
+4. Authorize traxy in HubSpot.
+5. Return to traxy after authorization completes.
+6. Review the **Settings** tab.
+7. Click **Save** if you change any settings.
+
+After HubSpot is connected, traxy shows the HubSpot portal ID, connection time, access status, and authorized scopes.
+
+## Choose delivery settings
+
+Use **Status** to allow traxy to send leads to HubSpot.
+
+Use **Auto-sync qualified leads** when you want traxy to send new qualified leads and new engagement activity automatically. Auto-sync is non-retroactive. It applies to leads and activity that qualify after auto-sync is enabled.
+
+Use manual delivery from **Leads** when you want to review selected leads before sending them to HubSpot.
+
+## Choose record creation rules
+
+Use the record creation settings to control when traxy creates new HubSpot records.
+
+- **Companies** controls whether traxy creates a company when it identifies a company that does not exist in HubSpot.
+- **Contacts** controls whether traxy creates a contact when the individual does not exist in HubSpot.
+- **Individuals without a company** controls whether traxy creates a contact when no company match is available.
+- **Individuals without an email** controls whether traxy creates a contact when the lead has no email address.
+
+If you choose **Ignore** for a rule, traxy skips that record when the rule applies. That skip is intentional and does not mean the HubSpot connection failed.
+
+## Sync activity to open deals
+
+Turn on **Sync activity to open deals** when you want traxy engagement notes to appear on associated open deals.
+
+traxy looks for open deals associated with the synced contact and company. It then adds the engagement note to the most relevant open deals.
+
+## Format states
+
+Use the state format setting to choose how traxy writes U.S. states to HubSpot:
+
+- **Abbreviated states [NY, TX]**
+- **Full state names [New York, Texas]**
+
+Choose the format that matches the rest of your HubSpot data.
+
+## What traxy sends
+
+traxy sends contact fields when available, including name, email, job title, company, website, phone, city, state, and country.
+
+traxy also sends company name, domain, and website when it can identify a company.
+
+For attribution, traxy can add HubSpot contact properties such as source, source detail, lead ID, lead URL, ICP match percent, intent level, lead tier, trigger type, last engagement time, and Watchlist profile.
+
+traxy also adds notes with lead context, engagement details, match reason, LinkedIn profile, post URL, comment text when available, and a link back to the traxy lead.
+
+## Send leads manually
+
+Use manual delivery when you want control over which leads enter HubSpot.
+
+1. Open **Leads**.
+2. Select one or more leads.
+3. Choose the send action.
+4. Select **HubSpot**.
+5. Confirm the send.
+
+traxy queues the selected leads for HubSpot sync.
+
+## Review HubSpot activity
+
+Open the **Activity** tab on the HubSpot integration page to review recent sync events.
+
+Activity can show:
+
+- queued syncs
+- processing syncs
+- retrying syncs
+- delivered syncs
+- failed syncs
+
+For failed syncs, review the error message, fix the HubSpot issue, and retry from **Leads** when needed.
+
+## Reconnect or disconnect HubSpot
+
+Use **Reconnect** if HubSpot access changes or if you need to refresh the authorization.
+
+Use **Disconnect** when you want traxy to stop sending leads to HubSpot.
+
+Disconnecting HubSpot removes the workspace authorization from traxy. It does not delete contacts, companies, deals, notes, or properties that already exist in HubSpot.

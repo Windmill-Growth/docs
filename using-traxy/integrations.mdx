@@ -1,9 +1,9 @@
 ---
 title: "Integrations"
-description: "Connect Slack, Webhook, Zapier, Clay, n8n, HeyReach, and Meta Ads to route qualified leads and audiences out of traxy."
+description: "Connect API & MCP, Slack, HubSpot, Webhook, Zapier, Clay, n8n, HeyReach, and Meta Ads to route qualified leads, audiences, and workspace data out of traxy."
 ---
 
-Use integrations to send qualified leads, lead alerts, outbound destinations, and audience exports into the tools your team already uses.
+Use integrations to send qualified leads, lead alerts, outbound destinations, audience exports, and workspace data into the tools your team already uses.
 
 <Frame>
   ![Integrationv4](/images/Integrationv4.png)
@@ -17,7 +17,9 @@ Owners and admins set up integrations and change delivery settings.
 
 The current public integrations are:
 
+- **API & MCP** for API keys and OAuth-based MCP access
 - **Slack** for qualified lead alerts and workspace activity notifications
+- **HubSpot** for creating or updating CRM contacts from qualified leads
 - **Webhook** for signed qualified lead events sent to another system
 - **Zapier** for sending qualified lead events to a Zapier webhook
 - **Clay** for sending qualified lead events to a Clay webhook
@@ -26,8 +28,16 @@ The current public integrations are:
 - **Meta Ads** for customer-list and lookalike audience workflows
 
 <CardGroup cols={2}>
+  <Card title="API & MCP" icon="key" href="/using-traxy/integrations/api-mcp">
+    Create API keys and connect MCP clients with OAuth.
+  </Card>
+
   <Card title="Slack" icon="slack" href="/using-traxy/integrations/slack">
     Send qualified lead alerts into a Slack channel.
+  </Card>
+
+  <Card title="HubSpot" icon="hubspot" href="/using-traxy/integrations/hubspot">
+    Create or update HubSpot contacts from qualified leads.
   </Card>
 
   <Card title="Webhook" icon="webhook" href="/using-traxy/integrations/webhook">
@@ -57,7 +67,7 @@ The current public integrations are:
 
 ## Manual vs automatic delivery
 
-Slack, Webhook, Zapier, Clay, n8n, and HeyReach delivery can work in two ways:
+Slack, HubSpot, Webhook, Zapier, Clay, n8n, and HeyReach delivery can work in two ways:
 
 - **Manual delivery** from the leads table when you want to review each lead first
 - **Automatic delivery** when you want `traxy` to route qualified leads as soon as they meet your threshold
@@ -73,6 +83,10 @@ If you send manually from **Leads**, you may see states such as queued, delivere
 
 Review automatic settings carefully before you enable them for a shared workspace.
 
+HubSpot can create or update CRM contacts and add engagement notes. Use [HubSpot](/using-traxy/integrations/hubspot) when you want qualified leads in your CRM.
+
 HeyReach requires a configured campaign or lead list before traxy can send leads. Use [HeyReach](/using-traxy/integrations/heyreach) when you want qualified leads to enter an outbound workflow.
 
 Meta Ads uses an audience export workflow instead of automatic lead delivery. Use [Meta Ads](/using-traxy/integrations/meta-ads) when you want to upload a traxy list to Meta and create a lookalike audience.
+
+API & MCP does not send leads automatically. Use [API & MCP](/using-traxy/integrations/api-mcp) when you need API keys or MCP access for another tool.
