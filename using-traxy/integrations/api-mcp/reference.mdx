@@ -1,11 +1,11 @@
 ---
 title: "API reference"
-description: "Use the traxy public API to read workspace data and connect approved audience workflows."
+description: "Use the traxy public API to read workspace data."
 ---
 
 Use the traxy public API when you need programmatic access to workspace data outside the app.
 
-The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, sync status, and approved Audience Analytics workflows.
+The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, and sync status.
 
 <Info>
   Create API keys from [API & MCP](/using-traxy/integrations/api-mcp). MCP clients use OAuth instead of API keys.
@@ -44,10 +44,8 @@ Each API key has scopes. Choose the smallest scope set your integration needs.
 - `content:read` for visible content feed posts
 - `integrations:read` for integration connection and delivery status
 - `sync:read` for sync and qualification run status
-- `audience_analytics:read` for approved aggregate audience analytics
-- `audience_analytics:request` for approved audience discovery requests
 
-Contact data and Audience Analytics scopes are sensitive. Only select them when your workflow needs them.
+Contact data is sensitive. Only select `leads:contact_read` when your workflow needs it.
 
 ## Pagination
 
@@ -66,7 +64,6 @@ List endpoints use cursor pagination.
 The generated API reference includes:
 
 - **Customer REST** endpoints for workspace data, leads, engagement summaries, ICP, Watchlist, analytics, content, integrations, and sync status
-- **Audience Analytics** endpoints for approved aggregate audience workflows
 - **MCP OAuth** endpoints used by remote MCP clients
 - **MCP** Streamable HTTP endpoint for JSON-RPC tool calls
 
@@ -93,7 +90,6 @@ Common status codes include:
 - `401` for invalid, expired, or revoked credentials
 - `402` for insufficient credits or missing capability
 - `404` when a resource is not visible to the key workspace
-- `409` for malformed or unsupported LinkedIn post URNs
 - `429` for rate limits
 
 MCP errors use JSON-RPC error envelopes.
@@ -103,5 +99,3 @@ MCP errors use JSON-RPC error envelopes.
 Default public responses do not include secrets, authorization headers, raw request bodies, raw scraped data, or hidden trial leads.
 
 Contact fields require `leads:contact_read`.
-
-Audience Analytics responses are aggregate-only. They do not include individual people, emails, phone numbers, LinkedIn profile URLs, raw comments, raw scraped data, or raw provider errors.

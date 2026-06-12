@@ -3,13 +3,10 @@ info:
   title: traxy public API and MCP V1
   version: 1.0.0
   description: |
-    Public customer-facing read API, Audience Analytics endpoints, and
-    remote MCP Streamable HTTP endpoint. Customer REST and Audience Analytics requests use
-    bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
+    Public customer-facing read API and remote MCP Streamable HTTP endpoint.
+    Customer REST requests use bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
     resource; API-key fallback is disabled by default. Public REST clients must
     not send a workspace ID. Default API keys cover the general read API.
-    Audience Analytics requires workspace access from traxy and explicitly
-    selected audience_analytics scopes on the key.
 servers:
   - url: https://api.traxy.ai/api/v1
     description: Production
@@ -19,7 +16,6 @@ security:
   - CustomerApiKey: []
 tags:
   - name: Customer REST
-  - name: Audience Analytics
   - name: MCP OAuth
   - name: MCP
 paths:
@@ -88,8 +84,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                $ref: "#/components/schemas/LeadCounts"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "402":
@@ -106,8 +101,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: true
+                $ref: "#/components/schemas/LeadStats"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "402":
@@ -126,11 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required: [data]
-                properties:
-                  data:
-                    $ref: "#/components/schemas/Lead"
+                $ref: "#/components/schemas/LeadEnvelope"
         "400":
           $ref: "#/components/responses/ValidationFailed"
         "401":
@@ -160,7 +150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PageEnvelope"
+                $ref: "#/components/schemas/LeadEngagementPage"
         "400":
           $ref: "#/components/responses/ValidationFailed"
         "401":
@@ -175,7 +165,7 @@ paths:
         - CustomerApiKey: ["icp:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/IcpProfileResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "402":
@@ -188,7 +178,7 @@ paths:
         - CustomerApiKey: ["icp:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/IcpProfileResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "402":
@@ -204,7 +194,7 @@ paths:
         - $ref: "#/components/parameters/Cursor"
       responses:
         "200":
-          $ref: "#/components/responses/PageObject"
+          $ref: "#/components/responses/WatchlistProfilePageResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "402":
@@ -217,7 +207,7 @@ paths:
         - CustomerApiKey: ["watchlist:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/WatchlistSummaryResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/watchlist/recommendations:
@@ -228,7 +218,7 @@ paths:
         - CustomerApiKey: ["watchlist:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/WatchlistRecommendationsResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/analytics/dashboard:
@@ -241,7 +231,7 @@ paths:
         - $ref: "#/components/parameters/Range"
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/AnalyticsDashboardResponse"
         "400":
           $ref: "#/components/responses/ValidationFailed"
         "401":
@@ -257,7 +247,7 @@ paths:
         - $ref: "#/components/parameters/Cursor"
       responses:
         "200":
-          $ref: "#/components/responses/PageObject"
+          $ref: "#/components/responses/PostPageResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/analytics/posts/{postId}/summary:
@@ -270,7 +260,7 @@ paths:
         - $ref: "#/components/parameters/PostId"
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/PostSummaryResponse"
         "400":
           $ref: "#/components/responses/ValidationFailed"
         "404":
@@ -287,7 +277,7 @@ paths:
         - $ref: "#/components/parameters/Cursor"
       responses:
         "200":
-          $ref: "#/components/responses/PageObject"
+          $ref: "#/components/responses/LeadPageResponse"
         "400":
           $ref: "#/components/responses/ValidationFailed"
         "404":
@@ -303,7 +293,7 @@ paths:
         - $ref: "#/components/parameters/Cursor"
       responses:
         "200":
-          $ref: "#/components/responses/PageObject"
+          $ref: "#/components/responses/PostPageResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/content/feed:
@@ -317,7 +307,7 @@ paths:
         - $ref: "#/components/parameters/Cursor"
       responses:
         "200":
-          $ref: "#/components/responses/PageObject"
+          $ref: "#/components/responses/PostPageResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/integrations:
@@ -328,7 +318,7 @@ paths:
         - CustomerApiKey: ["integrations:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/IntegrationsResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/integrations/status:
@@ -339,7 +329,7 @@ paths:
         - CustomerApiKey: ["integrations:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/IntegrationsResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/integrations/leads/{leadId}/delivery:
@@ -352,7 +342,7 @@ paths:
         - $ref: "#/components/parameters/LeadId"
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/LeadDeliveryStatesResponse"
         "400":
           $ref: "#/components/responses/ValidationFailed"
   /customer/integrations/lead-delivery-state:
@@ -364,13 +354,12 @@ paths:
       parameters:
         - name: leadId
           in: query
-          required: true
           schema:
             type: string
             format: uuid
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/LeadDeliveryStatesResponse"
         "400":
           $ref: "#/components/responses/ValidationFailed"
   /customer/sync/status:
@@ -381,7 +370,7 @@ paths:
         - CustomerApiKey: ["sync:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/SyncStatusResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
   /customer/qualification/runs/latest:
@@ -392,103 +381,9 @@ paths:
         - CustomerApiKey: ["sync:read"]
       responses:
         "200":
-          $ref: "#/components/responses/DataObject"
+          $ref: "#/components/responses/QualificationRunResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
-  /audience-analytics/health:
-    get:
-      tags: ["Audience Analytics"]
-      summary: Check Audience Analytics readiness for the key workspace.
-      security:
-        - CustomerApiKey: ["audience_analytics:read"]
-      responses:
-        "200":
-          $ref: "#/components/responses/AudienceObject"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-  /audience-analytics/linkedin-posts:
-    get:
-      tags: ["Audience Analytics"]
-      summary: Get aggregate-only audience analytics for a LinkedIn post.
-      security:
-        - CustomerApiKey: ["audience_analytics:read"]
-      parameters:
-        - name: postUrn
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          $ref: "#/components/responses/AudienceObject"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/UnresolvedUrn"
-  /audience-analytics/linkedin-posts/find-audience:
-    post:
-      tags: ["Audience Analytics"]
-      summary: Queue on-demand audience discovery for a LinkedIn post.
-      security:
-        - CustomerApiKey: ["audience_analytics:request"]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [postUrn]
-              additionalProperties: false
-              properties:
-                postUrn:
-                  type: string
-                idempotencyKey:
-                  type: string
-                  maxLength: 120
-      responses:
-        "202":
-          $ref: "#/components/responses/AudienceObject"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/UnresolvedUrn"
-        "429":
-          $ref: "#/components/responses/RateLimited"
-  /audience-analytics/organization:
-    get:
-      tags: ["Audience Analytics"]
-      summary: Get aggregate audience breakdown for the key workspace.
-      security:
-        - CustomerApiKey: ["audience_analytics:read"]
-      parameters:
-        - $ref: "#/components/parameters/Range"
-        - name: dimension
-          in: query
-          schema:
-            type: string
-            enum: [title, companySize, location, industry]
-            default: industry
-      responses:
-        "200":
-          $ref: "#/components/responses/AudienceObject"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
   /mcp/oauth/register:
     post:
       tags: ["MCP OAuth"]
@@ -664,7 +559,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: trxy_live_<public_id>_<secret>
-      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST and Audience Analytics, not MCP OAuth.
+      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST, not MCP OAuth.
     McpOAuth:
       type: http
       scheme: bearer
@@ -711,26 +606,6 @@ components:
         type: string
         format: uuid
   responses:
-    DataObject:
-      description: Data envelope.
-      content:
-        application/json:
-          schema:
-            type: object
-            additionalProperties: true
-    PageObject:
-      description: Paginated data envelope.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/PageEnvelope"
-    AudienceObject:
-      description: Aggregate-only audience response.
-      content:
-        application/json:
-          schema:
-            type: object
-            additionalProperties: true
     Unauthorized:
       description: Invalid, expired, or revoked API key.
       content:
@@ -790,6 +665,78 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorEnvelope"
+    LeadPageResponse:
+      description: Paginated lead response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LeadPage"
+    IcpProfileResponse:
+      description: Active ICP configuration. `data` is null when the workspace has no active ICP.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IcpProfileEnvelope"
+    WatchlistProfilePageResponse:
+      description: Paginated Watchlist profile response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/WatchlistProfilePage"
+    WatchlistSummaryResponse:
+      description: Watchlist profile counts.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/WatchlistSummary"
+    WatchlistRecommendationsResponse:
+      description: Watchlist recommendation response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/WatchlistRecommendations"
+    AnalyticsDashboardResponse:
+      description: Aggregate analytics dashboard response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AnalyticsDashboard"
+    PostPageResponse:
+      description: Paginated post analytics response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PostPage"
+    PostSummaryResponse:
+      description: Post analytics summary response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PostSummaryEnvelope"
+    IntegrationsResponse:
+      description: Integration connection and delivery status.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/IntegrationsEnvelope"
+    LeadDeliveryStatesResponse:
+      description: Lead delivery state response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LeadDeliveryStatesEnvelope"
+    SyncStatusResponse:
+      description: Engagement sync status response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SyncStatusEnvelope"
+    QualificationRunResponse:
+      description: Latest qualification run response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/QualificationRunEnvelope"
   schemas:
     McpOAuthClientRegistrationRequest:
       type: object
@@ -961,11 +908,15 @@ components:
         - organizationId
         - commercialMode
         - accessState
+        - visibleLeadCount
+        - hiddenLeadCount
+        - totalLeadCount
         - permissions
       properties:
         organizationId:
           type: string
           format: uuid
+          description: Workspace identifier returned by the API contract.
         commercialMode:
           type: string
           example: conversion_v2
@@ -977,23 +928,85 @@ components:
           nullable: true
         visibleLeadCount:
           type: integer
+          example: 42
         hiddenLeadCount:
           type: integer
+          example: 8
         totalLeadCount:
           type: integer
+          example: 50
+        visibleLeadTarget:
+          type: integer
+          nullable: true
+        teaserLeadTarget:
+          type: integer
+          nullable: true
         permissions:
           type: object
           additionalProperties:
             type: boolean
-    LeadPage:
-      allOf:
-        - $ref: "#/components/schemas/PageEnvelope"
-        - type: object
-          properties:
-            data:
-              type: array
-              items:
-                $ref: "#/components/schemas/Lead"
+          example:
+            canAccessHiddenLeads: true
+            canQualifyPostByUrl: true
+    PageInfo:
+      type: object
+      required: [limit, cursor, nextCursor]
+      properties:
+        limit:
+          type: integer
+          example: 50
+        cursor:
+          type: string
+          nullable: true
+          example: null
+        nextCursor:
+          type: string
+          nullable: true
+          example: eyJjcmVhdGVkQXQiOiIyMDI2LTA2LTEyVDE0OjE1OjAwLjAwMFoiLCJpZCI6IjAxOTBhYyJ9
+    ProfileSummary:
+      type: object
+      required: [displayName, headline, location, currentCompany]
+      properties:
+        displayName:
+          type: string
+          nullable: true
+          example: Morgan Lee
+        headline:
+          type: string
+          nullable: true
+          example: VP of Growth at ExampleCo
+        location:
+          type: string
+          nullable: true
+          example: New York, United States
+        currentCompany:
+          type: string
+          nullable: true
+          example: ExampleCo
+    LeadContact:
+      type: object
+      description: Returned only when the API key has `leads:contact_read`.
+      properties:
+        workEmail:
+          type: string
+          nullable: true
+          format: email
+        workEmailStatus:
+          type: string
+          nullable: true
+        personalEmail:
+          type: string
+          nullable: true
+          format: email
+        personalEmailStatus:
+          type: string
+          nullable: true
+        contactPhone:
+          type: string
+          nullable: true
+        contactPhoneStatus:
+          type: string
+          nullable: true
     Lead:
       type: object
       required:
@@ -1007,43 +1020,593 @@ components:
         icpMatchPercent:
           type: integer
           nullable: true
+          minimum: 0
+          maximum: 100
+        icpMatchLabel:
+          type: string
+          nullable: true
         intentScore:
           type: number
+          format: float
+        intentLevel:
+          type: string
+          nullable: true
         leadTier:
           type: string
           nullable: true
+          enum: [UNQUALIFIED, NURTURE, QUALIFIED, PRIORITY]
         trialBucket:
           type: string
           nullable: true
+        firstSeenAt:
+          type: string
+          format: date-time
+        lastEngagementAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        primaryQualifiedPostId:
+          type: string
+          nullable: true
+          format: uuid
         profile:
-          type: object
-          additionalProperties: true
+          $ref: "#/components/schemas/ProfileSummary"
         contact:
           nullable: true
-          description: Null unless the key has leads:contact_read.
-          type: object
-          additionalProperties: true
-    PageEnvelope:
+          oneOf:
+            - $ref: "#/components/schemas/LeadContact"
+    LeadEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/Lead"
+    LeadPage:
       type: object
       required: [data, page]
       properties:
         data:
           type: array
           items:
+            $ref: "#/components/schemas/Lead"
+        page:
+          $ref: "#/components/schemas/PageInfo"
+    LeadCounts:
+      type: object
+      required: [counts]
+      properties:
+        counts:
+          type: array
+          items:
+            type: object
+            required: [tier, count]
+            properties:
+              tier:
+                type: string
+                nullable: true
+                enum: [UNQUALIFIED, NURTURE, QUALIFIED, PRIORITY]
+              count:
+                type: integer
+                example: 12
+    LeadStats:
+      type: object
+      required:
+        - total
+        - averageIcpMatchPercent
+        - priorityCount
+        - qualifiedCount
+      properties:
+        total:
+          type: integer
+          example: 50
+        averageIcpMatchPercent:
+          type: number
+          nullable: true
+          example: 82.4
+        priorityCount:
+          type: integer
+          example: 9
+        qualifiedCount:
+          type: integer
+          example: 18
+    LeadEngagementPage:
+      type: object
+      required: [data, page]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeadEngagement"
+        page:
+          $ref: "#/components/schemas/PageInfo"
+    LeadEngagement:
+      type: object
+      required:
+        - id
+        - engagementType
+        - engagedAt
+        - capturedAt
+        - post
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagementType:
+          type: string
+          enum: [LIKE, COMMENT, REPOST]
+        reactionType:
+          type: string
+          nullable: true
+        engagedAt:
+          type: string
+          format: date-time
+        capturedAt:
+          type: string
+          format: date-time
+        post:
+          type: object
+          required: [id, publishedAt, metrics]
+          properties:
+            id:
+              type: string
+              format: uuid
+            publishedAt:
+              type: string
+              nullable: true
+              format: date-time
+            metrics:
+              $ref: "#/components/schemas/PostMetrics"
+    IcpProfileEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/IcpProfile"
+    IcpProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          example: ACTIVE
+        source:
+          type: string
+          nullable: true
+        summary:
+          type: object
+          nullable: true
+          additionalProperties: true
+        generatedAt:
+          type: string
+          nullable: true
+          format: date-time
+        activatedAt:
+          type: string
+          nullable: true
+          format: date-time
+        people:
+          $ref: "#/components/schemas/IcpPeopleCriteria"
+        company:
+          $ref: "#/components/schemas/IcpCompanyCriteria"
+    IcpPeopleCriteria:
+      type: object
+      properties:
+        jobTitles:
+          type: array
+          nullable: true
+          items:
+            type: string
+        departments:
+          type: array
+          nullable: true
+          items:
+            type: string
+        industries:
+          type: array
+          nullable: true
+          items:
+            type: string
+        locations:
+          type: array
+          nullable: true
+          items:
+            type: string
+        seniorities:
+          type: array
+          nullable: true
+          items:
+            type: string
+    IcpCompanyCriteria:
+      type: object
+      properties:
+        companySizes:
+          type: array
+          nullable: true
+          items:
+            type: string
+        revenueRanges:
+          type: array
+          nullable: true
+          items:
+            type: string
+        industries:
+          type: array
+          nullable: true
+          items:
+            type: string
+        locations:
+          type: array
+          nullable: true
+          items:
+            type: string
+        fundingStages:
+          type: array
+          nullable: true
+          items:
+            type: string
+        keywords:
+          type: array
+          nullable: true
+          items:
+            type: string
+        companyProductSummary:
+          type: string
+          nullable: true
+    WatchlistProfilePage:
+      type: object
+      required: [data, page]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/WatchlistProfile"
+        page:
+          $ref: "#/components/schemas/PageInfo"
+    WatchlistProfile:
+      type: object
+      required: [id, profileType, source, createdAt, profile]
+      properties:
+        id:
+          type: string
+          format: uuid
+        profileType:
+          type: string
+        slotKind:
+          type: string
+          nullable: true
+        source:
+          type: string
+        selectedCompanyName:
+          type: string
+          nullable: true
+        qualificationPausedAt:
+          type: string
+          nullable: true
+          format: date-time
+        lastEngagementSyncAt:
+          type: string
+          nullable: true
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        profile:
+          $ref: "#/components/schemas/ProfileSummary"
+    WatchlistSummary:
+      type: object
+      required: [counts]
+      properties:
+        counts:
+          type: array
+          items:
+            type: object
+            required: [profileType, count]
+            properties:
+              profileType:
+                type: string
+              count:
+                type: integer
+    WatchlistRecommendations:
+      type: object
+      required: [data, status]
+      properties:
+        data:
+          type: array
+          items:
             type: object
             additionalProperties: true
+        status:
+          type: string
+          enum: [not_available_in_v1]
+    AnalyticsDashboard:
+      type: object
+      required: [range, windowStart, leads, posts]
+      properties:
+        range:
+          type: string
+          enum: [7d, 30d, 90d]
+        windowStart:
+          type: string
+          format: date-time
+        leads:
+          $ref: "#/components/schemas/LeadStats"
+        posts:
+          $ref: "#/components/schemas/PostStats"
+    PostStats:
+      type: object
+      required: [qualifiedPostRunCount, postRunCount]
+      properties:
+        qualifiedPostRunCount:
+          type: integer
+        postRunCount:
+          type: integer
+    PostPage:
+      type: object
+      required: [data, page]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
         page:
-          type: object
-          required: [limit, nextCursor]
-          properties:
-            limit:
-              type: integer
-            cursor:
-              type: string
-              nullable: true
-            nextCursor:
-              type: string
-              nullable: true
+          $ref: "#/components/schemas/PageInfo"
+    Post:
+      type: object
+      required:
+        - id
+        - publishedAt
+        - effectivePublishedAt
+        - totalReactions
+        - totalComments
+        - totalReposts
+        - syncedReactionsCount
+        - syncedCommentsCount
+        - syncedRepostsCount
+        - lastFetchedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        publishedAt:
+          type: string
+          nullable: true
+          format: date-time
+        effectivePublishedAt:
+          type: string
+          format: date-time
+        totalReactions:
+          type: integer
+        totalComments:
+          type: integer
+        totalReposts:
+          type: integer
+        syncedReactionsCount:
+          type: integer
+        syncedCommentsCount:
+          type: integer
+        syncedRepostsCount:
+          type: integer
+        lastFetchedAt:
+          type: string
+          format: date-time
+    PostSummaryEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: "#/components/schemas/PostSummary"
+    PostSummary:
+      type: object
+      required:
+        - id
+        - publishedAt
+        - effectivePublishedAt
+        - totalReactions
+        - totalComments
+        - totalReposts
+        - syncedReactionsCount
+        - syncedCommentsCount
+        - syncedRepostsCount
+        - qualifiedLeadCount
+      properties:
+        id:
+          type: string
+          format: uuid
+        publishedAt:
+          type: string
+          nullable: true
+          format: date-time
+        effectivePublishedAt:
+          type: string
+          format: date-time
+        totalReactions:
+          type: integer
+        totalComments:
+          type: integer
+        totalReposts:
+          type: integer
+        syncedReactionsCount:
+          type: integer
+        syncedCommentsCount:
+          type: integer
+        syncedRepostsCount:
+          type: integer
+        qualifiedLeadCount:
+          type: integer
+    PostMetrics:
+      type: object
+      required: [totalReactions, totalComments, totalReposts]
+      properties:
+        totalReactions:
+          type: integer
+        totalComments:
+          type: integer
+        totalReposts:
+          type: integer
+    IntegrationsEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Integration"
+    Integration:
+      type: object
+      required:
+        - id
+        - type
+        - enabled
+        - autoSend
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          example: HUBSPOT
+        name:
+          type: string
+          nullable: true
+        enabled:
+          type: boolean
+        autoSend:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        pausedAt:
+          type: string
+          nullable: true
+          format: date-time
+        pausedReason:
+          type: string
+          nullable: true
+        consecutiveFailures:
+          type: integer
+          nullable: true
+        lastSuccessAt:
+          type: string
+          nullable: true
+          format: date-time
+        lastFailureAt:
+          type: string
+          nullable: true
+          format: date-time
+    LeadDeliveryStatesEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeadDeliveryState"
+    LeadDeliveryState:
+      type: object
+      required: [leadId, integrationType, integrationId, deliveredAt, updatedAt]
+      properties:
+        leadId:
+          type: string
+          format: uuid
+        integrationType:
+          type: string
+          example: HUBSPOT
+        integrationId:
+          type: string
+          format: uuid
+        deliveredAt:
+          type: string
+          nullable: true
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    SyncStatusEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/SyncStatus"
+    SyncStatus:
+      type: object
+      required:
+        - monitoredProfileId
+        - lastEngagementSyncAt
+        - running
+        - runningStartedAt
+      properties:
+        monitoredProfileId:
+          type: string
+          format: uuid
+        lastEngagementSyncAt:
+          type: string
+          nullable: true
+          format: date-time
+        running:
+          type: boolean
+        runningStartedAt:
+          type: string
+          nullable: true
+          format: date-time
+    QualificationRunEnvelope:
+      type: object
+      required: [data]
+      properties:
+        data:
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/QualificationRun"
+    QualificationRun:
+      type: object
+      required:
+        - id
+        - status
+        - startedAt
+        - completedAt
+        - engagementsProcessed
+        - leadsCreated
+        - leadsUpdated
+        - disqualifiedCount
+        - errorCount
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        startedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          nullable: true
+          format: date-time
+        engagementsProcessed:
+          type: integer
+        leadsCreated:
+          type: integer
+        leadsUpdated:
+          type: integer
+        disqualifiedCount:
+          type: integer
+        errorCount:
+          type: integer
     McpJsonRpcRequest:
       type: object
       required: [jsonrpc, method]
