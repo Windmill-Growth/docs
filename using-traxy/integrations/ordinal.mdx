@@ -53,175 +53,26 @@ The integration can use:
 
 Ordinal responses are aggregate-only. They do not include individual people, emails, phone numbers, LinkedIn profile URLs, raw comments, or raw scraped data.
 
-## API routes used by Ordinal
+## API endpoint docs
 
-Ordinal uses the dedicated traxy key as a bearer token when it calls the audience analytics API.
+Ordinal uses the dedicated traxy key as a bearer token with the `https://api.traxy.ai/api/v1` base URL.
 
-Use this base URL:
+Use these generated endpoint docs for exact query parameters, request bodies, response schemas, and status responses.
 
-```text
-https://api.traxy.ai/api/v1
-```
-
-The audience routes are:
-
-| Method | Route | Purpose |
-| --- | --- | --- |
-| `GET` | `/audience-analytics/health` | Check whether the key can access audience analytics. |
-| `GET` | `/audience-analytics/linkedin-posts?postUrn=...` | Read aggregate audience analytics for a LinkedIn post. |
-| `POST` | `/audience-analytics/linkedin-posts/find-audience` | Request audience discovery for a LinkedIn post. |
-| `GET` | `/audience-analytics/organization?range=30d&dimension=industry` | Read aggregate workspace audience breakdowns. |
-
-Send the key in the `Authorization` header:
-
-```http
-Authorization: Bearer trxy_live_...
-```
-
-For post routes, send a LinkedIn post URN such as `urn:li:activity:...`.
-
-For workspace audience breakdowns, `range` can be `7d`, `30d`, or `90d`. `dimension` can be `industry`, `title`, `companySize`, or `location`.
-
-### Health input and output
-
-`GET /audience-analytics/health` does not require query parameters or a request body.
-
-The response includes readiness and capabilities:
-
-```json
-{
-  "status": "ready",
-  "organizationId": "11111111-1111-4111-8111-111111111111",
-  "capabilities": {
-    "aggregateOnly": true,
-    "audienceDiscovery": true
-  }
-}
-```
-
-### LinkedIn post audience input and output
-
-`GET /audience-analytics/linkedin-posts` requires `postUrn`.
-
-```http
-GET /audience-analytics/linkedin-posts?postUrn=urn%3Ali%3Aactivity%3A7340000000000000000
-```
-
-The response includes post metrics, aggregate audience dimensions, and the latest discovery run when one exists.
-
-```json
-{
-  "status": "ready",
-  "post": {
-    "id": "22222222-2222-4222-8222-222222222222",
-    "publishedAt": "2026-05-01T00:00:00.000Z",
-    "effectivePublishedAt": "2026-05-01T00:00:00.000Z",
-    "metrics": {
-      "totalReactions": 50,
-      "totalComments": 12,
-      "totalReposts": 3,
-      "syncedReactionsCount": 50,
-      "syncedCommentsCount": 12,
-      "syncedRepostsCount": 3
-    }
-  },
-  "audience": {
-    "totalLeads": 42,
-    "dimensions": {
-      "title": [
-        { "segment": "Founder/CEO", "count": 12 },
-        { "segment": "VP/Director", "count": 8 },
-        { "segment": "Manager", "count": 5 },
-        { "segment": "Other", "count": 17 }
-      ],
-      "companySize": [
-        { "segment": "1-10", "count": 4 },
-        { "segment": "11-50", "count": 9 },
-        { "segment": "51-200", "count": 14 },
-        { "segment": "201-1k", "count": 8 },
-        { "segment": "1k+", "count": 2 },
-        { "segment": "Other", "count": 5 }
-      ],
-      "location": [
-        { "segment": "North America", "count": 25 },
-        { "segment": "Europe", "count": 10 },
-        { "segment": "APAC", "count": 3 },
-        { "segment": "Other", "count": 4 }
-      ],
-      "industry": [
-        { "segment": "SaaS", "count": 18 },
-        { "segment": "AI/ML", "count": 9 },
-        { "segment": "Fintech", "count": 5 },
-        { "segment": "E-commerce", "count": 4 },
-        { "segment": "Other", "count": 6 }
-      ]
-    }
-  },
-  "latestRun": {
-    "id": "33333333-3333-4333-8333-333333333333",
-    "status": "COMPLETED",
-    "createdAt": "2026-05-01T00:00:00.000Z",
-    "updatedAt": "2026-05-01T00:05:00.000Z"
-  }
-}
-```
-
-The `audience.dimensions` object includes `title`, `companySize`, `location`, and `industry` arrays. Each array contains `{ "segment": "...", "count": 0 }` buckets.
-
-### Audience discovery input and output
-
-`POST /audience-analytics/linkedin-posts/find-audience` requires `postUrn`. You can include `idempotencyKey` for retry-safe requests.
-
-```json
-{
-  "postUrn": "urn:li:activity:7340000000000000000",
-  "idempotencyKey": "ordinal-post-7340000000000000000"
-}
-```
-
-The response includes the discovery status and post ID. When discovery is queued, it includes `runId`.
-
-```json
-{
-  "status": "queued",
-  "postId": "22222222-2222-4222-8222-222222222222",
-  "runId": "33333333-3333-4333-8333-333333333333"
-}
-```
-
-If audience data already exists, the response can include `audience` instead of `runId`.
-
-### Workspace audience input and output
-
-`GET /audience-analytics/organization` accepts optional `range` and `dimension` query parameters.
-
-```http
-GET /audience-analytics/organization?range=30d&dimension=industry
-```
-
-The response includes the time window, total lead count, and aggregate buckets for the selected dimension.
-
-```json
-{
-  "status": "ready",
-  "range": "30d",
-  "dimension": "industry",
-  "windowStart": "2026-05-17T00:00:00.000Z",
-  "windowEnd": "2026-06-16T00:00:00.000Z",
-  "totalLeads": 42,
-  "segments": [
-    { "segment": "SaaS", "count": 18 },
-    { "segment": "AI/ML", "count": 9 },
-    { "segment": "Fintech", "count": 5 },
-    { "segment": "E-commerce", "count": 4 },
-    { "segment": "Other", "count": 6 }
-  ]
-}
-```
-
-<Info>
-  The traxy app generates the dedicated Ordinal key from **Integrations** \> **Ordinal**. The authenticated app route behind that key creation is `POST /api/v1/organizations/:organizationId/integrations/api-keys`.
-</Info>
+<CardGroup cols={2}>
+  <Card title="Check readiness" icon="activity" href="/using-traxy/integrations/ordinal/readiness">
+    `GET /audience-analytics/health`
+  </Card>
+  <Card title="Get post audience" icon="chart-no-axes-combined" href="/using-traxy/integrations/ordinal/linkedin-post-audience">
+    `GET /audience-analytics/linkedin-posts`
+  </Card>
+  <Card title="Request audience discovery" icon="search" href="/using-traxy/integrations/ordinal/request-audience-discovery">
+    `POST /audience-analytics/linkedin-posts/find-audience`
+  </Card>
+  <Card title="Get workspace audience" icon="chart-pie" href="/using-traxy/integrations/ordinal/workspace-audience">
+    `GET /audience-analytics/organization`
+  </Card>
+</CardGroup>
 
 ## Request audience discovery
 

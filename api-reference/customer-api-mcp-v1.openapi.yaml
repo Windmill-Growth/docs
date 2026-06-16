@@ -1737,6 +1737,7 @@ components:
         - queued
         - pending
         - already_available
+      example: ready
     AudienceAnalyticsHealth:
       type: object
       required: [status, organizationId, capabilities]
@@ -1758,6 +1759,12 @@ components:
               type: boolean
               description: Whether the workspace can request audience discovery for LinkedIn posts.
               example: true
+      example:
+        status: ready
+        organizationId: 11111111-1111-4111-8111-111111111111
+        capabilities:
+          aggregateOnly: true
+          audienceDiscovery: true
     AudienceAnalyticsBucket:
       type: object
       required: [segment, count]
@@ -1893,8 +1900,72 @@ components:
         latestRun:
           type: object
           nullable: true
+          description: Latest audience discovery run for the post, or `null` when no run exists.
           allOf:
             - $ref: "#/components/schemas/AudienceAnalyticsLatestRun"
+      example:
+        status: ready
+        post:
+          id: 22222222-2222-4222-8222-222222222222
+          publishedAt: "2026-05-01T00:00:00.000Z"
+          effectivePublishedAt: "2026-05-01T00:00:00.000Z"
+          metrics:
+            totalReactions: 50
+            totalComments: 12
+            totalReposts: 3
+            syncedReactionsCount: 50
+            syncedCommentsCount: 12
+            syncedRepostsCount: 3
+        audience:
+          totalLeads: 42
+          dimensions:
+            title:
+              - segment: Founder/CEO
+                count: 12
+              - segment: VP/Director
+                count: 8
+              - segment: Manager
+                count: 5
+              - segment: Other
+                count: 17
+            companySize:
+              - segment: 1-10
+                count: 4
+              - segment: 11-50
+                count: 9
+              - segment: 51-200
+                count: 14
+              - segment: 201-1k
+                count: 8
+              - segment: 1k+
+                count: 2
+              - segment: Other
+                count: 5
+            location:
+              - segment: North America
+                count: 25
+              - segment: Europe
+                count: 10
+              - segment: APAC
+                count: 3
+              - segment: Other
+                count: 4
+            industry:
+              - segment: SaaS
+                count: 18
+              - segment: AI/ML
+                count: 9
+              - segment: Fintech
+                count: 5
+              - segment: E-commerce
+                count: 4
+              - segment: Other
+                count: 6
+        latestRun:
+          id: 33333333-3333-4333-8333-333333333333
+          status: COMPLETED
+          createdAt: "2026-05-01T00:00:00.000Z"
+          updatedAt: "2026-05-01T00:05:00.000Z"
     AudienceAnalyticsLatestRun:
       type: object
       required: [id, status, createdAt, updatedAt]
@@ -1928,6 +1999,9 @@ components:
           maxLength: 120
           description: Optional caller-provided idempotency key for retry-safe requests.
           example: ordinal-post-7340000000000000000
+      example:
+        postUrn: urn:li:activity:7340000000000000000
+        idempotencyKey: ordinal-post-7340000000000000000
     AudienceAnalyticsFindAudienceResponse:
       type: object
       required: [status, postId]
@@ -1943,6 +2017,11 @@ components:
           description: Present when traxy queues or reuses a qualification run.
         audience:
           $ref: "#/components/schemas/AudienceAnalyticsAggregate"
+          description: Present when aggregate audience data is already available.
+      example:
+        status: queued
+        postId: 22222222-2222-4222-8222-222222222222
+        runId: 33333333-3333-4333-8333-333333333333
     AudienceAnalyticsOrganizationAudience:
       type: object
       required:
@@ -1978,6 +2057,24 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AudienceAnalyticsBucket"
+      example:
+        status: ready
+        range: 30d
+        dimension: industry
+        windowStart: "2026-05-17T00:00:00.000Z"
+        windowEnd: "2026-06-16T00:00:00.000Z"
+        totalLeads: 42
+        segments:
+          - segment: SaaS
+            count: 18
+          - segment: AI/ML
+            count: 9
+          - segment: Fintech
+            count: 5
+          - segment: E-commerce
+            count: 4
+          - segment: Other
+            count: 6
     McpJsonRpcRequest:
       type: object
       required: [jsonrpc, method]
