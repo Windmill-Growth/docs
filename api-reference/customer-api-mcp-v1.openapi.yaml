@@ -14,6 +14,7 @@ security:
   - CustomerApiKey: []
 tags:
   - name: Customer REST
+  - name: Ordinal Audience Analytics
   - name: MCP OAuth
   - name: MCP
 paths:
@@ -382,6 +383,129 @@ paths:
           $ref: "#/components/responses/QualificationRunResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /audience-analytics/health:
+    get:
+      tags: ["Ordinal Audience Analytics"]
+      summary: Check Ordinal audience analytics readiness.
+      description: Returns the workspace capability state for the API key. Use this before calling the audience analytics endpoints.
+      security:
+        - CustomerApiKey: ["audience_analytics:read"]
+      responses:
+        "200":
+          description: Ordinal audience analytics readiness.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudienceAnalyticsHealth"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /audience-analytics/linkedin-posts:
+    get:
+      tags: ["Ordinal Audience Analytics"]
+      summary: Get LinkedIn post audience analytics.
+      description: Returns aggregate-only audience analytics for a LinkedIn post tracked by the key workspace.
+      security:
+        - CustomerApiKey: ["audience_analytics:read"]
+      parameters:
+        - name: postUrn
+          in: query
+          required: true
+          description: LinkedIn activity or share URN for a post tracked in the workspace.
+          schema:
+            type: string
+            minLength: 8
+            maxLength: 256
+            example: urn:li:activity:7340000000000000000
+      responses:
+        "200":
+          description: Aggregate audience analytics for the LinkedIn post.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudienceAnalyticsPostAudience"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/UnresolvedUrn"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /audience-analytics/linkedin-posts/find-audience:
+    post:
+      tags: ["Ordinal Audience Analytics"]
+      summary: Request LinkedIn post audience discovery.
+      description: Queues audience discovery for a LinkedIn post tracked by the key workspace, or returns existing aggregate audience data when it is already available.
+      security:
+        - CustomerApiKey: ["audience_analytics:request"]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AudienceAnalyticsFindAudienceRequest"
+      responses:
+        "202":
+          description: Audience discovery was queued, reused, or already available.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudienceAnalyticsFindAudienceResponse"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          $ref: "#/components/responses/UnresolvedUrn"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+  /audience-analytics/organization:
+    get:
+      tags: ["Ordinal Audience Analytics"]
+      summary: Get workspace audience breakdown.
+      description: Returns an aggregate audience breakdown for visible active leads in the key workspace.
+      security:
+        - CustomerApiKey: ["audience_analytics:read"]
+      parameters:
+        - name: range
+          in: query
+          description: Time window for leads included in the aggregate.
+          schema:
+            type: string
+            enum: [7d, 30d, 90d]
+            default: 30d
+        - name: dimension
+          in: query
+          description: Audience dimension to group by.
+          schema:
+            type: string
+            enum: [title, companySize, location, industry]
+            default: industry
+      responses:
+        "200":
+          description: Aggregate workspace audience breakdown.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AudienceAnalyticsOrganizationAudience"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/InsufficientCapability"
+        "429":
+          $ref: "#/components/responses/RateLimited"
   /mcp/oauth/register:
     post:
       tags: ["MCP OAuth"]
@@ -1605,6 +1729,255 @@ components:
           type: integer
         errorCount:
           type: integer
+    AudienceDiscoveryStatus:
+      type: string
+      enum:
+        - ready
+        - not_requested
+        - queued
+        - pending
+        - already_available
+    AudienceAnalyticsHealth:
+      type: object
+      required: [status, organizationId, capabilities]
+      properties:
+        status:
+          $ref: "#/components/schemas/AudienceDiscoveryStatus"
+        organizationId:
+          type: string
+          format: uuid
+        capabilities:
+          type: object
+          required: [aggregateOnly, audienceDiscovery]
+          properties:
+            aggregateOnly:
+              type: boolean
+              description: Always true for Ordinal audience analytics.
+              example: true
+            audienceDiscovery:
+              type: boolean
+              description: Whether the workspace can request audience discovery for LinkedIn posts.
+              example: true
+    AudienceAnalyticsBucket:
+      type: object
+      required: [segment, count]
+      properties:
+        segment:
+          type: string
+          description: Bucket label for the selected audience dimension.
+          example: SaaS
+        count:
+          type: integer
+          minimum: 0
+          example: 12
+    AudienceAnalyticsAggregate:
+      type: object
+      required: [totalLeads, dimensions]
+      properties:
+        totalLeads:
+          type: integer
+          minimum: 0
+          example: 42
+        dimensions:
+          type: object
+          required: [title, companySize, location, industry]
+          properties:
+            title:
+              type: array
+              items:
+                $ref: "#/components/schemas/AudienceAnalyticsBucket"
+              example:
+                - segment: Founder/CEO
+                  count: 12
+                - segment: VP/Director
+                  count: 8
+                - segment: Manager
+                  count: 5
+                - segment: Other
+                  count: 17
+            companySize:
+              type: array
+              items:
+                $ref: "#/components/schemas/AudienceAnalyticsBucket"
+              example:
+                - segment: 1-10
+                  count: 4
+                - segment: 11-50
+                  count: 9
+                - segment: 51-200
+                  count: 14
+                - segment: 201-1k
+                  count: 8
+                - segment: 1k+
+                  count: 2
+                - segment: Other
+                  count: 5
+            location:
+              type: array
+              items:
+                $ref: "#/components/schemas/AudienceAnalyticsBucket"
+              example:
+                - segment: North America
+                  count: 25
+                - segment: Europe
+                  count: 10
+                - segment: APAC
+                  count: 3
+                - segment: Other
+                  count: 4
+            industry:
+              type: array
+              items:
+                $ref: "#/components/schemas/AudienceAnalyticsBucket"
+              example:
+                - segment: SaaS
+                  count: 18
+                - segment: AI/ML
+                  count: 9
+                - segment: Fintech
+                  count: 5
+                - segment: E-commerce
+                  count: 4
+                - segment: Other
+                  count: 6
+    AudienceAnalyticsPostAudience:
+      type: object
+      required: [status, post, audience, latestRun]
+      properties:
+        status:
+          $ref: "#/components/schemas/AudienceDiscoveryStatus"
+        post:
+          type: object
+          required: [id, publishedAt, effectivePublishedAt, metrics]
+          properties:
+            id:
+              type: string
+              format: uuid
+            publishedAt:
+              type: string
+              format: date-time
+              nullable: true
+            effectivePublishedAt:
+              type: string
+              format: date-time
+            metrics:
+              type: object
+              required:
+                - totalReactions
+                - totalComments
+                - totalReposts
+                - syncedReactionsCount
+                - syncedCommentsCount
+                - syncedRepostsCount
+              properties:
+                totalReactions:
+                  type: integer
+                  minimum: 0
+                totalComments:
+                  type: integer
+                  minimum: 0
+                totalReposts:
+                  type: integer
+                  minimum: 0
+                syncedReactionsCount:
+                  type: integer
+                  minimum: 0
+                syncedCommentsCount:
+                  type: integer
+                  minimum: 0
+                syncedRepostsCount:
+                  type: integer
+                  minimum: 0
+        audience:
+          $ref: "#/components/schemas/AudienceAnalyticsAggregate"
+        latestRun:
+          type: object
+          nullable: true
+          allOf:
+            - $ref: "#/components/schemas/AudienceAnalyticsLatestRun"
+    AudienceAnalyticsLatestRun:
+      type: object
+      required: [id, status, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          example: COMPLETED
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    AudienceAnalyticsFindAudienceRequest:
+      type: object
+      additionalProperties: false
+      required: [postUrn]
+      properties:
+        postUrn:
+          type: string
+          minLength: 8
+          maxLength: 256
+          description: LinkedIn activity or share URN for the post.
+          example: urn:li:activity:7340000000000000000
+        idempotencyKey:
+          type: string
+          minLength: 8
+          maxLength: 120
+          description: Optional caller-provided idempotency key for retry-safe requests.
+          example: ordinal-post-7340000000000000000
+    AudienceAnalyticsFindAudienceResponse:
+      type: object
+      required: [status, postId]
+      properties:
+        status:
+          $ref: "#/components/schemas/AudienceDiscoveryStatus"
+        postId:
+          type: string
+          format: uuid
+        runId:
+          type: string
+          format: uuid
+          description: Present when traxy queues or reuses a qualification run.
+        audience:
+          $ref: "#/components/schemas/AudienceAnalyticsAggregate"
+    AudienceAnalyticsOrganizationAudience:
+      type: object
+      required:
+        - status
+        - range
+        - dimension
+        - windowStart
+        - windowEnd
+        - totalLeads
+        - segments
+      properties:
+        status:
+          $ref: "#/components/schemas/AudienceDiscoveryStatus"
+        range:
+          type: string
+          enum: [7d, 30d, 90d]
+          example: 30d
+        dimension:
+          type: string
+          enum: [title, companySize, location, industry]
+          example: industry
+        windowStart:
+          type: string
+          format: date-time
+        windowEnd:
+          type: string
+          format: date-time
+        totalLeads:
+          type: integer
+          minimum: 0
+          example: 42
+        segments:
+          type: array
+          items:
+            $ref: "#/components/schemas/AudienceAnalyticsBucket"
     McpJsonRpcRequest:
       type: object
       required: [jsonrpc, method]
