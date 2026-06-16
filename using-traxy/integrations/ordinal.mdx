@@ -53,6 +53,39 @@ The integration can use:
 
 Ordinal responses are aggregate-only. They do not include individual people, emails, phone numbers, LinkedIn profile URLs, raw comments, or raw scraped data.
 
+## API routes used by Ordinal
+
+Ordinal uses the dedicated traxy key as a bearer token when it calls the audience analytics API.
+
+Use this base URL:
+
+```text
+https://api.traxy.ai/api/v1
+```
+
+The audience routes are:
+
+| Method | Route | Purpose |
+| --- | --- | --- |
+| `GET` | `/audience-analytics/health` | Check whether the key can access audience analytics. |
+| `GET` | `/audience-analytics/linkedin-posts?postUrn=...` | Read aggregate audience analytics for a LinkedIn post. |
+| `POST` | `/audience-analytics/linkedin-posts/find-audience` | Request audience discovery for a LinkedIn post. |
+| `GET` | `/audience-analytics/organization?range=30d&dimension=industry` | Read aggregate workspace audience breakdowns. |
+
+Send the key in the `Authorization` header:
+
+```http
+Authorization: Bearer trxy_live_...
+```
+
+For post routes, send a LinkedIn post URN such as `urn:li:activity:...`.
+
+For workspace audience breakdowns, `range` can be `7d`, `30d`, or `90d`. `dimension` can be `industry`, `title`, `companySize`, or `location`.
+
+<Info>
+  The traxy app generates the dedicated Ordinal key from **Integrations** \> **Ordinal**. The authenticated app route behind that key creation is `POST /api/v1/organizations/:organizationId/integrations/api-keys`.
+</Info>
+
 ## Request audience discovery
 
 If you select **Audience discovery**, Ordinal can request audience discovery for a LinkedIn post that belongs to a profile monitored in your workspace.
