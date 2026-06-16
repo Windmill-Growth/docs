@@ -42,6 +42,7 @@
         "pages": [
           "using-traxy/integrations",
           "using-traxy/integrations/api-mcp",
+          "using-traxy/integrations/ordinal",
           "using-traxy/integrations/slack",
           "using-traxy/integrations/hubspot",
           "using-traxy/integrations/webhook",

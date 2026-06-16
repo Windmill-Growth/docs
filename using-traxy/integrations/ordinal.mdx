@@ -1,0 +1,74 @@
+---
+title: "Ordinal"
+description: "Use Ordinal with traxy audience analytics to read aggregate audience insights and request audience discovery for LinkedIn posts."
+---
+
+Use the Ordinal integration when you want an approved audience analytics workflow to read aggregate traxy audience insights.
+
+Ordinal uses the traxy public API. It does not receive individual leads, contact details, raw comments, LinkedIn profile URLs, or raw provider data.
+
+## Before you connect Ordinal
+
+Owners and admins can create API keys for Ordinal.
+
+Make sure you have:
+
+- a paid workspace with API access
+- Ordinal access enabled for your workspace by traxy
+- an API key with the audience analytics scopes Ordinal needs
+- a place to store the API key securely
+
+Audience analytics scopes are not included on default API keys. They appear only when traxy has enabled your workspace for an approved audience analytics integration.
+
+## Create an Ordinal API key
+
+1. Open **Integrations**.
+2. Open **API & MCP**.
+3. Open the **API keys** tab.
+4. Click **Create key**.
+5. Add a clear name, such as `Ordinal`.
+6. Select **Audience analytics**.
+7. Select **Audience discovery** if Ordinal should request audience discovery for LinkedIn posts.
+8. Click **Create key**.
+9. Copy the key from the **API key created** dialog.
+10. Store the key in your team's secret manager.
+
+traxy shows the full key only once. If the key is lost, revoke it and create a new one.
+
+## What Ordinal can read
+
+Ordinal can read aggregate audience analytics for your workspace.
+
+The integration can use:
+
+- workspace audience breakdowns by industry, title, company size, or location
+- aggregate audience analytics for LinkedIn posts tracked in your workspace
+- post-level engagement counts and sync counts
+- audience discovery status for a LinkedIn post
+
+Ordinal responses are aggregate-only. They do not include individual people, emails, phone numbers, LinkedIn profile URLs, raw comments, or raw scraped data.
+
+## Request audience discovery
+
+If you select **Audience discovery**, Ordinal can request audience discovery for a LinkedIn post that belongs to a profile monitored in your workspace.
+
+Audience discovery may return:
+
+- **ready** when aggregate audience data is available
+- **not requested** when discovery has not started
+- **queued** when discovery has been queued
+- **pending** when discovery is running
+- **already available** when traxy already has the aggregate audience data
+
+Audience discovery uses your workspace permissions and available credits. If discovery is not available, review your workspace access and credits before retrying.
+
+## Keep access safe
+
+Treat the Ordinal API key like a password.
+
+- Store the key in a secret manager.
+- Do not paste the key into docs, chat, analytics tools, or issue trackers.
+- Create a separate key for testing when needed.
+- Revoke the key if Ordinal access changes or if you think the key was exposed.
+
+Revoking an API key stops new Ordinal requests immediately. It does not delete existing aggregate analytics in traxy.

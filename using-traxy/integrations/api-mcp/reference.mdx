@@ -5,7 +5,7 @@ description: "Use the traxy public API to read workspace data."
 
 Use the traxy public API when you need programmatic access to workspace data outside the app.
 
-The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, and sync status.
+The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, sync status, and aggregate audience analytics for approved integrations.
 
 <Info>
   Create API keys from [API & MCP](/using-traxy/integrations/api-mcp). MCP clients use OAuth instead of API keys.
@@ -44,8 +44,12 @@ Each API key has scopes. Choose the smallest scope set your integration needs.
 - `content:read` for visible content feed posts
 - `integrations:read` for integration connection and delivery status
 - `sync:read` for sync and qualification run status
+- `audience_analytics:read` for approved aggregate audience analytics
+- `audience_analytics:request` for approved audience discovery requests
 
 Contact data is sensitive. Only select `leads:contact_read` when your workflow needs it.
+
+Audience analytics scopes are available only when traxy has enabled your workspace for an approved audience integration, such as [Ordinal](/using-traxy/integrations/ordinal).
 
 ## Pagination
 
@@ -64,6 +68,7 @@ List endpoints use cursor pagination.
 The generated API reference includes:
 
 - **Customer REST** endpoints for workspace data, leads, engagement summaries, ICP, Watchlist, analytics, content, integrations, and sync status
+- **Audience analytics** endpoints for approved aggregate audience workflows
 - **MCP OAuth** endpoints used by remote MCP clients
 - **MCP** Streamable HTTP endpoint for JSON-RPC tool calls
 

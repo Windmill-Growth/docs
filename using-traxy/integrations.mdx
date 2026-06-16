@@ -1,6 +1,6 @@
 ---
 title: "Integrations"
-description: "Connect API & MCP, Slack, HubSpot, Webhook, Zapier, Clay, n8n, HeyReach, and Meta Ads to route qualified leads, audiences, and workspace data out of traxy."
+description: "Connect API & MCP, Ordinal, Slack, HubSpot, Webhook, Zapier, Clay, n8n, HeyReach, and Meta Ads to route qualified leads, audiences, and workspace data out of traxy."
 ---
 
 Use integrations to send qualified leads, lead alerts, outbound destinations, audience exports, and workspace data into the tools your team already uses.
@@ -18,6 +18,7 @@ Owners and admins set up integrations and change delivery settings.
 The current public integrations are:
 
 - **API & MCP** for API keys and OAuth-based MCP access
+- **Ordinal** for approved aggregate audience analytics workflows
 - **Slack** for qualified lead alerts and workspace activity notifications
 - **HubSpot** for creating or updating CRM contacts from qualified leads
 - **Webhook** for signed qualified lead events sent to another system
@@ -30,6 +31,10 @@ The current public integrations are:
 <CardGroup cols={2}>
   <Card title="API & MCP" icon="key" href="/using-traxy/integrations/api-mcp">
     Create API keys and connect MCP clients with OAuth.
+  </Card>
+
+  <Card title="Ordinal" icon="chart-pie" href="/using-traxy/integrations/ordinal">
+    Read aggregate audience analytics through an approved API integration.
   </Card>
 
   <Card title="Slack" icon="slack" href="/using-traxy/integrations/slack">
@@ -90,3 +95,5 @@ HeyReach requires a configured campaign or lead list before traxy can send leads
 Meta Ads uses an audience export workflow instead of automatic lead delivery. Use [Meta Ads](/using-traxy/integrations/meta-ads) when you want to upload a traxy list to Meta and create a lookalike audience.
 
 API & MCP does not send leads automatically. Use [API & MCP](/using-traxy/integrations/api-mcp) when you need API keys or MCP access for another tool.
+
+Ordinal uses API keys for aggregate audience analytics and audience discovery. Use [Ordinal](/using-traxy/integrations/ordinal) when your workspace has been approved for Ordinal access.
