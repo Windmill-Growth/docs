@@ -8,7 +8,7 @@ Use the traxy public API when you need programmatic access to workspace data out
 The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, sync status, and aggregate audience analytics for approved integrations.
 
 <Info>
-  Create API keys from [API & MCP](/using-traxy/integrations/api-mcp). MCP clients use OAuth instead of API keys.
+  Create general API keys from [API & MCP](/using-traxy/integrations/api-mcp). For Ordinal, generate the dedicated key from [Ordinal](/using-traxy/integrations/ordinal). MCP clients use OAuth instead of API keys.
 </Info>
 
 ## Base URL
@@ -33,7 +33,7 @@ Do not send a workspace ID in public API requests. traxy resolves the workspace 
 
 ## Scopes
 
-Each API key has scopes. Choose the smallest scope set your integration needs.
+Each general API key has scopes. Choose the smallest scope set your integration needs.
 
 - `workspace:read` for workspace access status
 - `leads:read` for visible lead data
@@ -44,12 +44,10 @@ Each API key has scopes. Choose the smallest scope set your integration needs.
 - `content:read` for visible content feed posts
 - `integrations:read` for integration connection and delivery status
 - `sync:read` for sync and qualification run status
-- `audience_analytics:read` for approved aggregate audience analytics
-- `audience_analytics:request` for approved audience discovery requests
 
 Contact data is sensitive. Only select `leads:contact_read` when your workflow needs it.
 
-Audience analytics scopes are available only when traxy has enabled your workspace for an approved audience integration, such as [Ordinal](/using-traxy/integrations/ordinal).
+Ordinal uses a dedicated key generated from the [Ordinal integration](/using-traxy/integrations/ordinal). Add that key to the traxy integration in Ordinal.
 
 ## Pagination
 

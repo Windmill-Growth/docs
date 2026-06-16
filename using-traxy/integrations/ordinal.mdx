@@ -1,43 +1,48 @@
 ---
 title: "Ordinal"
-description: "Use Ordinal with traxy audience analytics to read aggregate audience insights and request audience discovery for LinkedIn posts."
+description: "Connect Ordinal to traxy by generating a dedicated Ordinal API key and adding it to the traxy integration in Ordinal."
 ---
 
-Use the Ordinal integration when you want an approved audience analytics workflow to read aggregate traxy audience insights.
+Use the Ordinal integration when you want Ordinal to access your traxy audience data.
 
-Ordinal uses the traxy public API. It does not receive individual leads, contact details, raw comments, LinkedIn profile URLs, or raw provider data.
+Set up starts in traxy. Generate a dedicated Ordinal API key from the Ordinal integration page, then add that key to the traxy integration inside Ordinal.
 
 ## Before you connect Ordinal
 
-Owners and admins can create API keys for Ordinal.
+Owners and admins can generate an Ordinal key in traxy.
 
 Make sure you have:
 
-- a paid workspace with API access
-- Ordinal access enabled for your workspace by traxy
-- an API key with the audience analytics scopes Ordinal needs
-- a place to store the API key securely
+- access to the traxy workspace you want to connect
+- access to the Ordinal account you want to connect
+- the Ordinal integration available in traxy
+- a place to store the key securely
 
-Audience analytics scopes are not included on default API keys. They appear only when traxy has enabled your workspace for an approved audience analytics integration.
+The key is specific to the Ordinal integration. Use it only for Ordinal.
 
-## Create an Ordinal API key
+## Generate the Ordinal key in traxy
 
 1. Open **Integrations**.
-2. Open **API & MCP**.
-3. Open the **API keys** tab.
-4. Click **Create key**.
-5. Add a clear name, such as `Ordinal`.
-6. Select **Audience analytics**.
-7. Select **Audience discovery** if Ordinal should request audience discovery for LinkedIn posts.
-8. Click **Create key**.
-9. Copy the key from the **API key created** dialog.
-10. Store the key in your team's secret manager.
+2. Open **Ordinal**.
+3. Generate the Ordinal API key.
+4. Copy the key when traxy shows it.
+5. Store the key in your team's secret manager.
 
-traxy shows the full key only once. If the key is lost, revoke it and create a new one.
+traxy shows the full key only once. If the key is lost, generate a new Ordinal key and update it in Ordinal.
+
+## Add the key in Ordinal
+
+1. Open Ordinal.
+2. Go to **Integrations**.
+3. Open the **traxy** integration.
+4. Paste the traxy API key into the traxy integration.
+5. Save or connect the integration.
+
+After the key is saved in Ordinal, Ordinal can access the traxy data needed for its audience workflow.
 
 ## What Ordinal can read
 
-Ordinal can read aggregate audience analytics for your workspace.
+Ordinal can access the audience data available through the dedicated traxy key.
 
 The integration can use:
 
@@ -68,7 +73,6 @@ Treat the Ordinal API key like a password.
 
 - Store the key in a secret manager.
 - Do not paste the key into docs, chat, analytics tools, or issue trackers.
-- Create a separate key for testing when needed.
 - Revoke the key if Ordinal access changes or if you think the key was exposed.
 
 Revoking an API key stops new Ordinal requests immediately. It does not delete existing aggregate analytics in traxy.
