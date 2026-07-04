@@ -9,19 +9,21 @@ Use the Slack integration when you want qualified lead alerts and workspace acti
 
 Owners and admins can connect Slack and change delivery settings.
 
-Decide which channel should receive traxy notifications before you start. If you want to use a private channel, invite `traxy.ai` into that channel first with `/invite @traxy.ai`.
+Decide which channel should receive traxy notifications before you start. If you want to use a private channel and it does not appear in the channel list, invite `traxy` into that channel with `/invite @traxy`.
 
 ## Connect Slack
 
 1. Open **Integrations**.
 2. Open **Slack**.
 3. Connect your Slack workspace.
-4. Select the channel that should receive notifications.
+4. Select the channel that should receive notifications, or create a public or private channel from `traxy`.
 5. Enable the **Qualified Lead Detected** trigger once the channel is set.
-6. Decide whether you want auto-send on or off.
-7. If you turn on auto-send, set the ICP match threshold that should trigger delivery.
-8. Decide whether to enable **Send repeat engagement from qualified leads**.
-9. Send a test event before you rely on it.
+6. Choose which Watchlist profiles should send notifications, or leave the selector empty for all Watchlist profiles.
+7. Decide whether you want auto-send on or off.
+8. If you turn on auto-send, set the ICP match threshold that should trigger delivery.
+9. Decide whether to enable **Send repeat engagement from qualified leads**.
+10. Decide whether to enable **Send Daily Summary**.
+11. Send a test event before you rely on it.
 
 If you connect Slack but do not select a channel, Slack stays disabled.
 
@@ -35,6 +37,18 @@ Slack can work in two ways:
 Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
 
 Repeat engagement delivery only works when the integration trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
+
+## Filter by Watchlist profile
+
+Use **Watchlist Profiles** when you want Slack alerts only from specific monitored profiles.
+
+Leave the selector empty to receive alerts from all Watchlist profiles. Select one or more profiles when a channel should only receive leads from those sources.
+
+## Send a daily summary
+
+Turn on **Send Daily Summary** when you want a daily recap of all qualified leads found by `traxy`.
+
+The summary sends to the selected Slack channel every day at the time shown in the app. If no channel is selected, the daily summary control stays disabled.
 
 ## Test and troubleshoot
 

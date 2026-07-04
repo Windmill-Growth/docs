@@ -20,13 +20,13 @@ The current public integrations are:
 - **API & MCP** for API keys and OAuth-based MCP access
 - **Ordinal** for connecting Ordinal to traxy with a dedicated integration key
 - **Slack** for qualified lead alerts and workspace activity notifications
-- **HubSpot** for creating or updating CRM contacts from qualified leads
-- **Webhook** for signed qualified lead events sent to another system
-- **Zapier** for sending qualified lead events to a Zapier webhook
-- **Clay** for sending qualified lead events to a Clay webhook
-- **n8n** for sending qualified lead events to an n8n webhook
+- **HubSpot** for creating or updating CRM contacts, companies, and activity from qualified leads
+- **Webhook** for signed qualified lead alerts and activity notifications sent to another system
+- **Zapier** for sending qualified lead alerts and activity notifications to a Zapier webhook
+- **Clay** for sending qualified lead alerts and activity notifications to a Clay webhook
+- **n8n** for sending qualified lead alerts and activity notifications to an n8n webhook
 - **HeyReach** for sending qualified leads to a campaign or lead list
-- **Meta Ads** for customer-list and lookalike audience workflows
+- **Meta Ads** for value-based audience CSV exports
 
 <CardGroup cols={2}>
   <Card title="API & MCP" icon="key" href="/using-traxy/integrations/api-mcp">
@@ -66,7 +66,7 @@ The current public integrations are:
   </Card>
 
   <Card title="Meta Ads" icon="megaphone" href="/using-traxy/integrations/meta-ads">
-    Export qualified leads for Meta customer lists and lookalike audiences.
+    Export high-ICP-match leads as a value-based audience CSV.
   </Card>
 </CardGroup>
 
@@ -92,7 +92,7 @@ HubSpot can create or update CRM contacts and add engagement notes. Use [HubSpot
 
 HeyReach requires a configured campaign or lead list before traxy can send leads. Use [HeyReach](/using-traxy/integrations/heyreach) when you want qualified leads to enter an outbound workflow.
 
-Meta Ads uses an audience export workflow instead of automatic lead delivery. Use [Meta Ads](/using-traxy/integrations/meta-ads) when you want to upload a traxy list to Meta and create a lookalike audience.
+Meta Ads uses an audience export workflow instead of automatic lead delivery. Use [Meta Ads](/using-traxy/integrations/meta-ads) when you want to upload a value-based audience CSV to Meta.
 
 API & MCP does not send leads automatically. Use [API & MCP](/using-traxy/integrations/api-mcp) when you need API keys or MCP access for another tool.
 

@@ -27,6 +27,8 @@
         "group": "Using traxy",
         "pages": [
           "using-traxy/dashboard",
+          "using-traxy/agent",
+          "using-traxy/lead-searcher",
           "using-traxy/icp-configuration",
           "using-traxy/leads",
           "using-traxy/content-calendar",
@@ -90,8 +92,11 @@
           "GET /audience-analytics/organization",
           "POST /mcp/oauth/register",
           "GET /mcp/oauth/authorize",
+          "GET /mcp/oauth/authorize/request",
+          "POST /mcp/oauth/authorize/complete",
           "POST /mcp/oauth/token",
           "POST /mcp/oauth/revoke",
+          "GET /mcp",
           "POST /mcp"
         ]
       },

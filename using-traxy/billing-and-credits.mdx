@@ -1,6 +1,6 @@
 ---
 title: "Billing & Plans"
-description: "Manage subscription details, credit usage history, payment methods, invoices, and plan changes in traxy."
+description: "Manage subscription details, usage history, payment methods, invoices, and plan changes in traxy."
 ---
 
 Use Billing & Plans when you need to manage your workspace subscription and billing records.
@@ -14,12 +14,11 @@ Use Billing & Plans when you need to manage your workspace subscription and bill
 In **Settings** \> **Billing**, you can manage:
 
 - your current subscription
-- credit usage history
+- usage history
 - monitored profile seats
 - payment methods
 - billing history
 - plan changes
-- current-month Pay-as-you-go spend
 
 Your workspace sidebar also shows credit usage so you can track consumption without leaving your day-to-day workflow.
 
@@ -30,12 +29,14 @@ Everyone in the workspace can follow usage from the product, but owners and admi
 Billing & Plans includes the public areas most teams need:
 
 - **Overview** for your current plan and billing period
-- **Credit Usage** for the billing-window credit ledger
+- **Usage History** for the billing-window credit ledger
 - **Payment Methods** for saved cards
 - **Billing History** for invoices
 - **Manage Subscription** for upgrades, downgrades, and interval changes
 
 The overview also shows profile-seat usage when your plan includes Watchlist monitoring.
+
+Trial workspaces may show trial lead progress instead of shared credit usage. The app shows when discovery is locked at the trial limit and when upgrading unlocks hidden leads, ongoing discovery, shared credits, more monitored profiles, or webhooks.
 
 ## How periods and resets work
 
@@ -51,7 +52,7 @@ Use the billing summary in your workspace as the source of truth for the next re
 
 ## Review credit usage history
 
-Open **Credit Usage** when you want a ledger of credit charges in the current billing window.
+Open **Usage History** when you want a ledger of credit charges in the current billing window.
 
 Use it to:
 
@@ -70,6 +71,7 @@ Use the billing area when you need to:
 - update a card
 - view invoices and payment history
 - change subscription level
+- switch between monthly and annual billing when available
 - open the billing portal for additional billing tasks
 
 ## Manage profile seats
@@ -80,11 +82,15 @@ Use profile seats when you want to add more competitors, teammates, investors, o
 
 If your workspace reaches its profile-seat limit, `traxy` prompts an admin from Watchlist or Billing. On supported plans, admins can add profile seats as an add-on. If you lower profile-seat capacity later, you may need to archive monitored profiles so the workspace fits the new limit.
 
+Profile-seat add-ons become available immediately when the purchase succeeds. If you remove an add-on later, the app may ask you to archive a monitored profile before lowering the quota.
+
 ## Review scheduled plan changes
 
 If you schedule a plan change for the next billing period, Billing & Plans shows the pending change and effective date.
 
 Use that banner to confirm the upcoming plan, resume the current plan when available, or choose a different plan before the change takes effect.
+
+Downgrades may ask for a reason before they are scheduled. This helps your team confirm the change before the next billing period.
 
 ## Handle payment issues
 

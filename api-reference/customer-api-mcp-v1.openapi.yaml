@@ -1,12 +1,15 @@
 openapi: 3.0.3
 info:
-  title: traxy public API and MCP V1
+  title: traxy Customer API and MCP V1
   version: 1.0.0
   description: |
-    Public customer-facing read API and remote MCP Streamable HTTP endpoint.
-    Customer REST requests use bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
+    Public customer-facing read API, Ordinal Audience Analytics endpoints, and
+    remote MCP Streamable HTTP endpoint. Customer REST and Ordinal requests use
+    bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
     resource; API-key fallback is disabled by default. Public REST clients must
-    not send a workspace ID. Default API keys cover the general read API.
+    not send organizationId. Default API keys cover the general read API.
+    Ordinal Audience Analytics is self-serve for paid workspaces and requires
+    explicitly selected audience_analytics scopes on the key.
 servers:
   - url: https://api.traxy.ai/api/v1
     description: Production
@@ -20,32 +23,32 @@ tags:
 paths:
   /customer/workspace-access:
     get:
-      tags: ["Customer REST"]
-      summary: Get workspace access and commercial visibility.
+      tags: [Customer REST]
+      summary: Get business-facing workspace data access.
       security:
         - CustomerApiKey: ["workspace:read"]
       responses:
-        "200":
-          description: Workspace access state.
+        '200':
+          description: API-visible workspace capabilities and usage.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WorkspaceAccess"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-        "429":
-          $ref: "#/components/responses/RateLimited"
+                $ref: '#/components/schemas/WorkspaceAccess'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
+        '429':
+          $ref: '#/components/responses/RateLimited'
   /customer/leads:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: List API-visible leads.
       security:
         - CustomerApiKey: ["leads:read"]
       parameters:
-        - $ref: "#/components/parameters/Limit"
-        - $ref: "#/components/parameters/Cursor"
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
         - name: tier
           in: query
           schema:
@@ -57,391 +60,387 @@ paths:
             minimum: 0
             maximum: 100
       responses:
-        "200":
+        '200':
           description: Lead page. Contact fields are null unless the key has leads:contact_read.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LeadPage"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-        "429":
-          $ref: "#/components/responses/RateLimited"
+                $ref: '#/components/schemas/LeadPage'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
+        '429':
+          $ref: '#/components/responses/RateLimited'
   /customer/leads/counts:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get API-visible lead counts.
       security:
         - CustomerApiKey: ["leads:read"]
       responses:
-        "200":
+        '200':
           description: Lead counts grouped by tier/status.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LeadCounts"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
   /customer/leads/stats:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get aggregate lead stats.
       security:
         - CustomerApiKey: ["leads:read"]
       responses:
-        "200":
+        '200':
           description: Aggregate lead stats.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LeadStats"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
   /customer/leads/{leadId}:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get one API-visible lead.
       security:
         - CustomerApiKey: ["leads:read"]
       parameters:
-        - $ref: "#/components/parameters/LeadId"
+        - $ref: '#/components/parameters/LeadId'
       responses:
-        "200":
+        '200':
           description: Lead detail.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LeadEnvelope"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Lead'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /customer/leads/{leadId}/engagements:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: List safe engagement summaries for one lead.
       security:
         - CustomerApiKey: ["leads:read"]
       parameters:
-        - $ref: "#/components/parameters/LeadId"
-        - $ref: "#/components/parameters/Limit"
-        - $ref: "#/components/parameters/Cursor"
+        - $ref: '#/components/parameters/LeadId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
         - name: engagementType
           in: query
           schema:
             type: string
             enum: [LIKE, COMMENT, REPOST]
       responses:
-        "200":
+        '200':
           description: Engagement page.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LeadEngagementPage"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
+                $ref: '#/components/schemas/PageEnvelope'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /customer/icp:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get active ICP configuration.
       security:
         - CustomerApiKey: ["icp:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/IcpProfileResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
   /customer/icp/active:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get active ICP configuration.
       security:
         - CustomerApiKey: ["icp:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/IcpProfileResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
   /customer/watchlist/profiles:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: List watchlist profiles.
       security:
         - CustomerApiKey: ["watchlist:read"]
       parameters:
-        - $ref: "#/components/parameters/Limit"
-        - $ref: "#/components/parameters/Cursor"
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
       responses:
-        "200":
-          $ref: "#/components/responses/WatchlistProfilePageResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
+        '200':
+          $ref: '#/components/responses/PageObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
   /customer/watchlist/summary:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get watchlist summary.
       security:
         - CustomerApiKey: ["watchlist:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/WatchlistSummaryResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/watchlist/recommendations:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: List watchlist recommendations.
       security:
         - CustomerApiKey: ["watchlist:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/WatchlistRecommendationsResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/analytics/dashboard:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get aggregate analytics dashboard.
       security:
         - CustomerApiKey: ["analytics:read"]
       parameters:
-        - $ref: "#/components/parameters/Range"
+        - $ref: '#/components/parameters/Range'
       responses:
-        "200":
-          $ref: "#/components/responses/AnalyticsDashboardResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/analytics/posts:
     get:
-      tags: ["Customer REST"]
-      summary: List post analytics.
+      tags: [Customer REST]
+      summary: List post analytics, including safe post contentText.
       security:
         - CustomerApiKey: ["analytics:read"]
       parameters:
-        - $ref: "#/components/parameters/Limit"
-        - $ref: "#/components/parameters/Cursor"
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
       responses:
-        "200":
-          $ref: "#/components/responses/PostPageResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/PageObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/analytics/posts/{postId}/summary:
     get:
-      tags: ["Customer REST"]
-      summary: Get one post summary.
+      tags: [Customer REST]
+      summary: Get one post summary, including safe post contentText.
       security:
         - CustomerApiKey: ["analytics:read"]
       parameters:
-        - $ref: "#/components/parameters/PostId"
+        - $ref: '#/components/parameters/PostId'
       responses:
-        "200":
-          $ref: "#/components/responses/PostSummaryResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /customer/analytics/posts/{postId}/qualified-leads:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: List qualified leads for one post.
       security:
         - CustomerApiKey: ["analytics:read"]
       parameters:
-        - $ref: "#/components/parameters/PostId"
-        - $ref: "#/components/parameters/Limit"
-        - $ref: "#/components/parameters/Cursor"
+        - $ref: '#/components/parameters/PostId'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
       responses:
-        "200":
-          $ref: "#/components/responses/LeadPageResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "404":
-          $ref: "#/components/responses/NotFound"
+        '200':
+          $ref: '#/components/responses/PageObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /customer/content-feed:
     get:
-      tags: ["Customer REST"]
-      summary: List content feed posts.
+      tags: [Customer REST]
+      summary: List content feed posts, including safe post contentText.
       security:
         - CustomerApiKey: ["content:read"]
       parameters:
-        - $ref: "#/components/parameters/Limit"
-        - $ref: "#/components/parameters/Cursor"
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
       responses:
-        "200":
-          $ref: "#/components/responses/PostPageResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/PageObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/content/feed:
     get:
-      tags: ["Customer REST"]
-      summary: List content feed posts.
+      tags: [Customer REST]
+      summary: List content feed posts, including safe post contentText.
       security:
         - CustomerApiKey: ["content:read"]
       parameters:
-        - $ref: "#/components/parameters/Limit"
-        - $ref: "#/components/parameters/Cursor"
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
       responses:
-        "200":
-          $ref: "#/components/responses/PostPageResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/PageObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/integrations:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get safe integration status.
       security:
         - CustomerApiKey: ["integrations:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/IntegrationsResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/integrations/status:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get safe integration status.
       security:
         - CustomerApiKey: ["integrations:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/IntegrationsResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/integrations/leads/{leadId}/delivery:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get lead delivery state.
       security:
         - CustomerApiKey: ["integrations:read"]
       parameters:
-        - $ref: "#/components/parameters/LeadId"
+        - $ref: '#/components/parameters/LeadId'
       responses:
-        "200":
-          $ref: "#/components/responses/LeadDeliveryStatesResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
   /customer/integrations/lead-delivery-state:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get lead delivery state.
       security:
         - CustomerApiKey: ["integrations:read"]
       parameters:
         - name: leadId
           in: query
+          required: true
           schema:
             type: string
             format: uuid
       responses:
-        "200":
-          $ref: "#/components/responses/LeadDeliveryStatesResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
   /customer/sync/status:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get sync status.
       security:
         - CustomerApiKey: ["sync:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/SyncStatusResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /customer/qualification/runs/latest:
     get:
-      tags: ["Customer REST"]
+      tags: [Customer REST]
       summary: Get latest qualification run.
       security:
         - CustomerApiKey: ["sync:read"]
       responses:
-        "200":
-          $ref: "#/components/responses/QualificationRunResponse"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+        '200':
+          $ref: '#/components/responses/DataObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
   /audience-analytics/health:
     get:
-      tags: ["Ordinal Audience Analytics"]
-      summary: Check Ordinal audience analytics readiness.
-      description: Returns the workspace capability state for the API key. Use this before calling the audience analytics endpoints.
+      tags: [Ordinal Audience Analytics]
+      summary: Check Audience Analytics readiness for the key workspace.
       security:
         - CustomerApiKey: ["audience_analytics:read"]
       responses:
-        "200":
-          description: Ordinal audience analytics readiness.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AudienceAnalyticsHealth"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-        "429":
-          $ref: "#/components/responses/RateLimited"
+        '200':
+          $ref: '#/components/responses/AudienceObject'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
   /audience-analytics/linkedin-posts:
     get:
-      tags: ["Ordinal Audience Analytics"]
-      summary: Get LinkedIn post audience analytics.
-      description: Returns aggregate-only audience analytics for a LinkedIn post tracked by the key workspace.
+      tags: [Ordinal Audience Analytics]
+      summary: Get aggregate-only audience analytics for a LinkedIn post.
       security:
         - CustomerApiKey: ["audience_analytics:read"]
       parameters:
         - name: postUrn
           in: query
           required: true
-          description: LinkedIn activity or share URN for a post tracked in the workspace.
+          description: LinkedIn post URN (`urn:li:activity:...`, `urn:li:share:...`, `urn:li:ugcPost:...`) or a LinkedIn `feed/update` URL containing one of those URNs.
           schema:
             type: string
-            minLength: 8
-            maxLength: 256
-            example: urn:li:activity:7340000000000000000
+            maxLength: 1024
+          examples:
+            activityUrn:
+              value: urn:li:activity:123456789
+            feedUpdateUrl:
+              value: https://www.linkedin.com/feed/update/urn:li:share:123456789/
       responses:
-        "200":
-          description: Aggregate audience analytics for the LinkedIn post.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AudienceAnalyticsPostAudience"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/UnresolvedUrn"
-        "429":
-          $ref: "#/components/responses/RateLimited"
+        '200':
+          $ref: '#/components/responses/AudienceObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/UnresolvedUrn'
   /audience-analytics/linkedin-posts/find-audience:
     post:
-      tags: ["Ordinal Audience Analytics"]
-      summary: Request LinkedIn post audience discovery.
-      description: Queues audience discovery for a LinkedIn post tracked by the key workspace, or returns existing aggregate audience data when it is already available.
+      tags: [Ordinal Audience Analytics]
+      summary: Queue on-demand audience discovery for a LinkedIn post.
+      description: Starts discovery through the normal traxy post URL qualification pipeline and consumes normal qualification credits only when discovery is actually started.
       security:
         - CustomerApiKey: ["audience_analytics:request"]
       requestBody:
@@ -449,66 +448,58 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AudienceAnalyticsFindAudienceRequest"
+              type: object
+              required: [postUrn]
+              additionalProperties: false
+              properties:
+                postUrn:
+                  type: string
+                  maxLength: 1024
+                  description: LinkedIn post URN or `feed/update` URL containing a LinkedIn post URN.
+                idempotencyKey:
+                  type: string
+                  maxLength: 120
       responses:
-        "202":
-          description: Audience discovery was queued, reused, or already available.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AudienceAnalyticsFindAudienceResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/UnresolvedUrn"
-        "429":
-          $ref: "#/components/responses/RateLimited"
+        '202':
+          $ref: '#/components/responses/AudienceObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/UnresolvedUrn'
+        '429':
+          $ref: '#/components/responses/RateLimited'
   /audience-analytics/organization:
     get:
-      tags: ["Ordinal Audience Analytics"]
-      summary: Get workspace audience breakdown.
-      description: Returns an aggregate audience breakdown for visible active leads in the key workspace.
+      tags: [Ordinal Audience Analytics]
+      summary: Get aggregate audience breakdown for the key workspace.
       security:
         - CustomerApiKey: ["audience_analytics:read"]
       parameters:
-        - name: range
-          in: query
-          description: Time window for leads included in the aggregate.
-          schema:
-            type: string
-            enum: [7d, 30d, 90d]
-            default: 30d
+        - $ref: '#/components/parameters/Range'
         - name: dimension
           in: query
-          description: Audience dimension to group by.
           schema:
             type: string
             enum: [title, companySize, location, industry]
             default: industry
       responses:
-        "200":
-          description: Aggregate workspace audience breakdown.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AudienceAnalyticsOrganizationAudience"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "402":
-          $ref: "#/components/responses/InsufficientCapability"
-        "429":
-          $ref: "#/components/responses/RateLimited"
+        '200':
+          $ref: '#/components/responses/AudienceObject'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCapability'
   /mcp/oauth/register:
     post:
-      tags: ["MCP OAuth"]
+      tags: [MCP OAuth]
       summary: Register a public MCP OAuth client.
       description: Dynamic Client Registration for public clients. Redirect URIs must be safe loopback URIs or explicitly allowlisted HTTPS origins.
       security: []
@@ -517,19 +508,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/McpOAuthClientRegistrationRequest"
+              $ref: '#/components/schemas/McpOAuthClientRegistrationRequest'
       responses:
-        "201":
+        '201':
           description: Registered public client metadata.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/McpOAuthClientRegistrationResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
+                $ref: '#/components/schemas/McpOAuthClientRegistrationResponse'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
   /mcp/oauth/authorize:
     get:
-      tags: ["MCP OAuth"]
+      tags: [MCP OAuth]
       summary: Start MCP OAuth authorization.
       description: Validates client, redirect URI, resource, scopes, and PKCE challenge, then redirects to the traxy consent screen.
       security: []
@@ -576,13 +567,60 @@ paths:
           schema:
             type: string
       responses:
-        "302":
+        '302':
           description: Redirect to traxy consent screen.
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+  /mcp/oauth/authorize/request:
+    get:
+      tags: [MCP OAuth]
+      summary: Preview a pending MCP OAuth authorization request.
+      security:
+        - SupabaseUserJwt: []
+      parameters:
+        - name: request
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Safe consent-screen metadata.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/McpOAuthAuthorizationPreview'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /mcp/oauth/authorize/complete:
+    post:
+      tags: [MCP OAuth]
+      summary: Approve or cancel MCP OAuth authorization from traxy.
+      description: Approval requires workspace OWNER or ADMIN. Cancellation returns a clean access_denied callback without requiring workspace admin access.
+      security:
+        - SupabaseUserJwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/McpOAuthAuthorizeCompleteRequest'
+      responses:
+        '200':
+          description: Redirect URL for the MCP client callback.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/McpOAuthAuthorizeCompleteResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/InsufficientCapability'
   /mcp/oauth/token:
     post:
-      tags: ["MCP OAuth"]
+      tags: [MCP OAuth]
       summary: Exchange an authorization code or refresh token.
       description: Supports authorization_code with PKCE S256 and refresh_token with rotation.
       security: []
@@ -591,21 +629,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/McpOAuthTokenRequest"
+              $ref: '#/components/schemas/McpOAuthTokenRequest'
       responses:
-        "200":
+        '200':
           description: MCP OAuth token response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/McpOAuthTokenResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/McpUnauthorized"
+                $ref: '#/components/schemas/McpOAuthTokenResponse'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/McpUnauthorized'
   /mcp/oauth/revoke:
     post:
-      tags: ["MCP OAuth"]
+      tags: [MCP OAuth]
       summary: Revoke an MCP OAuth token.
       security: []
       requestBody:
@@ -613,9 +651,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/McpOAuthRevokeRequest"
+              $ref: '#/components/schemas/McpOAuthRevokeRequest'
       responses:
-        "200":
+        '200':
           description: Token revoke accepted.
           content:
             application/json:
@@ -624,15 +662,15 @@ paths:
                 additionalProperties: false
   /mcp:
     get:
-      tags: ["MCP"]
+      tags: [MCP]
       summary: MCP GET sessions are not enabled in V1.
       security:
         - McpOAuth: []
       responses:
-        "405":
-          $ref: "#/components/responses/MethodNotAllowed"
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
     post:
-      tags: ["MCP"]
+      tags: [MCP]
       summary: Streamable HTTP JSON-RPC endpoint for remote MCP clients.
       security:
         - McpOAuth: []
@@ -642,46 +680,46 @@ paths:
           required: true
           schema:
             type: string
-            example: "application/json, text/event-stream"
+            example: 'application/json, text/event-stream'
         - name: MCP-Protocol-Version
           in: header
           required: true
           schema:
             type: string
-            example: "2025-06-18"
+            example: '2025-06-18'
         - name: Origin
           in: header
           schema:
             type: string
-          description: Browser origins must match an allowed MCP origin.
+          description: Browser origins must match CUSTOMER_API_MCP_ALLOWED_ORIGINS.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/McpJsonRpcRequest"
+              $ref: '#/components/schemas/McpJsonRpcRequest'
       responses:
-        "200":
+        '200':
           description: JSON-RPC response.
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/McpJsonRpcResponse"
-        "400":
-          $ref: "#/components/responses/ValidationFailed"
-        "401":
-          $ref: "#/components/responses/McpUnauthorized"
-        "403":
-          $ref: "#/components/responses/McpOriginNotAllowed"
-        "429":
-          $ref: "#/components/responses/RateLimited"
+                $ref: '#/components/schemas/McpJsonRpcResponse'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/McpUnauthorized'
+        '403':
+          $ref: '#/components/responses/McpOriginNotAllowed'
+        '429':
+          $ref: '#/components/responses/RateLimited'
 components:
   securitySchemes:
     CustomerApiKey:
       type: http
       scheme: bearer
       bearerFormat: trxy_live_<public_id>_<secret>
-      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST, not MCP OAuth.
+      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST and Ordinal Audience Analytics, not MCP OAuth.
     McpOAuth:
       type: http
       scheme: bearer
@@ -728,12 +766,32 @@ components:
         type: string
         format: uuid
   responses:
+    DataObject:
+      description: Data envelope.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true
+    PageObject:
+      description: Paginated data envelope.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PageEnvelope'
+    AudienceObject:
+      description: Aggregate-only audience response.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true
     Unauthorized:
       description: Invalid, expired, or revoked API key.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     McpUnauthorized:
       description: Invalid, expired, revoked, or wrong-audience MCP OAuth token. Response includes a WWW-Authenticate challenge with resource metadata.
       headers:
@@ -744,121 +802,49 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     InsufficientCapability:
-      description: Key lacks the required scope or workspace capability.
+      description: Key or OAuth grant lacks the required scope.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     ValidationFailed:
       description: Request failed boundary validation.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     NotFound:
       description: Resource not found for the key workspace.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     UnresolvedUrn:
       description: Malformed or unsupported LinkedIn URN. Valid absent and cross-workspace post URNs use NotFound.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     McpOriginNotAllowed:
       description: Browser Origin is not allowed for MCP.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     MethodNotAllowed:
       description: HTTP method not supported for this endpoint.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
     RateLimited:
       description: Customer API rate limit exceeded. Production-like runtimes fail closed with this response if the distributed limiter is unavailable.
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/ErrorEnvelope"
-    LeadPageResponse:
-      description: Paginated lead response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/LeadPage"
-    IcpProfileResponse:
-      description: Active ICP configuration. `data` is null when the workspace has no active ICP.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/IcpProfileEnvelope"
-    WatchlistProfilePageResponse:
-      description: Paginated Watchlist profile response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/WatchlistProfilePage"
-    WatchlistSummaryResponse:
-      description: Watchlist profile counts.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/WatchlistSummary"
-    WatchlistRecommendationsResponse:
-      description: Watchlist recommendation response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/WatchlistRecommendations"
-    AnalyticsDashboardResponse:
-      description: Aggregate analytics dashboard response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/AnalyticsDashboard"
-    PostPageResponse:
-      description: Paginated post analytics response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/PostPage"
-    PostSummaryResponse:
-      description: Post analytics summary response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/PostSummaryEnvelope"
-    IntegrationsResponse:
-      description: Integration connection and delivery status.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/IntegrationsEnvelope"
-    LeadDeliveryStatesResponse:
-      description: Lead delivery state response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/LeadDeliveryStatesEnvelope"
-    SyncStatusResponse:
-      description: Engagement sync status response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/SyncStatusEnvelope"
-    QualificationRunResponse:
-      description: Latest qualification run response.
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/QualificationRunEnvelope"
+            $ref: '#/components/schemas/ErrorEnvelope'
   schemas:
     McpOAuthClientRegistrationRequest:
       type: object
@@ -874,7 +860,7 @@ components:
           items:
             type: string
             format: uri
-          example: ["http://localhost:1455/callback"]
+          example: ['http://localhost:1455/callback']
         grant_types:
           type: array
           items:
@@ -888,7 +874,7 @@ components:
         scope:
           oneOf:
             - type: string
-              example: "workspace:read leads:read"
+              example: 'workspace:read leads:read'
             - type: array
               items:
                 type: string
@@ -931,7 +917,70 @@ components:
           enum: [none]
         scope:
           type: string
-          example: "workspace:read leads:read analytics:read"
+          example: 'workspace:read leads:read analytics:read'
+    McpOAuthAuthorizationPreview:
+      type: object
+      required: [clientName, requestedScopes, expiresAt, resource]
+      properties:
+        clientName:
+          type: string
+          example: Codex
+        requestedScopes:
+          type: array
+          items:
+            type: string
+            enum:
+              - workspace:read
+              - leads:read
+              - analytics:read
+              - icp:read
+              - watchlist:read
+              - content:read
+              - integrations:read
+              - sync:read
+              - audience_analytics:read
+              - audience_analytics:request
+        expiresAt:
+          type: string
+          format: date-time
+        resource:
+          type: string
+          format: uri
+          example: https://api.traxy.ai/api/v1/mcp
+    McpOAuthAuthorizeCompleteRequest:
+      oneOf:
+        - type: object
+          additionalProperties: false
+          required: [requestToken, organizationId, approved]
+          properties:
+            requestToken:
+              type: string
+            organizationId:
+              type: string
+              format: uuid
+            approved:
+              type: boolean
+              enum: [true]
+        - type: object
+          additionalProperties: false
+          required: [requestToken, approved]
+          properties:
+            requestToken:
+              type: string
+            organizationId:
+              type: string
+              format: uuid
+            approved:
+              type: boolean
+              enum: [false]
+    McpOAuthAuthorizeCompleteResponse:
+      type: object
+      required: [redirectUrl]
+      properties:
+        redirectUrl:
+          type: string
+          format: uri
+          description: Client callback URL. Do not log or send to analytics because it may contain an authorization code.
     McpOAuthTokenRequest:
       oneOf:
         - type: object
@@ -994,7 +1043,7 @@ components:
           description: Opaque refresh token. Store securely; traxy stores only a hash.
         scope:
           type: string
-          example: "workspace:read leads:read analytics:read"
+          example: 'workspace:read leads:read analytics:read'
     McpOAuthRevokeRequest:
       type: object
       additionalProperties: false
@@ -1028,107 +1077,73 @@ components:
       type: object
       required:
         - organizationId
-        - commercialMode
-        - accessState
-        - visibleLeadCount
-        - hiddenLeadCount
-        - totalLeadCount
-        - permissions
+        - dataAccess
+        - usage
       properties:
         organizationId:
           type: string
           format: uuid
-          description: Workspace identifier returned by the API contract.
-        commercialMode:
-          type: string
-          example: conversion_v2
-        accessState:
-          type: string
-          example: PAID_ACTIVE
-        discoveryState:
-          type: string
-          nullable: true
-        visibleLeadCount:
-          type: integer
-          example: 42
-        hiddenLeadCount:
-          type: integer
-          example: 8
-        totalLeadCount:
-          type: integer
-          example: 50
-        visibleLeadTarget:
-          type: integer
-          nullable: true
-        teaserLeadTarget:
-          type: integer
-          nullable: true
-        permissions:
+        dataAccess:
           type: object
-          additionalProperties:
-            type: boolean
-          example:
-            canAccessHiddenLeads: true
-            canQualifyPostByUrl: true
-    PageInfo:
-      type: object
-      required: [limit, cursor, nextCursor]
-      properties:
-        limit:
-          type: integer
-          example: 50
-        cursor:
-          type: string
-          nullable: true
-          example: null
-        nextCursor:
-          type: string
-          nullable: true
-          example: eyJjcmVhdGVkQXQiOiIyMDI2LTA2LTEyVDE0OjE1OjAwLjAwMFoiLCJpZCI6IjAxOTBhYyJ9
-    ProfileSummary:
-      type: object
-      required: [displayName, headline, location, currentCompany]
-      properties:
-        displayName:
-          type: string
-          nullable: true
-          example: Morgan Lee
-        headline:
-          type: string
-          nullable: true
-          example: VP of Growth at ExampleCo
-        location:
-          type: string
-          nullable: true
-          example: New York, United States
-        currentCompany:
-          type: string
-          nullable: true
-          example: ExampleCo
-    LeadContact:
-      type: object
-      description: Returned only when the API key has `leads:contact_read`.
-      properties:
-        workEmail:
-          type: string
-          nullable: true
-          format: email
-        workEmailStatus:
-          type: string
-          nullable: true
-        personalEmail:
-          type: string
-          nullable: true
-          format: email
-        personalEmailStatus:
-          type: string
-          nullable: true
-        contactPhone:
-          type: string
-          nullable: true
-        contactPhoneStatus:
-          type: string
-          nullable: true
+          additionalProperties: false
+          required:
+            - workspace
+            - leads
+            - leadContactData
+            - analytics
+            - icp
+            - watchlist
+            - content
+            - integrations
+            - sync
+            - audienceAnalytics
+            - audienceDiscovery
+          properties:
+            workspace:
+              type: boolean
+            leads:
+              type: boolean
+            leadContactData:
+              type: boolean
+            analytics:
+              type: boolean
+            icp:
+              type: boolean
+            watchlist:
+              type: boolean
+            content:
+              type: boolean
+            integrations:
+              type: boolean
+            sync:
+              type: boolean
+            audienceAnalytics:
+              type: boolean
+            audienceDiscovery:
+              type: boolean
+        usage:
+          type: object
+          additionalProperties: false
+          required:
+            - apiVisibleLeadCount
+            - monitoredProfileCount
+            - monitoredProfileLimit
+          properties:
+            apiVisibleLeadCount:
+              type: integer
+            monitoredProfileCount:
+              type: integer
+            monitoredProfileLimit:
+              type: integer
+    LeadPage:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Lead'
     Lead:
       type: object
       required:
@@ -1142,939 +1157,40 @@ components:
         icpMatchPercent:
           type: integer
           nullable: true
-          minimum: 0
-          maximum: 100
-        icpMatchLabel:
-          type: string
-          nullable: true
         intentScore:
           type: number
-          format: float
-        intentLevel:
-          type: string
-          nullable: true
         leadTier:
           type: string
           nullable: true
-          enum: [UNQUALIFIED, NURTURE, QUALIFIED, PRIORITY]
-        trialBucket:
-          type: string
-          nullable: true
-        firstSeenAt:
-          type: string
-          format: date-time
-        lastEngagementAt:
-          type: string
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        primaryQualifiedPostId:
-          type: string
-          nullable: true
-          format: uuid
         profile:
-          $ref: "#/components/schemas/ProfileSummary"
+          type: object
+          additionalProperties: true
         contact:
           nullable: true
-          oneOf:
-            - $ref: "#/components/schemas/LeadContact"
-    LeadEnvelope:
-      type: object
-      required: [data]
-      properties:
-        data:
-          $ref: "#/components/schemas/Lead"
-    LeadPage:
-      type: object
-      required: [data, page]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/Lead"
-        page:
-          $ref: "#/components/schemas/PageInfo"
-    LeadCounts:
-      type: object
-      required: [counts]
-      properties:
-        counts:
-          type: array
-          items:
-            type: object
-            required: [tier, count]
-            properties:
-              tier:
-                type: string
-                nullable: true
-                enum: [UNQUALIFIED, NURTURE, QUALIFIED, PRIORITY]
-              count:
-                type: integer
-                example: 12
-    LeadStats:
-      type: object
-      required:
-        - total
-        - averageIcpMatchPercent
-        - priorityCount
-        - qualifiedCount
-      properties:
-        total:
-          type: integer
-          example: 50
-        averageIcpMatchPercent:
-          type: number
-          nullable: true
-          example: 82.4
-        priorityCount:
-          type: integer
-          example: 9
-        qualifiedCount:
-          type: integer
-          example: 18
-    LeadEngagementPage:
-      type: object
-      required: [data, page]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/LeadEngagement"
-        page:
-          $ref: "#/components/schemas/PageInfo"
-    LeadEngagement:
-      type: object
-      required:
-        - id
-        - engagementType
-        - engagedAt
-        - capturedAt
-        - post
-      properties:
-        id:
-          type: string
-          format: uuid
-        engagementType:
-          type: string
-          enum: [LIKE, COMMENT, REPOST]
-        reactionType:
-          type: string
-          nullable: true
-        engagedAt:
-          type: string
-          format: date-time
-        capturedAt:
-          type: string
-          format: date-time
-        post:
+          description: Null unless the key has leads:contact_read.
           type: object
-          required: [id, publishedAt, metrics]
-          properties:
-            id:
-              type: string
-              format: uuid
-            publishedAt:
-              type: string
-              nullable: true
-              format: date-time
-            metrics:
-              $ref: "#/components/schemas/PostMetrics"
-    IcpProfileEnvelope:
-      type: object
-      required: [data]
-      properties:
-        data:
-          nullable: true
-          allOf:
-            - $ref: "#/components/schemas/IcpProfile"
-    IcpProfile:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        status:
-          type: string
-          example: ACTIVE
-        source:
-          type: string
-          nullable: true
-        summary:
-          type: object
-          nullable: true
           additionalProperties: true
-        generatedAt:
-          type: string
-          nullable: true
-          format: date-time
-        activatedAt:
-          type: string
-          nullable: true
-          format: date-time
-        people:
-          $ref: "#/components/schemas/IcpPeopleCriteria"
-        company:
-          $ref: "#/components/schemas/IcpCompanyCriteria"
-    IcpPeopleCriteria:
-      type: object
-      properties:
-        jobTitles:
-          type: array
-          nullable: true
-          items:
-            type: string
-        departments:
-          type: array
-          nullable: true
-          items:
-            type: string
-        industries:
-          type: array
-          nullable: true
-          items:
-            type: string
-        locations:
-          type: array
-          nullable: true
-          items:
-            type: string
-        seniorities:
-          type: array
-          nullable: true
-          items:
-            type: string
-    IcpCompanyCriteria:
-      type: object
-      properties:
-        companySizes:
-          type: array
-          nullable: true
-          items:
-            type: string
-        revenueRanges:
-          type: array
-          nullable: true
-          items:
-            type: string
-        industries:
-          type: array
-          nullable: true
-          items:
-            type: string
-        locations:
-          type: array
-          nullable: true
-          items:
-            type: string
-        fundingStages:
-          type: array
-          nullable: true
-          items:
-            type: string
-        keywords:
-          type: array
-          nullable: true
-          items:
-            type: string
-        companyProductSummary:
-          type: string
-          nullable: true
-    WatchlistProfilePage:
+    PageEnvelope:
       type: object
       required: [data, page]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/WatchlistProfile"
-        page:
-          $ref: "#/components/schemas/PageInfo"
-    WatchlistProfile:
-      type: object
-      required: [id, profileType, source, createdAt, profile]
-      properties:
-        id:
-          type: string
-          format: uuid
-        profileType:
-          type: string
-        slotKind:
-          type: string
-          nullable: true
-        source:
-          type: string
-        selectedCompanyName:
-          type: string
-          nullable: true
-        qualificationPausedAt:
-          type: string
-          nullable: true
-          format: date-time
-        lastEngagementSyncAt:
-          type: string
-          nullable: true
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-        profile:
-          $ref: "#/components/schemas/ProfileSummary"
-    WatchlistSummary:
-      type: object
-      required: [counts]
-      properties:
-        counts:
-          type: array
-          items:
-            type: object
-            required: [profileType, count]
-            properties:
-              profileType:
-                type: string
-              count:
-                type: integer
-    WatchlistRecommendations:
-      type: object
-      required: [data, status]
       properties:
         data:
           type: array
           items:
             type: object
             additionalProperties: true
-        status:
-          type: string
-          enum: [not_available_in_v1]
-    AnalyticsDashboard:
-      type: object
-      required: [range, windowStart, leads, posts]
-      properties:
-        range:
-          type: string
-          enum: [7d, 30d, 90d]
-        windowStart:
-          type: string
-          format: date-time
-        leads:
-          $ref: "#/components/schemas/LeadStats"
-        posts:
-          $ref: "#/components/schemas/PostStats"
-    PostStats:
-      type: object
-      required: [qualifiedPostRunCount, postRunCount]
-      properties:
-        qualifiedPostRunCount:
-          type: integer
-        postRunCount:
-          type: integer
-    PostPage:
-      type: object
-      required: [data, page]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/Post"
         page:
-          $ref: "#/components/schemas/PageInfo"
-    Post:
-      type: object
-      required:
-        - id
-        - publishedAt
-        - effectivePublishedAt
-        - totalReactions
-        - totalComments
-        - totalReposts
-        - syncedReactionsCount
-        - syncedCommentsCount
-        - syncedRepostsCount
-        - lastFetchedAt
-      properties:
-        id:
-          type: string
-          format: uuid
-        publishedAt:
-          type: string
-          nullable: true
-          format: date-time
-        effectivePublishedAt:
-          type: string
-          format: date-time
-        totalReactions:
-          type: integer
-        totalComments:
-          type: integer
-        totalReposts:
-          type: integer
-        syncedReactionsCount:
-          type: integer
-        syncedCommentsCount:
-          type: integer
-        syncedRepostsCount:
-          type: integer
-        lastFetchedAt:
-          type: string
-          format: date-time
-    PostSummaryEnvelope:
-      type: object
-      required: [data]
-      properties:
-        data:
-          $ref: "#/components/schemas/PostSummary"
-    PostSummary:
-      type: object
-      required:
-        - id
-        - publishedAt
-        - effectivePublishedAt
-        - totalReactions
-        - totalComments
-        - totalReposts
-        - syncedReactionsCount
-        - syncedCommentsCount
-        - syncedRepostsCount
-        - qualifiedLeadCount
-      properties:
-        id:
-          type: string
-          format: uuid
-        publishedAt:
-          type: string
-          nullable: true
-          format: date-time
-        effectivePublishedAt:
-          type: string
-          format: date-time
-        totalReactions:
-          type: integer
-        totalComments:
-          type: integer
-        totalReposts:
-          type: integer
-        syncedReactionsCount:
-          type: integer
-        syncedCommentsCount:
-          type: integer
-        syncedRepostsCount:
-          type: integer
-        qualifiedLeadCount:
-          type: integer
-    PostMetrics:
-      type: object
-      required: [totalReactions, totalComments, totalReposts]
-      properties:
-        totalReactions:
-          type: integer
-        totalComments:
-          type: integer
-        totalReposts:
-          type: integer
-    IntegrationsEnvelope:
-      type: object
-      required: [data]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/Integration"
-    Integration:
-      type: object
-      required:
-        - id
-        - type
-        - enabled
-        - autoSend
-        - createdAt
-        - updatedAt
-      properties:
-        id:
-          type: string
-          format: uuid
-        type:
-          type: string
-          example: HUBSPOT
-        name:
-          type: string
-          nullable: true
-        enabled:
-          type: boolean
-        autoSend:
-          type: boolean
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        pausedAt:
-          type: string
-          nullable: true
-          format: date-time
-        pausedReason:
-          type: string
-          nullable: true
-        consecutiveFailures:
-          type: integer
-          nullable: true
-        lastSuccessAt:
-          type: string
-          nullable: true
-          format: date-time
-        lastFailureAt:
-          type: string
-          nullable: true
-          format: date-time
-    LeadDeliveryStatesEnvelope:
-      type: object
-      required: [data]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/LeadDeliveryState"
-    LeadDeliveryState:
-      type: object
-      required: [leadId, integrationType, integrationId, deliveredAt, updatedAt]
-      properties:
-        leadId:
-          type: string
-          format: uuid
-        integrationType:
-          type: string
-          example: HUBSPOT
-        integrationId:
-          type: string
-          format: uuid
-        deliveredAt:
-          type: string
-          nullable: true
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-    SyncStatusEnvelope:
-      type: object
-      required: [data]
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/SyncStatus"
-    SyncStatus:
-      type: object
-      required:
-        - monitoredProfileId
-        - lastEngagementSyncAt
-        - running
-        - runningStartedAt
-      properties:
-        monitoredProfileId:
-          type: string
-          format: uuid
-        lastEngagementSyncAt:
-          type: string
-          nullable: true
-          format: date-time
-        running:
-          type: boolean
-        runningStartedAt:
-          type: string
-          nullable: true
-          format: date-time
-    QualificationRunEnvelope:
-      type: object
-      required: [data]
-      properties:
-        data:
-          nullable: true
-          allOf:
-            - $ref: "#/components/schemas/QualificationRun"
-    QualificationRun:
-      type: object
-      required:
-        - id
-        - status
-        - startedAt
-        - completedAt
-        - engagementsProcessed
-        - leadsCreated
-        - leadsUpdated
-        - disqualifiedCount
-        - errorCount
-      properties:
-        id:
-          type: string
-          format: uuid
-        status:
-          type: string
-        startedAt:
-          type: string
-          format: date-time
-        completedAt:
-          type: string
-          nullable: true
-          format: date-time
-        engagementsProcessed:
-          type: integer
-        leadsCreated:
-          type: integer
-        leadsUpdated:
-          type: integer
-        disqualifiedCount:
-          type: integer
-        errorCount:
-          type: integer
-    AudienceDiscoveryStatus:
-      type: string
-      enum:
-        - ready
-        - not_requested
-        - queued
-        - pending
-        - already_available
-      example: ready
-    AudienceAnalyticsHealth:
-      type: object
-      required: [status, organizationId, capabilities]
-      properties:
-        status:
-          $ref: "#/components/schemas/AudienceDiscoveryStatus"
-        organizationId:
-          type: string
-          format: uuid
-        capabilities:
           type: object
-          required: [aggregateOnly, audienceDiscovery]
+          required: [limit, nextCursor]
           properties:
-            aggregateOnly:
-              type: boolean
-              description: Always true for Ordinal audience analytics.
-              example: true
-            audienceDiscovery:
-              type: boolean
-              description: Whether the workspace can request audience discovery for LinkedIn posts.
-              example: true
-      example:
-        status: ready
-        organizationId: 11111111-1111-4111-8111-111111111111
-        capabilities:
-          aggregateOnly: true
-          audienceDiscovery: true
-    AudienceAnalyticsBucket:
-      type: object
-      required: [segment, count]
-      properties:
-        segment:
-          type: string
-          description: Bucket label for the selected audience dimension.
-          example: SaaS
-        count:
-          type: integer
-          minimum: 0
-          example: 12
-    AudienceAnalyticsAggregate:
-      type: object
-      required: [totalLeads, dimensions]
-      properties:
-        totalLeads:
-          type: integer
-          minimum: 0
-          example: 42
-        dimensions:
-          type: object
-          required: [title, companySize, location, industry]
-          properties:
-            title:
-              type: array
-              items:
-                $ref: "#/components/schemas/AudienceAnalyticsBucket"
-              example:
-                - segment: Founder/CEO
-                  count: 12
-                - segment: VP/Director
-                  count: 8
-                - segment: Manager
-                  count: 5
-                - segment: Other
-                  count: 17
-            companySize:
-              type: array
-              items:
-                $ref: "#/components/schemas/AudienceAnalyticsBucket"
-              example:
-                - segment: 1-10
-                  count: 4
-                - segment: 11-50
-                  count: 9
-                - segment: 51-200
-                  count: 14
-                - segment: 201-1k
-                  count: 8
-                - segment: 1k+
-                  count: 2
-                - segment: Other
-                  count: 5
-            location:
-              type: array
-              items:
-                $ref: "#/components/schemas/AudienceAnalyticsBucket"
-              example:
-                - segment: North America
-                  count: 25
-                - segment: Europe
-                  count: 10
-                - segment: APAC
-                  count: 3
-                - segment: Other
-                  count: 4
-            industry:
-              type: array
-              items:
-                $ref: "#/components/schemas/AudienceAnalyticsBucket"
-              example:
-                - segment: SaaS
-                  count: 18
-                - segment: AI/ML
-                  count: 9
-                - segment: Fintech
-                  count: 5
-                - segment: E-commerce
-                  count: 4
-                - segment: Other
-                  count: 6
-    AudienceAnalyticsPostAudience:
-      type: object
-      required: [status, post, audience, latestRun]
-      properties:
-        status:
-          $ref: "#/components/schemas/AudienceDiscoveryStatus"
-        post:
-          type: object
-          required: [id, publishedAt, effectivePublishedAt, metrics]
-          properties:
-            id:
+            limit:
+              type: integer
+            cursor:
               type: string
-              format: uuid
-            publishedAt:
-              type: string
-              format: date-time
               nullable: true
-            effectivePublishedAt:
+            nextCursor:
               type: string
-              format: date-time
-            metrics:
-              type: object
-              required:
-                - totalReactions
-                - totalComments
-                - totalReposts
-                - syncedReactionsCount
-                - syncedCommentsCount
-                - syncedRepostsCount
-              properties:
-                totalReactions:
-                  type: integer
-                  minimum: 0
-                totalComments:
-                  type: integer
-                  minimum: 0
-                totalReposts:
-                  type: integer
-                  minimum: 0
-                syncedReactionsCount:
-                  type: integer
-                  minimum: 0
-                syncedCommentsCount:
-                  type: integer
-                  minimum: 0
-                syncedRepostsCount:
-                  type: integer
-                  minimum: 0
-        audience:
-          $ref: "#/components/schemas/AudienceAnalyticsAggregate"
-        latestRun:
-          type: object
-          nullable: true
-          description: Latest audience discovery run for the post, or `null` when no run exists.
-          allOf:
-            - $ref: "#/components/schemas/AudienceAnalyticsLatestRun"
-      example:
-        status: ready
-        post:
-          id: 22222222-2222-4222-8222-222222222222
-          publishedAt: "2026-05-01T00:00:00.000Z"
-          effectivePublishedAt: "2026-05-01T00:00:00.000Z"
-          metrics:
-            totalReactions: 50
-            totalComments: 12
-            totalReposts: 3
-            syncedReactionsCount: 50
-            syncedCommentsCount: 12
-            syncedRepostsCount: 3
-        audience:
-          totalLeads: 42
-          dimensions:
-            title:
-              - segment: Founder/CEO
-                count: 12
-              - segment: VP/Director
-                count: 8
-              - segment: Manager
-                count: 5
-              - segment: Other
-                count: 17
-            companySize:
-              - segment: 1-10
-                count: 4
-              - segment: 11-50
-                count: 9
-              - segment: 51-200
-                count: 14
-              - segment: 201-1k
-                count: 8
-              - segment: 1k+
-                count: 2
-              - segment: Other
-                count: 5
-            location:
-              - segment: North America
-                count: 25
-              - segment: Europe
-                count: 10
-              - segment: APAC
-                count: 3
-              - segment: Other
-                count: 4
-            industry:
-              - segment: SaaS
-                count: 18
-              - segment: AI/ML
-                count: 9
-              - segment: Fintech
-                count: 5
-              - segment: E-commerce
-                count: 4
-              - segment: Other
-                count: 6
-        latestRun:
-          id: 33333333-3333-4333-8333-333333333333
-          status: COMPLETED
-          createdAt: "2026-05-01T00:00:00.000Z"
-          updatedAt: "2026-05-01T00:05:00.000Z"
-    AudienceAnalyticsLatestRun:
-      type: object
-      required: [id, status, createdAt, updatedAt]
-      properties:
-        id:
-          type: string
-          format: uuid
-        status:
-          type: string
-          example: COMPLETED
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-    AudienceAnalyticsFindAudienceRequest:
-      type: object
-      additionalProperties: false
-      required: [postUrn]
-      properties:
-        postUrn:
-          type: string
-          minLength: 8
-          maxLength: 256
-          description: LinkedIn activity or share URN for the post.
-          example: urn:li:activity:7340000000000000000
-        idempotencyKey:
-          type: string
-          minLength: 8
-          maxLength: 120
-          description: Optional caller-provided idempotency key for retry-safe requests.
-          example: ordinal-post-7340000000000000000
-      example:
-        postUrn: urn:li:activity:7340000000000000000
-        idempotencyKey: ordinal-post-7340000000000000000
-    AudienceAnalyticsFindAudienceResponse:
-      type: object
-      required: [status, postId]
-      properties:
-        status:
-          $ref: "#/components/schemas/AudienceDiscoveryStatus"
-        postId:
-          type: string
-          format: uuid
-        runId:
-          type: string
-          format: uuid
-          description: Present when traxy queues or reuses a qualification run.
-        audience:
-          $ref: "#/components/schemas/AudienceAnalyticsAggregate"
-          description: Present when aggregate audience data is already available.
-      example:
-        status: queued
-        postId: 22222222-2222-4222-8222-222222222222
-        runId: 33333333-3333-4333-8333-333333333333
-    AudienceAnalyticsOrganizationAudience:
-      type: object
-      required:
-        - status
-        - range
-        - dimension
-        - windowStart
-        - windowEnd
-        - totalLeads
-        - segments
-      properties:
-        status:
-          $ref: "#/components/schemas/AudienceDiscoveryStatus"
-        range:
-          type: string
-          enum: [7d, 30d, 90d]
-          example: 30d
-        dimension:
-          type: string
-          enum: [title, companySize, location, industry]
-          example: industry
-        windowStart:
-          type: string
-          format: date-time
-        windowEnd:
-          type: string
-          format: date-time
-        totalLeads:
-          type: integer
-          minimum: 0
-          example: 42
-        segments:
-          type: array
-          items:
-            $ref: "#/components/schemas/AudienceAnalyticsBucket"
-      example:
-        status: ready
-        range: 30d
-        dimension: industry
-        windowStart: "2026-05-17T00:00:00.000Z"
-        windowEnd: "2026-06-16T00:00:00.000Z"
-        totalLeads: 42
-        segments:
-          - segment: SaaS
-            count: 18
-          - segment: AI/ML
-            count: 9
-          - segment: Fintech
-            count: 5
-          - segment: E-commerce
-            count: 4
-          - segment: Other
-            count: 6
+              nullable: true
     McpJsonRpcRequest:
       type: object
       required: [jsonrpc, method]
@@ -2082,7 +1198,7 @@ components:
       properties:
         jsonrpc:
           type: string
-          enum: ["2.0"]
+          enum: ['2.0']
         id:
           nullable: true
           oneOf:
@@ -2100,7 +1216,7 @@ components:
       properties:
         jsonrpc:
           type: string
-          enum: ["2.0"]
+          enum: ['2.0']
         id:
           nullable: true
           oneOf:

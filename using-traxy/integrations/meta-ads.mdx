@@ -1,11 +1,11 @@
 ---
 title: "Meta Ads"
-description: "Export qualified leads from traxy, upload them as a Meta customer list, and build a lookalike audience."
+description: "Export high-ICP-match leads from traxy as a value-based audience CSV for Meta Ads."
 ---
 
-Use the Meta Ads integration when you want to turn reviewed qualified leads into a Meta Custom Audience and a lookalike audience.
+Use the Meta Ads integration when you want to turn qualified `traxy` leads into a value-based audience CSV for Meta.
 
-The best seed list is specific, clean, and close to your ICP. Include both email and phone number when traxy has them so Meta has more identifiers to match.
+`traxy` includes leads at or above the ICP match threshold shown in the app. The row value is the ICP match, so stronger-fit leads carry more value in the export.
 
 ## Before you start
 
@@ -14,27 +14,49 @@ Make sure you have:
 - access to the right Meta business account and ad account
 - permission to create audiences in Meta Ads
 - the Meta Ads integration available in **Integrations**
-- a reviewed list of qualified leads you are allowed to use for advertising
-- email and phone enrichment where possible
+- visible qualified leads in `traxy`
+- permission to use the exported contacts for advertising
 
 <Info>
   Customer lists contain personal identifiers. Only export and upload contacts you have permission to use for advertising, and follow Meta's customer list terms.
 </Info>
 
-## Export the audience from traxy
+## Start an export in traxy
 
 1. Open **Integrations**.
 2. Open **Meta Ads**.
-3. Start an audience export.
-4. Choose the qualified lead segment you want to use.
-5. Prefer leads with both **Email** and **Phone** values.
-6. If needed, enrich selected leads before you export.
-7. Keep **Email** and **Phone** selected as identifiers.
-8. Export the list.
+3. Review **Audience size**.
+4. Click **New export**.
+5. Review the **Audience snapshot**.
+6. Choose the export accuracy.
+7. Review the credit estimate if `traxy` shows one.
+8. Click **Start export**.
 
-Upload the exact file traxy gives you. Do not rename columns, split email and phone into separate files, or reformat phone numbers unless your team has a required cleanup step.
+Running exports appear in **Export history** while `traxy` prepares the CSV.
 
-If you need a tighter seed list, start from **Leads** and filter by ICP match, intent, monitored profile, source, or owner before you export.
+## Choose export accuracy
+
+Choose the accuracy option that fits your goal:
+
+- **Maximum match data** enriches email and phone before generating the audience.
+- **Medium, email only** enriches missing emails and keeps phone fields as-is.
+- **Medium, phone only** enriches missing phone numbers and keeps email fields as-is.
+- **Fastest, no enrichment** uses the contact data already saved on each lead.
+
+More contact fields can help Meta match more people, but enrichment may use credits. Trial exports use the trial behavior shown in the app.
+
+## Download the CSV
+
+Export history can show:
+
+- **Queued**
+- **Processing**
+- **Ready**
+- **Failed**
+
+When an export is **Ready**, click the download action to save the CSV.
+
+Upload the exact file `traxy` gives you. Do not rename columns, split email and phone into separate files, or reformat phone numbers unless your team has a required cleanup step.
 
 ## Upload the list in Meta Ads
 
@@ -43,11 +65,11 @@ If you need a tighter seed list, start from **Leads** and filter by ICP match, i
 3. Click **Create audience**.
 4. Choose **Custom audience**.
 5. Choose **Customer list**.
-6. Upload the file you exported from traxy.
+6. Upload the file you exported from `traxy`.
 7. Accept Meta's customer list terms if Meta prompts you.
-8. Map the traxy columns to Meta identifiers.
+8. Map the `traxy` columns to Meta identifiers.
 9. Use **Email** for email addresses and **Phone** for phone numbers.
-10. Name the audience clearly, such as `traxy - qualified leads - Q2 2026`.
+10. Name the audience clearly, such as `traxy - qualified leads - Q3 2026`.
 11. Finish the import and wait for Meta to process the audience.
 
 Meta may take time to match the uploaded identifiers. Wait until the audience is ready before you use it in an ad set or as a lookalike source.
@@ -56,32 +78,14 @@ Meta may take time to match the uploaded identifiers. Wait until the audience is
 
 1. In **Audiences**, click **Create audience**.
 2. Choose **Lookalike audience**.
-3. Select the traxy customer list Custom Audience as the source.
+3. Select the `traxy` customer list Custom Audience as the source.
 4. Choose the countries or regions you want to reach.
 5. Start with a close lookalike size when available.
 6. Create broader lookalike variants separately when you want to test scale.
 7. Name the audience clearly, such as `traxy - qualified leads - 1% lookalike - US`.
 8. Create the audience and wait for Meta to finish building it.
 
-If Meta cannot create the lookalike, the source audience may be too small or still processing. Export a larger qualified list, broaden your traxy filters, or wait for the customer list audience to finish matching.
-
-## Track both audiences
-
-Track the original customer list and the lookalike audience separately so you can see which one is helping.
-
-Use the customer list when you want to:
-
-- retarget known qualified leads
-- exclude known leads from prospecting campaigns
-- compare known-lead performance against new-audience performance
-
-Use the lookalike audience when you want to:
-
-- find new people similar to your qualified leads
-- test prospecting from a seed list that already reflects your ICP
-- scale beyond the people traxy already found
-
-For cleaner reporting, put the customer list and lookalike audience in separate ad sets when you test them. Use clear campaign names, ad set names, and URL tracking so you can compare spend, cost per lead, conversion rate, and downstream lead quality.
+If Meta cannot create the lookalike, the source audience may be too small or still processing. Export a larger qualified list, broaden your `traxy` ICP, or wait for the customer list audience to finish matching.
 
 ## Refresh the audience
 
@@ -89,4 +93,4 @@ Refresh the Meta customer list when your qualified lead pool changes meaningfull
 
 You can update the same customer list when you want Meta campaigns and related lookalikes to keep using the latest source. Create a new dated audience when you want to compare one export against another.
 
-If match quality looks weak, check whether the export includes both email and phone, whether phone numbers include country context, and whether you uploaded the unedited traxy file.
+If match quality looks weak, check whether the export includes enough email and phone data, whether phone numbers include country context, and whether you uploaded the unedited `traxy` file.

@@ -3,7 +3,7 @@ title: "API reference"
 description: "Use the traxy public API to read workspace data."
 ---
 
-Use the traxy public API when you need programmatic access to workspace data outside the app.
+Use the `traxy` public API when you need programmatic access to workspace data outside the app.
 
 The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, sync status, and aggregate audience analytics for approved integrations.
 
@@ -29,11 +29,11 @@ Send your API key as a bearer token.
 Authorization: Bearer trxy_live_...
 ```
 
-Do not send a workspace ID in public API requests. traxy resolves the workspace from the API key.
+Do not send a workspace ID in public API requests. `traxy` resolves the workspace from the API key.
 
 ## Scopes
 
-Each general API key has scopes. Choose the smallest scope set your integration needs.
+Each API key has scopes. Choose the smallest scope set your integration needs.
 
 - `workspace:read` for workspace access status
 - `leads:read` for visible lead data
@@ -44,10 +44,12 @@ Each general API key has scopes. Choose the smallest scope set your integration 
 - `content:read` for visible content feed posts
 - `integrations:read` for integration connection and delivery status
 - `sync:read` for sync and qualification run status
+- `audience_analytics:read` for aggregate audience analytics
+- `audience_analytics:request` for audience discovery requests
 
 Contact data is sensitive. Only select `leads:contact_read` when your workflow needs it.
 
-Ordinal uses a dedicated key generated from the [Ordinal integration](/using-traxy/integrations/ordinal). Add that key to the traxy integration in Ordinal.
+Ordinal uses a dedicated key generated from the [Ordinal integration](/using-traxy/integrations/ordinal). Add that key to the `traxy` integration in Ordinal.
 
 ## Pagination
 
@@ -70,7 +72,7 @@ The generated API reference includes:
 - **MCP OAuth** endpoints used by remote MCP clients
 - **MCP** Streamable HTTP endpoint for JSON-RPC tool calls
 
-Use Customer REST endpoints for server-to-server integrations. Use MCP setup from the [API & MCP](/using-traxy/integrations/api-mcp) page when an AI client should connect to traxy tools.
+Use Customer REST endpoints for server-to-server integrations. Use MCP setup from the [API & MCP](/using-traxy/integrations/api-mcp) page when an AI client should connect to `traxy` tools.
 
 ## Errors
 
@@ -99,6 +101,6 @@ MCP errors use JSON-RPC error envelopes.
 
 ## Privacy
 
-Default public responses do not include secrets, authorization headers, raw request bodies, raw scraped data, or hidden trial leads.
+Default public responses do not include secrets, authorization headers, raw request bodies, raw scraped data, hidden trial leads, or contact fields.
 
 Contact fields require `leads:contact_read`.
