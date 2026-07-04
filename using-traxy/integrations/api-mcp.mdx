@@ -44,7 +44,7 @@ Use the key as a bearer token for traxy public API calls.
 Authorization: Bearer trxy_live_...
 ```
 
-Open the [API reference](/using-traxy/integrations/api-mcp/reference) when you are ready to review endpoints, parameters, scopes, and response shapes.
+Open the [API reference](https://claude.ai/using-traxy/integrations/api-mcp/reference) when you are ready to review endpoints, parameters, scopes, and response shapes.
 
 ## Choose API scopes
 
@@ -59,7 +59,8 @@ Use the smallest scope set that supports your workflow.
 - **Integrations** lets the integration read safe integration connection and delivery status.
 - **Sync status** lets the integration read qualification and engagement sync status.
 - **Workspace access** lets the integration read workspace access status.
-For Ordinal setup, use the dedicated [Ordinal integration](/using-traxy/integrations/ordinal) instead of creating a general API key here.
+
+For Ordinal setup, use the dedicated [Ordinal integration](https://claude.ai/using-traxy/integrations/ordinal) instead of creating a general API key here.
 
 ## Revoke an API key
 
@@ -73,6 +74,16 @@ Revoke a key when it is no longer used, when a vendor changes, or when you think
 6. Confirm the change.
 
 Existing clients using that key lose access immediately.
+
+## Keep access safe
+
+Treat API keys like passwords.
+
+- Store API keys in a secret manager.
+- Do not paste API keys into MCP config.
+- Revoke keys you no longer use.
+- Create separate keys for production and testing.
+- Review **Last used** before removing old keys.
 
 ## Connect MCP
 
@@ -116,14 +127,67 @@ opencode mcp auth traxy
 
 Use the command or config shown in traxy as the source of truth. It includes the correct MCP endpoint for your environment.
 
-## Keep access safe
+## MCP tools
 
-Treat API keys like passwords.
+Your MCP client lists the available tools after you connect. Tools return only data your workspace permissions allow.
 
-- Store API keys in a secret manager.
-- Do not paste API keys into MCP config.
-- Revoke keys you no longer use.
-- Create separate keys for production and testing.
-- Review **Last used** before removing old keys.
+- **traxy\_get\_mcp\_connection\_status** returns connection and auth diagnostics, scope values, and protocol versions.
+- **traxy\_list\_leads** returns visible leads.
+- **traxy\_list\_lead\_signals** returns lead engagement signals with safe lead, watched-profile, and post context.
+- **traxy\_list\_account\_reports** returns account-level lead summaries.
+- **traxy\_get\_account\_report** returns one account report with top visible leads.
+- **traxy\_get\_watchlist\_profile** returns one watched profile with company, profile, and sync fields.
+- **traxy\_get\_agent\_status** returns agent state, the active or latest run, preview, and eligibility.
+- **traxy\_get\_agent\_budget\_status** returns configured and enabled state, daily usage, credit usage, projection, and preview allowance.
+- **traxy\_list\_agent\_runs** returns recent agent run summaries.
+- **traxy\_list\_agent\_candidates** returns safe visible candidates plus aggregate locked counts.
+
+## Filter MCP tool results
+
+Use filters to narrow tool results before the client processes them.
+
+### traxy\_list\_leads
+
+- `origin=agent|watchlist|all` filters leads by where they were found.
+
+The older `foundBy` parameter is deprecated but still accepted. `foundBy=agent` and `foundBy=onboarding_preview` normalize to `origin=agent`. Use `origin` in new integrations.
+
+### traxy\_list\_lead\_signals
+
+- `origin=agent|watchlist|all`
+- `engagementType`
+- `engagementTypes`
+- `companyNames`
+- `profileType`
+- `relationshipLabel`
+- `minIcpMatchPercent`
+- `maxIcpMatchPercent`
+
+Existing selectors still work: `leadId`, `monitoredProfileId`, `monitoredProfileIds`, `postId`, `dateFrom`, `dateTo`, `disposition`, and `query`.
+
+### traxy\_list\_account\_reports and traxy\_get\_account\_report
+
+- `accountId`
+- `companyName`
+- `minIcpMatchPercent`
+- `maxIcpMatchPercent`
+- `dateFrom`
+- `dateTo`
+- `query`
+- `sort=latestSignalAt|leadCount|averageIcpMatchPercent|accountName`
+- `sortDirection=asc|desc`
+
+### traxy\_get\_watchlist\_profile
+
+- `monitoredProfileId`
+
+### traxy\_list\_agent\_candidates
+
+- `runId`
+- `source=latest_agent_run|latest_preview`
+- `limit`
+- `offset`
+
+## Remove MCP access
 
 MCP grants use OAuth instead of API keys. If you no longer want a client to access traxy, remove the MCP connection in that client and reconnect only when needed.
