@@ -11,7 +11,7 @@ API & MCP access is included with paid workspaces. If your workspace needs an up
 
 ## Before you connect API & MCP
 
-Owners and admins can create or revoke API keys. Members can still use the MCP setup instructions when workspace access allows it.
+Owners and admins can create or revoke API keys and approve a new MCP OAuth connection. Members can view the setup instructions, but an owner or admin must approve a new connection for the workspace.
 
 Make sure you know:
 
@@ -20,7 +20,7 @@ Make sure you know:
 - where your team stores production secrets
 - which MCP client you want to connect
 
-Default API keys include standard read access for leads, analytics, ICP, Watchlist, content, integrations, sync status, and workspace access.
+Default API keys include standard read access for leads, analytics, ICP, Watchlist, content, integrations, sync status, and workspace access. Agent status, runs, and candidates are currently exposed through MCP tools rather than Customer REST endpoints.
 
 Contact data is sensitive. Select it only when the integration needs it.
 
@@ -60,6 +60,7 @@ Use the smallest scope set that supports your workflow.
 - `content:read` lets the integration read visible content feed posts.
 - `integrations:read` lets the integration read safe integration connection and delivery status.
 - `sync:read` lets the integration read qualification and engagement sync status.
+- `agent:read` enables Agent status, budget, run, and candidate tools on MCP OAuth grants. The scope can appear in shared API-key scope metadata, but there are currently no Customer REST Agent endpoints.
 - `workspace:read` lets the integration read workspace access status.
 - `audience_analytics:read` lets an approved integration read aggregate audience analytics.
 - `audience_analytics:request` lets an approved integration request audience discovery.
@@ -109,6 +110,8 @@ Use **Copy setup prompt** when you want `traxy` to generate client-specific setu
 
 After OAuth approval, the client can list and run `traxy` tools based on your workspace permissions.
 
+Current MCP clients negotiate protocol version `2025-11-25`. `traxy` also accepts `2025-06-18` for compatibility with older clients. Most clients manage this header automatically.
+
 ## Client setup notes
 
 For Claude Code, copy the command from `traxy`. It uses this shape:
@@ -123,9 +126,11 @@ For Codex, copy the command from `traxy`. It uses this shape:
 
 ```sh
 codex mcp add traxy --url "https://api.traxy.ai/api/v1/mcp"
+codex mcp login traxy
+codex mcp list
 ```
 
-Then open Codex and verify the connection with `/mcp`. If Codex reports that the server is unauthenticated, start the OAuth login from Codex and approve `traxy`.
+The add command registers the remote server. The login command starts OAuth in your browser. After approval, `codex mcp list` confirms the server is registered and authenticated.
 
 For Cursor, copy the config into `.cursor/mcp.json`, restart Cursor, and approve `traxy` when Cursor starts OAuth.
 
@@ -150,30 +155,100 @@ Use the command or config shown in `traxy` as the source of truth. It includes t
 
 ## MCP tools
 
-Your MCP client lists the available tools after you connect. Tools return only data your workspace permissions allow.
+Your MCP client lists the tools available to the active OAuth grant after you connect. The complete scope-gated catalog contains 31 tools, but `tools/list` returns only tools allowed by the granted scopes and workspace access. Audience tools require optional `audience_analytics:*` scopes and are not part of the default OAuth grant.
 
-- **traxy\_get\_mcp\_connection\_status** returns connection and auth diagnostics, scope values, and protocol versions.
-- **traxy\_list\_leads** returns visible leads.
-- **traxy\_list\_lead\_signals** returns lead engagement signals with safe lead, watched-profile, and post context.
-- **traxy\_list\_account\_reports** returns account-level lead summaries.
-- **traxy\_get\_account\_report** returns one account report with top visible leads.
-- **traxy\_get\_watchlist\_profile** returns one watched profile with company, profile, and sync fields.
-- **traxy\_get\_agent\_status** returns agent state, the active or latest run, preview, and eligibility.
-- **traxy\_get\_agent\_budget\_status** returns configured and enabled state, daily usage, credit usage, projection, and preview allowance.
-- **traxy\_list\_agent\_runs** returns recent Agent run summaries.
-- **traxy\_list\_agent\_candidates** returns safe visible candidates plus aggregate locked counts.
+### Connection and workspace
+
+- `traxy_get_mcp_connection_status` returns safe connection, authentication, scope, and protocol diagnostics.
+- `traxy_get_workspace_access` returns visible workspace capabilities and usage.
+
+### Leads
+
+- `traxy_list_leads` returns visible leads.
+- `traxy_get_lead_counts` returns visible lead counts.
+- `traxy_get_lead_stats` returns aggregate lead statistics.
+- `traxy_get_lead` returns one visible lead.
+- `traxy_list_lead_engagements` returns safe engagement summaries for one lead.
+- `traxy_list_lead_signals` returns lead signals with safe lead, watched-profile, and post context.
+
+### Accounts
+
+- `traxy_list_account_reports` returns account-level lead summaries.
+- `traxy_get_account_report` returns one account report with top visible leads.
+
+### Agent
+
+- `traxy_get_agent_status` returns Agent state, the active or latest run, preview, and eligibility.
+- `traxy_get_agent_budget_status` returns configured and enabled state, daily usage, credit usage, projection, and preview allowance.
+- `traxy_list_agent_runs` returns recent Agent run summaries.
+- `traxy_list_agent_candidates` returns safe visible candidates plus aggregate locked counts.
+
+### ICP and Watchlist
+
+- `traxy_get_active_icp` returns the active ICP summary.
+- `traxy_list_watchlist_profiles` returns monitored profiles visible to the workspace.
+- `traxy_get_watchlist_profile` returns one watched profile with company, profile, and sync fields.
+- `traxy_get_watchlist_summary` returns watched-profile counts by type.
+- `traxy_list_watchlist_recommendations` returns Watchlist recommendation availability.
+
+### Content and analytics
+
+- `traxy_get_analytics_dashboard` returns aggregate lead and post analytics.
+- `traxy_list_analytics_posts` returns analytics, safe author metadata, and available post text for monitored posts.
+- `traxy_get_post_summary` returns metrics, safe author metadata, and available post text for one monitored post.
+- `traxy_list_post_qualified_leads` returns visible qualified leads for one post.
+- `traxy_list_content_feed` returns visible content-feed posts with safe author and relationship context.
+
+### Integrations and sync
+
+- `traxy_get_integrations_status` returns safe integration connection status.
+- `traxy_get_lead_delivery_state` returns lead delivery state for visible leads.
+- `traxy_get_sync_status` returns the latest engagement sync status.
+- `traxy_get_latest_qualification_run` returns the latest qualification run summary.
+
+### Audience analytics
+
+- `traxy_get_audience_post` returns aggregate-only audience analytics for one post.
+- `traxy_get_organization_audience` returns aggregate audience patterns for the workspace.
+- `traxy_find_audience` requests audience discovery. This tool can start work and use qualification credits when discovery is needed.
+
+## Paginate list results
+
+Cursor-based list tools accept `limit` and `cursor`. The default limit is `50`, and the maximum is `100`.
+
+1. Call the tool without a cursor.
+2. Read `page.nextCursor` from the result.
+3. Pass that value unchanged as `cursor` in the next call.
+4. Keep the same filters, sort, and sort direction on every page.
+5. Stop when `page.nextCursor` is `null`.
+
+Treat cursors as opaque values. Do not decode, edit, or construct them yourself.
+
+Sorted Watchlist, analytics-post, content-feed, and account-report cursors are tied to the selected sort and direction. `traxy` rejects malformed, legacy, or sort-incompatible cursors with `validation_failed` instead of silently restarting at the first page.
+
+`traxy_list_agent_candidates` is the exception. It uses `limit` and `offset` instead of cursor pagination.
 
 ## Filter MCP tool results
 
 Use filters to narrow tool results before the client processes them.
 
-### traxy\_list\_leads
+### traxy_list_leads
 
-- `origin=agent|watchlist|all` filters leads by where they were found.
+- `tier` or `leadTiers`
+- `disposition` or `dispositions`; omitted dispositions default to active leads
+- `minIcpMatchPercent` and `maxIcpMatchPercent`
+- `monitoredProfileId` or `monitoredProfileIds`
+- `postId`
+- `engagementType` or `engagementTypes`
+- `ownerId` or `ownerIds`
+- `dateFrom` and `dateTo`
+- `query`
+- `companyNames`
+- `origin=agent|watchlist|all`
 
 The older `foundBy` parameter is deprecated but still accepted. `foundBy=agent` and `foundBy=onboarding_preview` normalize to `origin=agent`. Use `origin` in new integrations.
 
-### traxy\_list\_lead\_signals
+### traxy_list_lead_signals
 
 - `origin=agent|watchlist|all`
 - `engagementType`
@@ -186,9 +261,26 @@ The older `foundBy` parameter is deprecated but still accepted. `foundBy=agent` 
 
 Existing selectors still work: `leadId`, `monitoredProfileId`, `monitoredProfileIds`, `postId`, `dateFrom`, `dateTo`, `disposition`, and `query`.
 
-### traxy\_list\_account\_reports and traxy\_get\_account\_report
+### traxy_list_analytics_posts and traxy_list_content_feed
 
-- `accountId`
+Use these filters to retrieve posts from a specific watched profile or segment:
+
+- `monitoredProfileId` for one watched profile
+- `monitoredProfileIds` for up to 50 watched profiles
+- `profileType=TEAMMATE|COMPETITOR|INVESTOR|CUSTOM`
+- `relationshipLabel`
+- `source=MEMBER_ONBOARDING|MANUAL_WATCHLIST`
+- `dateFrom` and `dateTo`
+- `minIcpMatchPercent`
+- `status=any|qualified|unqualified`
+- `query`
+- `sort=date|engagement|reactions|comments|reposts`
+- `sortDirection=asc|desc`
+
+To retrieve more than 100 posts for one influencer, keep the same `monitoredProfileId`, `sort`, and `sortDirection` while passing each `page.nextCursor` to the next call.
+
+### traxy_list_account_reports
+
 - `companyName`
 - `minIcpMatchPercent`
 - `maxIcpMatchPercent`
@@ -198,16 +290,59 @@ Existing selectors still work: `leadId`, `monitoredProfileId`, `monitoredProfile
 - `sort=latestSignalAt|leadCount|averageIcpMatchPercent|accountName`
 - `sortDirection=asc|desc`
 
-### traxy\_get\_watchlist\_profile
+### traxy_get_account_report
+
+- `accountId`
+- `minIcpMatchPercent`
+- `maxIcpMatchPercent`
+- `dateFrom`
+- `dateTo`
+
+### traxy_get_watchlist_profile
 
 - `monitoredProfileId`
 
-### traxy\_list\_agent\_candidates
+`traxy_list_watchlist_profiles` also accepts `profileType`, `profileTypes`, `source`, `slotKind`, `relationshipLabel`, `state`, `query`, `sort`, and `sortDirection`.
+
+### traxy_list_agent_candidates
 
 - `runId`
 - `source=latest_agent_run|latest_preview`
 - `limit`
 - `offset`
+
+Agent results are deliberately business-facing. They do not expose internal orchestration and runtime metadata, raw candidates, scoring payloads, emails, phones, LinkedIn profile URLs, or raw evidence text. Locked candidates are aggregate counts, not hidden lead placeholders.
+
+## Handle MCP errors
+
+Invalid top-level HTTP request bodies return the standard HTTP `400` error envelope. Missing or invalid OAuth credentials return the HTTP `401` error envelope with a `WWW-Authenticate` challenge.
+
+Valid JSON-RPC requests with malformed `tools/call` envelopes, unknown methods or tools, or missing scopes return JSON-RPC errors.
+
+When a known, authorized tool receives invalid arguments, the call returns a normal JSON-RPC result with `isError: true`. Read `result.structuredContent.error.issues`, correct the named argument paths, and retry. Validation summaries never echo the raw invalid values.
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "call-1",
+  "result": {
+    "structuredContent": {
+      "error": {
+        "code": "validation_failed",
+        "message": "Tool traxy_get_lead failed input validation. Fix the arguments and retry.",
+        "issues": [
+          {
+            "path": "arguments.leadId",
+            "code": "invalid_string",
+            "message": "Invalid uuid"
+          }
+        ]
+      }
+    },
+    "isError": true
+  }
+}
+```
 
 ## Keep access safe
 

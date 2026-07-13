@@ -1,7 +1,3 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> For Mintlify product knowledge (components, configuration, writing standards),
-> install the Mintlify skill: `npx skills add https://mintlify.com/docs`
-
 # Documentation project instructions
 
 ## About this project
@@ -42,5 +38,7 @@
 - Do not document roadmap items or future features
 - Do not document backend architecture or implementation details
 - Do not expose private, internal, or customer-specific information
-- Scope this repo to user docs only for now; do not publish API docs
+- Publish only the current public API and MCP contract. Keep private runtime fields, internal admin behavior, test helpers, and roadmap functionality out of the docs.
+- Treat `trace-backend/docs/api/customer-api-mcp-v1.md`, its OpenAPI artifact, and the public Customer API/MCP source as the contract of record. Keep the Mintlify guide, reference, OpenAPI copy, and `docs.json` navigation aligned with that contract.
+- When the public API or MCP changes, verify route navigation, scope lists, tool counts, protocol versions, pagination behavior, and error-envelope behavior before publishing.
 - You may read from `/Users/benbuaron/Documents/GitHub/trace-frontend` to understand the product, but do not make changes there
