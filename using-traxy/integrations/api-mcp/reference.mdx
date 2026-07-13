@@ -5,7 +5,7 @@ description: "Use the traxy public API to read workspace data."
 
 Use the `traxy` public API when you need programmatic access to workspace data outside the app.
 
-The public API is read-first. It exposes workspace access, visible leads, engagement summaries, ICP, Watchlist, analytics, content, integration delivery state, sync status, and aggregate audience analytics for approved integrations.
+The public API is read-first. It exposes workspace access, visible leads and signals, account reports, ICP, Watchlist profile detail, analytics, content, integration delivery state, sync status, and aggregate audience analytics for approved integrations.
 
 <Info>
   Create general API keys from [API & MCP](/using-traxy/integrations/api-mcp). For Ordinal, generate the dedicated key from [Ordinal](/using-traxy/integrations/ordinal). MCP clients use OAuth instead of API keys.
@@ -44,6 +44,7 @@ Each API key has scopes. Choose the smallest scope set your integration needs.
 - `content:read` for visible content feed posts
 - `integrations:read` for integration connection and delivery status
 - `sync:read` for sync and qualification run status
+- `agent:read` for Agent MCP tools. The scope can appear in shared API-key metadata, but no Customer REST Agent endpoints are currently exposed.
 - `audience_analytics:read` for aggregate audience analytics
 - `audience_analytics:request` for audience discovery requests
 
@@ -53,15 +54,46 @@ Ordinal uses a dedicated key generated from the [Ordinal integration](/using-tra
 
 ## Pagination
 
-List endpoints use cursor pagination.
+List endpoints use cursor pagination. The default page size is `50`.
 
 <ParamField query="limit" type="integer">
   Number of items to return. The maximum value is `100`.
 </ParamField>
 
 <ParamField query="cursor" type="string">
-  Cursor returned by the previous response.
+  Opaque cursor returned by the previous response. The maximum length is 256 characters.
 </ParamField>
+
+Each list response includes `page.nextCursor`.
+
+1. Send the first request without `cursor`.
+2. Pass `page.nextCursor` unchanged as `cursor` in the next request.
+3. Keep the same filters, sort, and sort direction for every page.
+4. Stop when `page.nextCursor` is `null`.
+
+Do not decode, edit, or construct cursor values.
+
+Sorted Watchlist, analytics-post, content-feed, and account-report cursors are tied to the selected sort and direction. Malformed, legacy, or sort-incompatible cursors return `400 validation_failed`; they do not restart pagination.
+
+### Filter leads and signals
+
+`GET /customer/leads` supports tier, disposition, ICP range, monitored profile, post, engagement type, owner, date range, text search, company, and safe origin filters. Omitted dispositions default to active leads. Explicit `CLIENT` or `BAD_LEAD` filters are still supported.
+
+`GET /customer/leads/signals` supports the same business filters where applicable and adds safe watched-profile and post context for the engagement that generated each signal.
+
+### Read Watchlist profiles and account reports
+
+`GET /customer/watchlist/profiles` supports profile type, source, slot kind, relationship label, state, search, and sorting. `GET /customer/watchlist/profiles/{monitoredProfileId}` returns safe relationship and follower snapshot metadata for one profile.
+
+`GET /customer/account-reports` groups visible active leads by company and supports company, ICP range, date, search, and aggregate sorting. `GET /customer/account-reports/{accountId}` applies ICP range and date filters to the detail summary and top leads.
+
+### Filter post analytics
+
+`GET /customer/analytics/posts` supports filters for one or more monitored profiles, profile type, relationship label, source, date range, minimum ICP match, qualification status, and text search. Post analytics and content-feed results include safe author metadata and available `contentText` without exposing personal profile URLs.
+
+Use `monitoredProfileId` to retrieve posts for one watched profile. Use `sort=date|engagement|reactions|comments|reposts` and `sortDirection=asc|desc` to control the order.
+
+When you request the next page, keep `monitoredProfileId`, `sort`, `sortDirection`, and every other filter unchanged.
 
 ## Endpoint groups
 
@@ -73,6 +105,8 @@ The generated API reference includes:
 - **MCP** Streamable HTTP endpoint for JSON-RPC tool calls
 
 Use Customer REST endpoints for server-to-server integrations. Use MCP setup from the [API & MCP](/using-traxy/integrations/api-mcp) page when an AI client should connect to `traxy` tools.
+
+The current MCP surface exposes 31 tools. Current clients use protocol version `2025-11-25`; `2025-06-18` remains supported for compatibility.
 
 ## Errors
 
@@ -97,10 +131,14 @@ Common status codes include:
 - `404` when a resource is not visible to the key workspace
 - `429` for rate limits
 
-MCP errors use JSON-RPC error envelopes.
+Invalid top-level MCP request bodies use the standard HTTP `400` error envelope. Missing or invalid OAuth credentials use the HTTP `401` error envelope and `WWW-Authenticate` challenge.
+
+Valid JSON-RPC requests with malformed `tools/call` envelopes, unknown methods/tools, or missing scopes use JSON-RPC error envelopes.
+
+A known, authorized tool with invalid arguments returns a normal JSON-RPC result with `isError: true`. Use the safe paths in `result.structuredContent.error.issues` to correct the arguments and retry. Raw invalid values are not echoed.
 
 ## Privacy
 
-Default public responses do not include secrets, authorization headers, raw request bodies, raw scraped data, hidden trial leads, or contact fields.
+Default public responses do not include secrets, authorization headers, raw request bodies, raw scraped data, hidden trial leads, raw Agent candidates, internal orchestration/runtime metadata, or contact fields.
 
 Contact fields require `leads:contact_read`.
