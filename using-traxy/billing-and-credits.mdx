@@ -1,6 +1,6 @@
 ---
 title: "Billing & Plans"
-description: "Manage subscription details, usage history, payment methods, invoices, and plan changes in traxy."
+description: "Manage subscription details, cancellations, usage history, payment methods, invoices, and plan changes in traxy."
 ---
 
 Use Billing & Plans when you need to manage your workspace subscription and billing records.
@@ -29,6 +29,7 @@ Everyone in the workspace can follow usage from the product, but owners and admi
 Billing & Plans includes the public areas most teams need:
 
 - **Overview** for your current plan and billing period
+- **Manage plan →** on the current plan card for Stripe billing tasks, including cancellation
 - **Usage History** for the billing-window credit ledger
 - **Payment Methods** for saved cards
 - **Billing History** for invoices
@@ -73,6 +74,21 @@ Use the billing area when you need to:
 - change subscription level
 - switch between monthly and annual billing when available
 - open the billing portal for additional billing tasks
+
+## Cancel a paid subscription
+
+Workspace owners and admins can cancel a Stripe-managed subscription from Billing & Plans:
+
+1. Open **Settings** > **Billing**.
+2. Stay on the **Overview** tab.
+3. Find the current plan card and select **Manage plan →**. `traxy` opens the Stripe Billing Portal.
+4. In Stripe, open the subscription and select the cancellation option shown for your plan.
+5. Review the effective date and billing details, then confirm the cancellation in Stripe.
+6. Return to `traxy`. The billing status may take a moment to sync.
+
+<Note>
+  **Manage Subscription** is the `traxy` tab for changing plans or billing intervals. Subscription cancellation is handled through **Manage plan →** on **Overview**. If that button or a cancellation option is unavailable, ask a workspace owner or admin to check the subscription, or contact support.
+</Note>
 
 ## Manage profile seats
 
