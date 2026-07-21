@@ -28,7 +28,6 @@
         "pages": [
           "using-traxy/dashboard",
           "using-traxy/agent",
-          "using-traxy/lead-searcher",
           "using-traxy/icp-configuration",
           "using-traxy/leads",
           "using-traxy/content-calendar",
