@@ -1,0 +1,67 @@
+---
+title: "Claude"
+description: "Connect Claude web, desktop, or Claude Code to traxy with OAuth."
+---
+
+Connect Claude when you want to ask for traxy leads, analytics, Watchlist activity, and other workspace context in natural language.
+
+Claude connects through OAuth. You do not need to create or paste an API key.
+
+Any active workspace member can approve a request that contains only standard read scopes. The default OAuth request also includes saved contact and LinkedIn profile access, so an owner or admin normally approves the first connection. An owner or admin is also required for any scope that can change workspace data or spend credits.
+
+The integration requires Pro, Scale, or Enterprise access.
+
+## Connect the Claude app or browser
+
+1. Open **Integrations** > **Claude** in traxy.
+2. Keep **App & browser** selected.
+3. Open Claude's connector settings from the link in traxy.
+4. Add a custom connector named traxy.
+5. Paste this MCP URL:
+
+   ```text
+   https://api.traxy.ai/api/v1/mcp
+   ```
+
+6. Add the connector.
+7. Click **Connect** in Claude.
+8. Review and approve the traxy authorization request.
+
+An owner of a Claude Team or Enterprise account may need to allow an organization-level custom connector.
+
+## Connect Claude Code
+
+1. Open **Integrations** > **Claude**.
+2. Select **Terminal**.
+3. Copy and run:
+
+   ```sh
+   claude mcp add --transport http --scope user traxy "https://api.traxy.ai/api/v1/mcp"
+   ```
+
+4. Open Claude Code and run `/mcp`.
+5. Select the traxy server and choose **Authenticate**.
+6. Approve access in your browser.
+7. Return to Claude Code and confirm that traxy is connected.
+
+The user scope makes the connection available to your local Claude Code user.
+
+## Start with a simple request
+
+Try:
+
+```text
+Get my newest active traxy lead. Summarize why the person qualified and show the latest engagement.
+```
+
+Claude can only use tools included in your approved OAuth grant. If you ask it to spend credits or change workspace data, it should explain the action and ask for confirmation first.
+
+<Tip>
+  The **Terminal** tab can copy a setup prompt and traxy skill along with the command. Use them when you want Claude Code to follow traxy's confirmation and data-handling guidance.
+</Tip>
+
+## Disconnect
+
+Remove or disconnect traxy from Claude's connector settings. Reconnect when you want to authorize access again.
+
+See [API reference and MCP tools](/using-traxy/integrations/api-mcp/reference#mcp-tools) for the current tool groups and permissions.

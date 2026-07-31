@@ -1,65 +1,60 @@
 ---
 title: "Dashboard"
-description: "Use the dashboard to monitor lead volume, fit quality, and post performance in traxy."
+description: "Review lead volume, audience patterns, and recent performance in traxy."
 ---
 
-The dashboard gives you a high-level view of how `traxy` is turning LinkedIn engagement into qualified leads.
+Use Dashboard for a current summary of your workspace.
 
-<Frame>
-  ![Dashboardv4](/images/Dashboardv4.png)
-</Frame>
+## Review lead volume
 
-## What you can monitor
+The top cards show:
 
-The main metric cards show:
+- **Total leads**, including the number added in the last 30 days
+- **Avg leads per day**
+- **Minimum ICP match**
 
-- **Total Leads**
-- **Perfect Leads**
-- **Total Followers**
-- **Qualified Engagement Rate**
+The minimum ICP match controls which people qualify for your workspace. Raise it for stricter matching. Lower it to include more borderline matches.
 
-If your role allows it, you can also adjust the ICP match threshold from the dashboard. Lower thresholds increase volume. Higher thresholds increase strictness.
+Owners and admins can change the threshold. The control applies the new value when you commit the change.
 
-## Adjust the ICP threshold
+## Read the leads-per-day chart
 
-The dashboard uses your current workspace ICP threshold when it counts leads.
+Use the chart to compare lead discovery and credit use over time.
 
-- Raise the threshold when you want stricter matching.
-- Lower the threshold when you want to review more borderline matches.
-- Watch both **Total Leads** and **Perfect Leads** after you change it.
+Choose **7 Days**, **1 Month**, **3 Month**, or **All time**. The chart can separate:
 
-## Review perfect leads
+- Agent leads
+- Watchlist leads
+- other lead sources
+- credits used
+- average ICP match
 
-The perfect leads section highlights the highest-fit people in your workspace. Use it to:
+Use the same time range when you compare changes after an ICP or threshold update.
 
-- spot the strongest matches first
-- open a lead directly in **Leads**
-- check whether your fit threshold is too strict
+## Review live leads
 
-If `traxy` finds leads but none match your perfect lead criteria, review your ICP or lower the threshold.
+**Live leads** shows the newest qualified leads first. Open a person to review the lead detail, or click **View all** to continue in **Leads**.
 
-## Review top posts
+## Understand your audience
 
-The top posts area helps you understand which LinkedIn posts are producing the best lead outcomes.
+The audience section groups qualified leads by:
 
-The tracked-post insight is a rolling 7-day view. It highlights qualified leads from tracked posts in the last 7 days and, when enough history exists, compares recent engagement with the previous 7 days.
+- title
+- company size
+- location
+- industry
 
-Use it to:
+Use the strongest segment to see which part of your ICP is producing the most lead activity. These charts are aggregate summaries, not a replacement for the lead list.
 
-- compare posts by qualified lead count
-- open post-level analytics
-- jump from a post into the related leads
+## Review top performance
 
-The dashboard can keep updating while your first qualification pass is still running, so it is a good place to monitor onboarding progress without leaving the app.
+The top-performing section compares recent results over the last seven days.
 
-If no posts qualify yet, the dashboard may still show engagement trends that help you decide what to publish next.
+- **Watchlist** highlights profiles producing useful lead signal.
+- **Posts** highlights posts producing qualified leads.
 
-## Use dashboard signals to troubleshoot
+Open the related profile or post when you want the underlying details.
 
-Common dashboard states include:
-
-- no posts analyzed yet
-- low engagement
-- engagement without qualified leads
-
-If the dashboard looks empty or lead counts stay low, continue with [no qualified leads yet](/troubleshooting/no-qualified-leads-yet).
+<Tip>
+  If lead volume is low, compare the Agent state, Watchlist activity, ICP, and minimum match before changing several settings at once.
+</Tip>

@@ -1,0 +1,69 @@
+---
+title: "Codex"
+description: "Connect ChatGPT, the Codex app, IDE extension, or CLI to traxy with OAuth."
+---
+
+Connect Codex when you want ChatGPT or Codex to work with traxy leads, analytics, Watchlist activity, and other workspace context.
+
+Codex connects through OAuth. You do not need to create or paste an API key.
+
+Any active workspace member can approve a request that contains only standard read scopes. The default OAuth request also includes saved contact and LinkedIn profile access, so an owner or admin normally approves the first connection. An owner or admin is also required for any scope that can change workspace data or spend credits.
+
+The integration requires Pro, Scale, or Enterprise access.
+
+## Connect the Codex app or browser
+
+1. Open **Integrations** > **Codex** in traxy.
+2. Keep **App & browser** selected.
+3. Open Codex settings.
+4. Select **Plugins** > **MCPs**.
+5. Add a server with the **Streamable HTTP** type.
+6. Name the server traxy.
+7. Paste this MCP URL:
+
+   ```text
+   https://api.traxy.ai/api/v1/mcp
+   ```
+
+8. Save the server.
+9. Review and approve the traxy authorization request.
+
+The connection is then available to supported ChatGPT and Codex surfaces that share your setup.
+
+## Connect the Codex CLI
+
+If the `codex` command is not installed, run:
+
+```sh
+npm install --global @openai/codex
+```
+
+Then:
+
+```sh
+codex mcp add traxy --url "https://api.traxy.ai/api/v1/mcp"
+codex mcp login traxy
+codex mcp list
+```
+
+The first command registers traxy. The second opens OAuth in your browser. The final command confirms the connection.
+
+## Start with a simple request
+
+Try:
+
+```text
+Get my newest active traxy lead. Summarize why the person qualified and show the latest engagement.
+```
+
+Codex can only use tools included in your approved OAuth grant. If you ask it to spend credits or change workspace data, it should explain the action and ask for confirmation first.
+
+<Tip>
+  The **Terminal** tab can copy a setup prompt and traxy skill along with the commands. Use them when you want Codex to follow traxy's confirmation and data-handling guidance.
+</Tip>
+
+## Disconnect
+
+Remove the traxy MCP server from Codex. Reconnect and complete OAuth again when you want to restore access.
+
+See [API reference and MCP tools](/using-traxy/integrations/api-mcp/reference#mcp-tools) for the current tool groups and permissions.

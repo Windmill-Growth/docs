@@ -5,28 +5,28 @@ description: "Answers to common public user questions about traxy."
 
 <AccordionGroup>
   <Accordion title="What is a qualified lead?">
-    A qualified lead is a person whose LinkedIn engagement matches your workspace ICP strongly enough to count as a fit in `traxy`.
+    A qualified lead is a person whose LinkedIn engagement or Agent profile matches your workspace ICP at or above the minimum match.
   </Accordion>
   <Accordion title="What is a qualified engagement?">
     Qualified engagement is engagement from people who meet your workspace fit criteria closely enough to matter for lead qualification.
   </Accordion>
   <Accordion title="Why did credits change even when I did not get new qualified leads?">
-    Qualification credits can be used when `traxy` evaluates a unique person during the current billing period, even if that person does not end up as a qualified lead.
+    Most qualification credits settle when traxy saves a successful result. Agent is different: after the trial allowance, it uses credits for each unique profile scanned in the billing window, even when the person does not become a qualified lead.
   </Accordion>
   <Accordion title="Where do I update my ICP?">
     You can update your ICP during onboarding or later in **ICP Configuration** from the main app navigation.
   </Accordion>
   <Accordion title="Why is Slack connected but not sending alerts?">
-    Slack notifications stay disabled until you select a channel and enable the trigger. If you chose a private channel and it does not appear in the channel list, invite the `traxy` Slack app to that channel with `/invite @traxy` before you test it.
+    Slack notifications stay disabled until you select a channel and enable the trigger. If you chose a private channel and it does not appear in the channel list, invite the traxy Slack app to that channel with `/invite @traxy` before you test it.
   </Accordion>
   <Accordion title="What does the Webhook integration do?">
-    Webhook sends qualified lead events from `traxy` to your endpoint so another system can receive and act on them.
+    Webhook sends qualified lead events from traxy to your endpoint so another system can receive and act on them.
   </Accordion>
   <Accordion title="How are Zapier, Clay, and n8n different from Webhook?">
     Zapier, Clay, and n8n use the same signed webhook delivery model, but each has its own integration page, connection state, and manual send option.
   </Accordion>
   <Accordion title="What does the Ordinal integration do?">
-    Ordinal uses a dedicated traxy integration key. Generate the key from **Integrations** > **Ordinal** in `traxy`, then paste it into the **traxy** integration inside Ordinal.
+    Ordinal uses a dedicated traxy integration key. Generate the key from **Integrations** > **Ordinal**, then paste it into the traxy integration inside Ordinal.
   </Accordion>
   <Accordion title="Why is auto-send not delivering older leads?">
     Auto-send only applies to leads that qualify after it is enabled. Use manual delivery from the leads table if you want to send existing leads.
@@ -35,7 +35,7 @@ description: "Answers to common public user questions about traxy."
     HubSpot can skip records when your settings say to ignore contacts without an email, contacts without a company, or missing CRM records. Review the HubSpot integration settings before retrying.
   </Accordion>
   <Accordion title="Do MCP clients need API keys?">
-    No. MCP uses OAuth from the **API & MCP** integration page. API keys are for public REST API calls.
+    No. Connect from **Integrations** > **Claude** or **Integrations** > **Codex**. Both use OAuth. API keys are for direct REST access.
   </Accordion>
   <Accordion title="Why am I not getting repeat engagement alerts?">
     Repeat engagement alerts only send when the integration trigger, auto-send, and **Send repeat engagement from qualified leads** are all enabled.
@@ -46,8 +46,8 @@ description: "Answers to common public user questions about traxy."
   <Accordion title="Why can I not qualify a post?">
     The post may have no engagement, qualification data may still be refreshing, or your workspace may not have enough credits for the action.
   </Accordion>
-  <Accordion title="Why are some leads locked or missing after I hit my credit limit?">
-    If qualification is paused because your workspace ran out of available credits, some newly found leads can stay locked until credits reset, your plan changes, or an admin enables Pay-as-you-go.
+  <Accordion title="What happens when the workspace runs out of credits?">
+    New credit-funded qualification, enrichment, and Agent work cannot start. Existing saved leads remain available. Work can resume after the monthly credit window resets or the plan changes.
   </Accordion>
   <Accordion title="Can I work across multiple workspaces?">
     Yes. If you belong to more than one workspace, use the workspace switcher in the sidebar to move between them.
@@ -56,9 +56,9 @@ description: "Answers to common public user questions about traxy."
     Open **Settings** > **Blocklist** to add or remove company domains that should not appear as future leads.
   </Accordion>
   <Accordion title="Where do I manage billing and usage settings?">
-    Open **Settings** > **Billing** for subscription tasks, usage history, payment methods, invoices, plan changes, and the credit controls available to your workspace.
+    Open **Settings** > **Billing** for subscription tasks, credit usage, payment methods, invoices, and plan changes.
   </Accordion>
   <Accordion title="How do I cancel my subscription?">
-    A workspace owner or admin should open **Settings** > **Billing** > **Overview**, then select **Manage plan →** on the current plan card. Complete the cancellation in the Stripe Billing Portal and review the effective date before confirming. See [Cancel a paid subscription](/using-traxy/billing-and-credits#cancel-a-paid-subscription) for the full steps.
+    A workspace owner or admin should open **Settings** > **Billing** > **Manage Subscription**, select **Cancel Plan**, and complete the cancellation in Stripe. Review the effective date before confirming. See [Cancel a subscription](/using-traxy/billing-and-credits#cancel-a-subscription).
   </Accordion>
 </AccordionGroup>

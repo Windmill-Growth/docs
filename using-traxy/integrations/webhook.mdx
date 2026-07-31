@@ -41,7 +41,7 @@ Use the payload samples in the app as the source of truth for your receiver. The
 
 Webhook requests are signed.
 
-Each request includes `X-traxy-Signature` and `X-traxy-Timestamp` so your receiver can verify that it came from traxy.
+Each request includes `X-Traxy-Signature` and `X-Traxy-Timestamp` so your receiver can verify that it came from traxy.
 
 ## Choose manual or automatic delivery
 
@@ -58,7 +58,7 @@ Repeat engagement delivery only works when the integration trigger and auto-send
 
 Use a test payload before you go live.
 
-Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
+The test is one immediate request. Lead deliveries can retry temporary failures. Automatic delivery may pause if repeated failures are not fixed.
 
 If you send manually from **Leads**, you may see states such as queued, delivered, or failed. Fix the underlying Webhook issue first, then retry from the lead.
 

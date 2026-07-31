@@ -1,136 +1,91 @@
 ---
 title: "Watchlist"
-description: "Monitor teammate, competitor, investor, and custom profiles to turn their engagement into qualified leads in traxy."
+description: "Monitor LinkedIn profiles and qualify people who engage with their posts."
 ---
 
-Use Watchlist when you want `traxy` to monitor important LinkedIn profiles and surface leads from their engagement.
+Use Watchlist to monitor people whose LinkedIn audiences matter to your workspace.
 
-<Frame>
-  ![Watchlistv4](/images/Watchlistv4.png)
-</Frame>
+## Choose a relationship
 
-## What Watchlist tracks
+Watchlist supports:
 
-Watchlist can monitor four profile types:
-
-- **Teammates**
-- **Competitors**
-- **Investors**
+- **Competitor**
+- **Teammate**
+- **Influencer**
+- **Investor**
 - **Custom**
 
-Use **Custom** when the built-in relationship types do not fit. `traxy` stores custom relationship labels so you can reuse them later.
+Use **Custom** for a reusable relationship such as client, partner, or customer.
 
-When a watched profile posts and gets engagement, `traxy` can turn that activity into qualified leads for your workspace.
-
-<Info>
-  High-engagement profiles can create more signal and may increase credit usage.
-</Info>
-
-## Use recommended profiles
-
-Watchlist can show **Recommended for you** profiles based on your workspace context.
-
-Use recommendations when you want to find likely signal sources without researching every profile yourself.
-
-Recommended profile cards can show:
-
-- why the profile may be useful
-- estimated lead potential
-- activity and audience signals
-- whether you have an available profile seat
-
-If you do not want to track a recommendation, dismiss it. If your workspace has no available profile seats, an admin may need to add a seat or change plans before the profile can be monitored.
-
-## Add one profile
+## Add profiles
 
 1. Open **Watchlist**.
 2. Click **Add LinkedIn Profile**.
-3. Paste the LinkedIn profile URL and click **Verify**.
-4. Review the detected company and relationship.
-5. If more than one company is detected, choose the company you want to use.
-6. If needed, switch the relationship type to **Teammate**, **Competitor**, **Investor**, or **Custom**.
-7. If `traxy` finds a latest post, decide whether to leave **Qualify latest post** turned on.
-8. Save the profile.
+3. Paste a LinkedIn profile URL.
+4. Verify the profile.
+5. Confirm the relationship and company.
+6. Add the profile.
 
-If the profile belongs to your company, `traxy` usually tracks it as a teammate. Other profiles can be tracked as competitors, investors, or custom relationships.
+Use batch mode to paste up to 20 LinkedIn profile URLs at once. The 20-URL bound applies to one verification request, not to the size of your Watchlist.
 
-If **Qualify latest post** stays on, `traxy` queues that profile's latest post in the background so leads can start appearing right away.
+Watchlist profiles are unlimited. A separate limit can apply when a relationship requires a competitor company.
 
-## Add profiles in batches
+## Understand the first discovery
 
-Use **Add in batches** when you want to add more than one profile at once.
+A profile's first successful addition creates one free initial discovery.
 
-You can paste multiple LinkedIn profile URLs, review each preview row, choose the relationship for each profile, and then add the verified set together.
+traxy freezes up to five recent posts and examines them until it finds five new qualified leads or reaches the end of the frozen window.
 
-If the verified set is larger than your available profile seats, add the profiles that fit now. Owners and admins on supported plans can add more profile seats from the flow.
+The discovery belongs to the profile:
 
-## Review tabs and summary cards
+- adding a duplicate does not create another discovery
+- restoring a removed profile does not create another discovery
+- pausing or removing the profile suspends it
+- resuming or restoring the profile continues the same discovery
 
-Use the tabs to switch between **All Profiles**, **Competitors**, **Teammates**, **Investors**, and **Custom**.
+Qualification after this one-time discovery uses the workspace credit balance.
 
-Watchlist shows four summary cards:
+## Understand ongoing qualification
+
+After you add a profile, traxy manages the five most recent posts published from that point forward.
+
+This is a sliding trailing-five window. It is always on for active Watchlist monitoring and cannot be disabled or reduced. Already examined posts process only new, deduplicated engagement.
+
+Use manual **Find Leads** in [Post Signals](/using-traxy/content-calendar) for a post outside the managed window.
+
+## Use tabs and summary cards
+
+Use **All Profiles**, **Competitors**, **Teammates**, **Influencers**, **Investors**, and **Custom** to narrow the table.
+
+The summary cards show:
 
 - **All Profiles Monitored**
 - **Qualified Posts**
 - **Engagements**
 - **Qualified leads**
 
-Use them to see whether the profiles you are tracking are creating useful signal for your workspace.
+Use **Monitor** and **Archived** to move between active and removed profiles.
 
-Use **Monitor** and **Archived** to switch between profiles you are actively tracking and profiles you have removed from active monitoring.
+## Review the table
 
-## Work in the table
+Each row can show the profile, relationship, company, qualified posts, qualified leads, **CPL**, state, and date added.
 
-Each row shows the profile, type, company, **Qualified Posts**, **Qualified Leads**, **CPL**, status, and date added.
+**CPL** means credits used per qualified lead in the current billing window.
 
-`CPL` means credits per lead for the current billing cycle.
+Open a profile to review:
 
-Use the table to:
+- audience ICP match
+- qualified posts and leads
+- credits used in the current billing window
+- recent top leads
+- tracked posts and qualification status
 
-- open the profile details sheet
-- open the LinkedIn profile
-- pause monitoring
-- resume monitoring
-- restore an archived profile
-- remove manually added profiles
-- compare which watched profiles are producing the most useful results
+You can pause, resume, remove, or restore a manually added profile. Some teammate profiles can be created from workspace member context and may have different controls.
 
-## Open the profile details sheet
+## Use recommendations
 
-Click a profile row to open its details sheet.
+**Recommended for you** can suggest profiles based on your workspace context. Review the relationship and expected signal before you add one. Dismiss a recommendation when it is not useful.
 
-Use it when you want profile-level analytics without leaving Watchlist.
-
-The sheet includes:
-
-- an **Overview** tab with audience ICP match, qualified posts, qualified leads, credits used this billing cycle, and best post performance
-- a **Top Leads** tab with recent qualified leads for that profile
-- a **Posts** tab with the profile's tracked posts and qualification status
-
-You can change the time range to **Last 7 days**, **Last 30 days**, **Last 90 days**, or **All time** while you review leads and posts.
-
-## Understand teammate rows
-
-Some teammate profiles can appear automatically from your workspace members.
-
-Those rows help `traxy` monitor your own team activity without requiring manual setup for every member.
-
-Teammate rows can show your workspace company name instead of a generic teammate label when `traxy` can match the profile to your company.
-
-## Know how post qualification works
-
-For manual profiles, `traxy` can optionally qualify the latest detected post when you add the profile.
-
-After that, Watchlist qualifies new posts automatically.
-
-Older posts outside that flow still need to be qualified manually unless the profile is a teammate.
-
-Use [Post Signals](/using-traxy/content-calendar) when you want to find leads from older posts one post at a time.
-
-## Plan and access notes
-
-Admins can manage Watchlist for the workspace.
-
-Your plan controls how many profiles your workspace can monitor. The app shows available profile seats and prompts an admin when a plan change or profile-seat add-on is needed.
-
-If your current plan does not include Watchlist, `traxy` prompts you to upgrade before you add more profiles.
+<Info>
+  High-engagement profiles can produce more qualification work. Review **Post Signals** and credit usage when you want to understand the cost of a profile's activity.
+</Info>

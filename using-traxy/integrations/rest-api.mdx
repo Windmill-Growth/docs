@@ -1,0 +1,107 @@
+---
+title: "API"
+description: "Create an API key and retrieve traxy workspace data with a simple REST request."
+---
+
+Use the API when your application needs direct, server-to-server access to traxy data.
+
+The fastest path is to create a key and request one lead. You do not need to send a workspace ID. The API identifies your workspace from the key.
+
+API access requires Pro, Scale, or Enterprise access.
+
+## Get your first lead
+
+<Steps>
+  <Step title="Create an API key">
+    Open **Integrations** > **API**, then click **Create key**.
+
+    Give the key a clear name. The default read scopes are enough to retrieve leads. Add contact access only if your application needs saved email, phone, or LinkedIn profile data.
+  </Step>
+  <Step title="Copy the key">
+    Copy the full key from the confirmation dialog and store it in a secret manager.
+
+    traxy shows the full key once. If you lose it, revoke it and create another key.
+  </Step>
+  <Step title="Request one lead">
+    Replace the example key, then run:
+
+    ```sh
+    curl --request GET \
+      --url "https://api.traxy.ai/api/v1/customer/leads?limit=1" \
+      --header "Authorization: Bearer trxy_live_..."
+    ```
+
+    The lead is in `data[0]`. If `data` is empty, your workspace does not currently have an active lead that matches the request.
+  </Step>
+</Steps>
+
+<Card title="Open the API reference" icon="book-open" href="/using-traxy/integrations/api-mcp/reference">
+  Browse every REST endpoint, parameter, scope, and response schema.
+</Card>
+
+## Create and revoke keys
+
+Owners and admins can create and revoke API keys. Members can view setup guidance but cannot manage keys.
+
+To create a key:
+
+1. Open **Integrations**.
+2. Open **API**.
+3. Click **Create key**.
+4. Enter a name.
+5. Select the scopes your application needs.
+6. Click **Create key**.
+7. Copy and store the key.
+
+To revoke a key:
+
+1. Open **Integrations** > **API**.
+2. Find the key.
+3. Click **Revoke**.
+4. Confirm the change.
+
+Revocation stops new requests that use that key.
+
+## Choose scopes
+
+New API keys start with read access for leads, analytics, ICP, Watchlist, content, integrations, sync status, Agent status, and workspace access.
+
+Add only the permissions your application needs:
+
+- `leads:contact_read` returns saved contact fields and LinkedIn profile URLs.
+- `leads:contact_enrich` allows contact enrichment and requires lead read and contact read access.
+- `leads:manage` allows lead quick actions.
+- `watchlist:manage` allows Watchlist changes.
+- `integrations:manage` allows webhook destination changes.
+- `integrations:deliver` allows delivery of a selected lead to a webhook-style destination.
+- `agent:run` allows a confirmed Agent run.
+- `audience_analytics:read` returns aggregate audience analytics.
+- `audience_analytics:request` starts audience discovery.
+- `post_qualification:manage` starts confirmed qualification for a LinkedIn post.
+
+Some permissions can spend credits or change workspace data. The app calls them out during key creation. Only owners and admins can grant sensitive access.
+
+<Info>
+  API keys are for REST requests. Claude and Codex connect through OAuth and do not need an API key.
+</Info>
+
+## Paginate results
+
+List endpoints return `page.nextCursor`.
+
+1. Send the first request without `cursor`.
+2. Copy `page.nextCursor` into the next request.
+3. Keep the same filters and sorting.
+4. Stop when `page.nextCursor` is `null`.
+
+Treat the cursor as an opaque value. Do not edit or decode it.
+
+## Keep keys safe
+
+- Store keys in a secret manager.
+- Do not put keys in browser code, source control, documentation, or chat.
+- Use separate keys for separate applications.
+- Review each key's **Last used** date.
+- Revoke a key when an application no longer needs access.
+
+If you want to ask for leads in natural language, connect [Claude](/using-traxy/integrations/claude) or [Codex](/using-traxy/integrations/codex).

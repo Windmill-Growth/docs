@@ -1,105 +1,82 @@
 ---
 title: "Post Signals"
-description: "Search, qualify, and review posts in traxy."
+description: "Find leads from LinkedIn posts and review post-level performance."
 ---
 
-Use Post Signals when you want to work from a searchable post feed instead of jumping between the dashboard and leads.
+Use Post Signals to search monitored LinkedIn posts, start qualification, and review the leads tied to each post.
 
-<Frame>
-  ![Post Signalv4](/images/PostSignalv4.png)
-</Frame>
+## Review the summary
 
-## Change profile scope
-
-If your workspace tracks more than one LinkedIn profile, use the profile selector at the top of Post Signals before you review posts or qualify a post.
-
-This keeps counts, credit previews, and qualified lead totals aligned to the profile scope you are reviewing.
-
-## Use the summary cards
-
-Post Signals shows four summary cards for the selected time range:
+The summary cards show:
 
 - **Qualified Posts**
 - **Total Leads from Posts**
 - **Avg ICP Match**
 - **Top Performing Account**
 
-Use them to spot which posts and profiles are producing the strongest lead signal.
+Choose **Last 7 days**, **Last 30 days**, **Last 90 days**, or **All time** before comparing results.
 
 ## Search and filter posts
-
-Use the toolbar to work from the post feed.
 
 You can:
 
 - search post text
 - switch between **List** and **Grid**
-- sort by date, leads, average ICP match, or engagement
-- change the time range to **Last 7 days**, **Last 30 days**, **Last 90 days**, or **All time**
-- filter by qualification status, **Auto-Scan**, and minimum average ICP
+- sort by date, processing activity, qualification activity, lead count, average ICP match, or engagement
+- filter by qualification status
+- filter by **Auto-Scan**
+- set a minimum average ICP match
 
-If no results appear, remove filters or widen the time range before you assume post data is missing.
+Remove filters or widen the time range if a post you expect is not in the current result.
 
-## Find leads from a tracked post
+## Find leads from one post
 
-When a post has engagement, you can run **Find Leads** directly from Post Signals.
+Click **Find Leads** on a post with engagement.
 
-This is useful when:
+The dialog can show a provisional range while traxy prepares an exact quote. When you continue, traxy obtains a ready quote and reserves the required credits before the request begins.
 
-- you want to review one post at a time
-- you want to prioritize a post with strong buyer signals
-- you want to refresh lead discovery after a high-performing post
+If the exact quote exceeds the workspace balance, the request does not start. traxy does not create unpaid usage.
 
-Before you confirm, `traxy` starts with an estimated credit range for that action.
+People already charged for the same billable qualification window are deduplicated before settlement. The final credit use can therefore be lower than the raw engagement count.
 
-Use **Get Exact Credits** when you want the exact count before you continue.
+## Find leads from a LinkedIn URL
 
-The estimate can end up lower in practice because people `traxy` already qualified in the last 30 days are excluded from billing.
-
-Only posts with engagement can be used to find leads. The action can stay blocked if credits are unavailable, Pay-as-you-go is off, or the workspace monthly budget cap has been reached.
-
-The credit preview reflects your current profile scope.
-
-## Qualify a post by URL
-
-Use **Qualify Post** at the top of Post Signals when the post is not already in your feed.
+Use the post URL action when a post is not already in your feed:
 
 1. Click **Qualify Post**.
 2. Paste the LinkedIn post URL.
-3. Review the resolved post preview.
-4. Choose the relationship for that profile if needed.
-5. Review the credit estimate or get exact credits.
-6. Click **Find Leads**.
+3. Review the resolved post.
+4. Review the exact credit requirement.
+5. Click **Find Leads**.
 
-This is useful when you want to qualify a specific post right away instead of waiting for it to show up in the feed.
+traxy starts only after the post resolves and the credit reservation succeeds.
 
-## Qualify multiple posts
+## Find leads from several posts
 
-In list view, select more than one post and use **Qualify Posts**.
+In list view, select the posts and open the batch action.
 
-The batch dialog lets you:
+Every selected post needs a ready exact quote. traxy reserves the entire batch together. If the full reservation cannot succeed, none of the selected requests start.
 
-- review the selected posts
-- see total engagement across the selection
-- remove posts you do not want to run yet
-- estimate or calculate exact credits before you submit
+## Understand Auto-Scan
 
-## Use Auto-Scan
+For an active Watchlist profile, traxy automatically manages a sliding window of the five most recent posts published after you added the profile.
 
-Turn on **Auto-Scan** for a post when you want `traxy` to keep qualifying new engagement on that post as it comes in.
+This trailing-five window is required. You cannot disable or shrink it. When a newer post enters the window, the oldest post leaves it.
 
-By default, only your last 5 posts are actively monitored. Enabling **Auto-Scan** keeps a post qualifying indefinitely.
+Posts outside the managed window can still use manual **Find Leads**. An editable **Auto-Scan** setting on another post does not replace or expand the required Watchlist window.
+
+## Understand the free initial discovery
+
+The first time you add a Watchlist profile, traxy starts one free initial discovery:
+
+- it freezes up to five recent posts available at add time
+- it stops after finding five new qualified leads or examining the full frozen window
+- pausing or removing the profile suspends that same discovery
+- restoring the profile resumes it
+- adding the same profile again does not create another free discovery
+
+While that discovery is running, manual **Find Leads** and enabling an editable **Auto-Scan** setting for the profile are unavailable. Post Signals shows the current preparation or discovery status.
 
 ## Review post analytics
 
-Open post analytics to see the qualified leads tied to a specific post. From there, you can jump back into the leads view to continue working those people.
-
-Post analytics is useful when you want to:
-
-- see which specific post produced the lead
-- compare high-performing posts by lead quality
-- move from a post into a filtered leads view
-
-<Tip>
-  If a post shows strong engagement but weak average ICP match, that usually signals an ICP or threshold adjustment opportunity.
-</Tip>
+Open a post to see its performance and qualified leads. Follow a lead into **Leads** when you are ready to review, enrich, classify, or route the person.

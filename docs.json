@@ -3,7 +3,7 @@
   "theme": "mint",
   "name": "traxy docs",
   "colors": {
-    "primary": "#B59ADB",
+    "primary": "#685BFF",
     "light": "#FFA7B3",
     "dark": "#685BFF"
   },
@@ -29,6 +29,7 @@
           "using-traxy/dashboard",
           "using-traxy/agent",
           "using-traxy/icp-configuration",
+          "using-traxy/qualification",
           "using-traxy/leads",
           "using-traxy/content-calendar",
           "using-traxy/watchlist",
@@ -41,7 +42,9 @@
         "group": "Integrations",
         "pages": [
           "using-traxy/integrations",
-          "using-traxy/integrations/api-mcp",
+          "using-traxy/integrations/rest-api",
+          "using-traxy/integrations/claude",
+          "using-traxy/integrations/codex",
           "using-traxy/integrations/ordinal",
           "using-traxy/integrations/ordinal/readiness",
           "using-traxy/integrations/ordinal/linkedin-post-audience",
@@ -130,5 +133,17 @@
         "href": "mailto:support@traxy.ai"
       }
     ]
-  }
+  },
+  "redirects": [
+    {
+      "source": "/using-traxy/integrations/api-mcp",
+      "destination": "/using-traxy/integrations/rest-api",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/usage-based-credits",
+      "destination": "/using-traxy/billing-and-credits",
+      "permanent": true
+    }
+  ]
 }

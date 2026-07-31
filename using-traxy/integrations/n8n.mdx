@@ -3,9 +3,9 @@ title: "n8n"
 description: "Send qualified lead events from traxy to an n8n webhook."
 ---
 
-Use the n8n integration when you want qualified lead events from `traxy` to start an n8n workflow.
+Use the n8n integration when you want qualified lead events from traxy to start an n8n workflow.
 
-n8n delivery uses a webhook-style connection. `traxy` sends a signed `POST` request to the n8n webhook URL you configure.
+n8n delivery uses a webhook-style connection. traxy sends a signed `POST` request to the n8n webhook URL you configure.
 
 ## Before you connect n8n
 
@@ -18,7 +18,7 @@ Make sure you have:
 - the n8n webhook URL
 - an optional bearer token if your webhook expects one
 
-Use a secure `https://` URL. `traxy` cannot send to insecure endpoints.
+Use a secure `https://` URL. traxy cannot send to insecure endpoints.
 
 ## Connect n8n
 
@@ -42,7 +42,7 @@ If you connect n8n but do not keep a valid webhook URL saved, n8n delivery stays
 n8n can work in two ways:
 
 - **Manual delivery** from the leads table when you want to review each lead first
-- **Automatic delivery** when you want `traxy` to send new qualified leads to n8n as soon as they meet your threshold
+- **Automatic delivery** when you want traxy to send new qualified leads to n8n as soon as they meet your threshold
 
 Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
 
@@ -58,7 +58,7 @@ Use manual delivery when you want to control which leads enter n8n.
 4. Select **n8n**.
 5. Confirm the send.
 
-`traxy` queues the selected leads for delivery to the configured n8n webhook.
+traxy queues the selected leads for delivery to the configured n8n webhook.
 
 ## Review the payload
 
@@ -66,13 +66,13 @@ The n8n integration page includes **Payload & Help** with sample JSON for first 
 
 The payload includes event metadata plus lead, profile, company, contact, and engagement data.
 
-Use the sample payload in `traxy` as the source of truth when you map fields in n8n.
+Use the sample payload in traxy as the source of truth when you map fields in n8n.
 
 ## Verify requests
 
 n8n requests are signed.
 
-Each request includes `X-traxy-Signature` and `X-traxy-Timestamp` so your receiver can verify that it came from `traxy`.
+Each request includes `X-Traxy-Signature` and `X-Traxy-Timestamp` so your receiver can verify that it came from traxy.
 
 If you add an auth header, use the bearer format shown in the app.
 
@@ -80,7 +80,7 @@ If you add an auth header, use the bearer format shown in the app.
 
 Use **Send Test Payload** before you turn on an important workflow.
 
-Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
+The test is one immediate request. Lead deliveries can retry temporary failures. Automatic delivery may pause if repeated failures are not fixed.
 
 If you send manually from **Leads**, you may see states such as queued, delivered, or failed. Fix the underlying n8n issue first, then retry from the lead.
 
@@ -88,6 +88,6 @@ Review automatic settings carefully before you enable them for a shared workspac
 
 ## Disconnect n8n
 
-Use **Disconnect** when you want `traxy` to stop sending events to n8n.
+Use **Disconnect** when you want traxy to stop sending events to n8n.
 
 Disconnecting n8n does not change existing n8n workflows or execution history.

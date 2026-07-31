@@ -1,0 +1,83 @@
+---
+title: "How qualification works"
+description: "Understand how traxy turns ICP matches and buyer signals into qualified leads."
+---
+
+Qualification decides whether a person should become a lead in your workspace.
+
+traxy combines your active ICP, minimum match, company exclusions, and a supported discovery signal. It saves the person as a qualified lead when the result meets the workspace rules.
+
+## What traxy evaluates
+
+Your ICP describes the people and companies you want:
+
+- job titles
+- departments
+- seniority
+- locations
+- company size
+- industries
+- revenue
+- funding
+- keywords and niches
+- company or product summary
+
+The **Minimum ICP match** on Dashboard decides how strong the match must be. Raising it makes qualification stricter. Lowering it includes more borderline matches.
+
+## Where qualified leads come from
+
+### Agent
+
+Agent scans profiles that match the approved ICP. It saves the people who meet the current qualification rules.
+
+### Watchlist and Post Signals
+
+Watchlist and Post Signals evaluate people who like, comment on, or repost a monitored LinkedIn post.
+
+Watchlist runs one free initial discovery when you first add a profile. It then manages a required sliding window of the five most recent posts published after the profile was added.
+
+Manual **Find Leads** can qualify another LinkedIn post after traxy reserves the required credits.
+
+## What prevents a lead
+
+A person does not enter the active lead list when:
+
+- the ICP match is below the workspace minimum
+- the person's company domain is on the Blocklist
+- the person is already handled by deduplication
+- required qualification access or credits are unavailable
+- you previously moved the lead to another workflow state
+
+Existing **Clients**, **Snooze**, **Done**, and **Bad fit** leads stay in their respective views. traxy does not create another active copy of the same person.
+
+## Give qualification feedback
+
+Use **Mark as good fit** or **Mark as bad fit** in Leads. Select the applicable reasons and add a note when context matters.
+
+This feedback helps traxy improve later qualification. **Mark as done**, **Snooze lead**, and **Mark as client** are workflow actions. They do not mean the ICP score was wrong.
+
+## Understand credit settlement
+
+Most qualification uses 1 credit for each unique billable profile in the current billing window. Repeated engagement from the same person is deduplicated for that window.
+
+Manual post requests reserve the exact available credits before work starts. The final settlement reflects the unique profiles that produced billable results.
+
+Agent uses a different rule after its trial allowance. It charges each unique profile scanned in the billing window, even when that profile does not become a qualified lead.
+
+Contact enrichment is separate from qualification:
+
+- a newly saved email uses 3 credits
+- a newly saved phone number uses 5 credits
+
+## Review the result
+
+Open a lead to review its ICP match, qualification summary, source, and engagement history. Use those details before you classify, enrich, export, or route the lead.
+
+<CardGroup cols={2}>
+  <Card title="Refine your ICP" icon="target" href="/using-traxy/icp-configuration">
+    Change the people and company criteria.
+  </Card>
+  <Card title="Work with leads" icon="users" href="/using-traxy/leads">
+    Review results and give fit feedback.
+  </Card>
+</CardGroup>

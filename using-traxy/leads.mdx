@@ -1,134 +1,83 @@
 ---
 title: "Leads"
-description: "Search, filter, review, enrich, export, and route qualified leads in traxy."
+description: "Review, classify, enrich, export, and route qualified leads in traxy."
 ---
 
-The leads area is where you review, classify, enrich, and route the people `traxy` identified from LinkedIn engagement.
+Use Leads to work with the people traxy qualified from Agent, Watchlist, and post activity.
 
-<Frame>
-  ![Leadsv4](/images/Leadsv4.png)
-</Frame>
+## Use the lead views
 
-## Use the main tabs
+traxy separates leads into five views:
 
-`traxy` separates leads into four main views:
+- **Active Leads** for people ready for review or outreach
+- **Clients** for people you identify as customers
+- **Snooze** for people you want to revisit later
+- **Done** for outreach or review work you completed
+- **Bad fit** for people who should not count as a fit
 
-- **Active** for leads you are working now
-- **Clients** for people you already closed or want to treat as customers
-- **Snoozed** for leads you want to pause
-- **Bad fit** for people you do not want in your active review flow
+**Done** does not change the lead's ICP match or fit feedback. It removes the person from active lead results in the app, API, and connected AI clients. Move the lead back to **Active Leads** when you want to resume work.
 
-## Search and filter leads
+## Search and filter
 
-Use the toolbar to narrow the list quickly.
+Use search, ICP match, intent, relationship strength, owner, monitored profile, post source, and engagement filters to narrow the list.
 
-The main filters include:
+**Advanced Filters** adds people, company, date, and delivery criteria. Use it when you need a repeatable segment for review, export, or routing.
 
-- search
+If your workspace has more than one profile scope, choose the scope before you compare counts or export results.
+
+## Review a lead
+
+Open a lead to review:
+
+- the qualification summary
 - ICP match
-- intent
-- relationship strength
-- owner
-- monitored profile
-- engaged with
-- post source
+- engagement history
+- source profile and post
+- fit feedback and notes
+- saved contact data
+- delivery status
 
-Open **Advanced Filters** when you need more control. Advanced filters include:
+Use **Edit Columns** to keep the table focused on the fields your workflow needs.
 
-- **People Criteria** with **Job Titles**, **Departments**, and **Location**
-- **Lead Criteria** with **Engaged in Last 24 Hours** and **First Seen**
-- **Company Criteria** with **Company Name**, **Industries**, **Company Size**, **Revenue**, **Funding**, and **Keywords & Niches**
-- **Sent Integration** filters for Slack, HubSpot, Webhook, Zapier, Clay, n8n, and HeyReach delivery status
+## Use quick actions
 
-If your workspace tracks more than one profile, use the selector at the top of **Leads** before you filter. That keeps counts and results aligned to the profile scope you want to review.
+You can act from the table or lead detail:
 
-## Work inside the table
+- **Mark as client**
+- **Snooze lead**
+- **Mark as done**
+- **Mark as good fit**
+- **Mark as bad fit**
 
-You can sort the table, change visible columns, and open a full lead detail view from the list.
+Good-fit and bad-fit actions accept preset reasons and a note. traxy uses this feedback to improve future qualification.
 
-Use **Edit Columns** when your team wants a tighter working view for qualification, enrichment, or routing.
+You can apply supported actions to selected leads in bulk. Marking a lead as done is reversible.
 
-Useful fields include:
+## Enrich contact data
 
-- **Last engagement** to see the most recent like, comment, or repost
-- delivery status columns when you use Slack, HubSpot, Webhook, Zapier, Clay, n8n, or HeyReach
-- contact fields after enrichment
+Use enrichment when you need a saved email, phone number, or both.
 
-The lead detail view is the best place to:
+Owners and admins can also configure **Auto-Enrich** for newly qualified leads at or above a selected ICP match. Auto-Enrich applies to future qualified leads, not older posts or leads.
 
-- review engagement history
-- inspect the qualification summary
-- review fit feedback and notes
-- enrich email or phone
-- send an individual lead to Slack, HubSpot, Webhook, Zapier, Clay, n8n, or HeyReach
+Credits settle only when traxy finds and saves new contact data:
 
-## Review and move leads quickly
+- email enrichment uses 3 credits
+- phone enrichment uses 5 credits
 
-You can review leads directly from the table without opening each record.
+If the contact data is already saved, read it from the lead instead of enriching it again.
 
-Use quick actions or the detail panel to:
+## Export or send leads
 
-- mark a lead as a good fit
-- mark a lead as a bad fit
-- mark a lead as a client
-- snooze a lead
-- undo a recent classification change
+Select leads to export the columns your workflow needs.
 
-You can also apply these actions in bulk after you select multiple leads.
+You can also send a lead to a configured Slack, HubSpot, Webhook, Zapier, Clay, n8n, or HeyReach destination. Automatic delivery applies to leads that qualify after you enable it. Send older leads manually.
 
-Bulk actions can also help you enrich, export, send, snooze, restore, or delete selected leads. Use delete when you want to remove leads from the current workflow, and use snooze when you may want to return to them later.
+## Exclude a company
 
-## Use Auto-Enrich
+Use the company hover card to add a company domain to **Blocklist**. Future leads from that domain no longer enter your workspace.
 
-Owners and admins can manage **Auto-Enrich** from the leads page.
-
-When you turn it on, `traxy` can automatically enrich newly qualified leads that meet your minimum ICP score.
-
-You can choose whether `traxy` looks for:
-
-- email
-- phone
-- both
-
-Credits are charged only when contact data is found.
-
-Auto-Enrich does not backfill older posts. Use [Post Signals](/using-traxy/content-calendar) when you want to find leads from older engagement.
-
-## Manage company exclusions
-
-From a company's hover card in the leads table, you can add that company to your **Blocklist**.
-
-When you do that, future leads from that company stop appearing in your workspace.
-
-You can manage blocked domains later in **Settings** \> **Blocklist**.
-
-## Send and route leads
-
-Depending on your workspace setup, you can:
-
-- snooze or restore leads
-- export selected leads
-- enrich leads
-- send leads to Slack, HubSpot, Webhook, Zapier, Clay, n8n, or HeyReach
-
-When you export, choose the columns that matter for your workflow. If your workspace has available enrichment, you can enrich selected leads before exporting them.
-
-If you want automatic delivery, connect your workspace in [Integrations](/using-traxy/integrations). If you prefer more control, send leads manually from the leads table after review.
-
-Automatic delivery only applies to leads that qualify after auto-send is enabled. It does not backfill older leads that were already in your workspace.
-
-## Understand locked or paused lead states
-
-If your workspace runs out of available qualification credits, `traxy` can pause new qualification work.
-
-When that happens:
-
-- some new leads may stay locked or hidden
-- qualification actions may stop until credits reset
-- admins may need to upgrade, raise the monthly budget, or turn on [Pay-as-you-go](/using-traxy/usage-based-credits)
+Manage exclusions in **Settings** > **Blocklist**.
 
 <Info>
-  Credits can affect qualification and enrichment actions. If an action is unavailable, check [Billing & Plans](/using-traxy/billing-and-credits).
+  When the workspace has no credits left, new credit-funded qualification and enrichment requests pause or fail until the monthly credit window resets or the plan changes. Existing saved leads remain available.
 </Info>
-
-If you want a practical outreach workflow after `traxy` surfaces a lead, use [outbound to signal-based leads](/using-traxy/outbound-to-signal-based-leads).

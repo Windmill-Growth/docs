@@ -1,116 +1,216 @@
 ---
 title: "API reference"
-description: "Use the traxy public API to read workspace data."
+description: "Use the traxy REST API and understand the tools available through MCP."
 ---
 
-Use the `traxy` public API when you need programmatic access to workspace data outside the app.
+Use REST for server-to-server reads. Use the traxy MCP connection when Claude or Codex should work with workspace data and confirmed actions.
 
-The public API is read-first. It exposes workspace access, visible leads and signals, account reports, ICP, Watchlist profile detail, analytics, content, integration delivery state, sync status, and aggregate audience analytics for approved integrations.
+<CardGroup cols={3}>
+  <Card title="Create an API key" icon="key" href="/using-traxy/integrations/rest-api">
+    Make a REST request and retrieve your first lead.
+  </Card>
+  <Card title="Connect Claude" icon="sparkles" href="/using-traxy/integrations/claude">
+    Authorize Claude with OAuth.
+  </Card>
+  <Card title="Connect Codex" icon="terminal" href="/using-traxy/integrations/codex">
+    Authorize ChatGPT or Codex with OAuth.
+  </Card>
+</CardGroup>
 
-<Info>
-  Create general API keys from [API & MCP](/using-traxy/integrations/api-mcp). For Ordinal, generate the dedicated key from [Ordinal](/using-traxy/integrations/ordinal). MCP clients use OAuth instead of API keys.
-</Info>
-
-## Base URL
-
-Use the production API base URL for public integrations:
+## REST base URL
 
 ```text
 https://api.traxy.ai/api/v1
 ```
 
-All endpoint paths in this reference are relative to that base URL.
-
-## Authentication
-
-Send your API key as a bearer token.
+Send an API key as a bearer token:
 
 ```http
 Authorization: Bearer trxy_live_...
 ```
 
-Do not send a workspace ID in public API requests. `traxy` resolves the workspace from the API key.
+Do not send a workspace ID. traxy resolves the workspace from the credential.
 
-## Scopes
+## Get one lead
 
-Each API key has scopes. Choose the smallest scope set your integration needs.
+```sh
+curl --request GET \
+  --url "https://api.traxy.ai/api/v1/customer/leads?limit=1" \
+  --header "Authorization: Bearer trxy_live_..."
+```
 
-- `workspace:read` for workspace access status
-- `leads:read` for visible lead data
-- `leads:contact_read` for contact fields
-- `analytics:read` for dashboard and post analytics
-- `icp:read` for the active ICP summary
-- `watchlist:read` for Watchlist profiles and summaries
-- `content:read` for visible content feed posts
-- `integrations:read` for integration connection and delivery status
-- `sync:read` for sync and qualification run status
-- `agent:read` for Agent MCP tools. The scope can appear in shared API-key metadata, but no Customer REST Agent endpoints are currently exposed.
-- `audience_analytics:read` for aggregate audience analytics
-- `audience_analytics:request` for audience discovery requests
+Lead list responses put records in `data` and pagination state in `page`.
 
-Contact data is sensitive. Only select `leads:contact_read` when your workflow needs it.
+## REST scopes
 
-Ordinal uses a dedicated key generated from the [Ordinal integration](/using-traxy/integrations/ordinal). Add that key to the `traxy` integration in Ordinal.
+Default keys include these read scopes:
+
+- `leads:read`
+- `analytics:read`
+- `icp:read`
+- `watchlist:read`
+- `content:read`
+- `integrations:read`
+- `sync:read`
+- `agent:read`
+- `workspace:read`
+
+Optional permissions include:
+
+- `leads:contact_read`
+- `leads:contact_enrich`
+- `leads:manage`
+- `watchlist:manage`
+- `integrations:manage`
+- `integrations:deliver`
+- `agent:run`
+- `audience_analytics:read`
+- `audience_analytics:request`
+- `post_qualification:manage`
+
+The REST surface is read-first. Request-capable permissions protect the corresponding MCP tools. Contact enrichment also requires `leads:read` and `leads:contact_read`. Lead delivery also requires `leads:contact_read`.
 
 ## Pagination
 
-List endpoints use cursor pagination. The default page size is `50`.
-
-<ParamField query="limit" type="integer">
-  Number of items to return. The maximum value is `100`.
-</ParamField>
-
-<ParamField query="cursor" type="string">
-  Opaque cursor returned by the previous response. The maximum length is 256 characters.
-</ParamField>
-
-Each list response includes `page.nextCursor`.
+Cursor-based lists default to 50 items and accept at most 100.
 
 1. Send the first request without `cursor`.
-2. Pass `page.nextCursor` unchanged as `cursor` in the next request.
-3. Keep the same filters, sort, and sort direction for every page.
-4. Stop when `page.nextCursor` is `null`.
+2. Read `page.nextCursor`.
+3. Pass that value unchanged in the next request.
+4. Keep every filter and sort setting the same.
+5. Stop when `page.nextCursor` is `null`.
 
-Do not decode, edit, or construct cursor values.
+Do not decode or construct cursors. A malformed or sort-incompatible cursor returns `400 validation_failed`.
 
-Sorted Watchlist, analytics-post, content-feed, and account-report cursors are tied to the selected sort and direction. Malformed, legacy, or sort-incompatible cursors return `400 validation_failed`; they do not restart pagination.
+`traxy_list_agent_candidates` is the exception. It uses `limit` and `offset`.
 
-### Filter leads and signals
+## Lead results
 
-`GET /customer/leads` supports tier, disposition, ICP range, monitored profile, post, engagement type, owner, date range, text search, company, and safe origin filters. Omitted dispositions default to active leads. Explicit `CLIENT` or `BAD_LEAD` filters are still supported.
+`GET /customer/leads` returns active leads by default. Use `disposition` when you want another lead view.
 
-`GET /customer/leads/signals` supports the same business filters where applicable and adds safe watched-profile and post context for the engagement that generated each signal.
+Useful filters include:
 
-### Read Watchlist profiles and account reports
+- ICP match range
+- lead tier
+- lead state
+- Agent or Watchlist origin
+- monitored profile
+- LinkedIn post
+- engagement type
+- owner
+- company
+- text query
+- date range
 
-`GET /customer/watchlist/profiles` supports profile type, source, slot kind, relationship label, state, search, and sorting. `GET /customer/watchlist/profiles/{monitoredProfileId}` returns safe relationship and follower snapshot metadata for one profile.
+Use `GET /customer/leads/signals` when you need the engagement, monitored profile, and post context behind the lead.
 
-`GET /customer/account-reports` groups visible active leads by company and supports company, ICP range, date, search, and aggregate sorting. `GET /customer/account-reports/{accountId}` applies ICP range and date filters to the detail summary and top leads.
+Contact fields and LinkedIn profile URLs require `leads:contact_read`.
 
-### Filter post analytics
+## MCP connection
 
-`GET /customer/analytics/posts` supports filters for one or more monitored profiles, profile type, relationship label, source, date range, minimum ICP match, qualification status, and text search. Post analytics and content-feed results include safe author metadata and available `contentText` without exposing personal profile URLs.
+The MCP endpoint is:
 
-Use `monitoredProfileId` to retrieve posts for one watched profile. Use `sort=date|engagement|reactions|comments|reposts` and `sortDirection=asc|desc` to control the order.
+```text
+https://api.traxy.ai/api/v1/mcp
+```
 
-When you request the next page, keep `monitoredProfileId`, `sort`, `sortDirection`, and every other filter unchanged.
+Claude and Codex complete OAuth in the browser. The client negotiates the protocol version. traxy supports `2025-11-25` and `2025-06-18`.
 
-## Endpoint groups
+The default OAuth grant adds `leads:contact_read` to the standard read scopes. An owner or admin must approve that access. A request containing only non-sensitive read scopes can be approved by any active workspace member.
 
-The generated API reference includes:
+`tools/list` returns only the tools allowed by the approved scopes and current workspace access.
 
-- **Customer REST** endpoints for workspace data, leads, engagement summaries, ICP, Watchlist, analytics, content, integrations, and sync status
-- **Audience analytics** endpoints for approved aggregate audience workflows
-- **MCP OAuth** endpoints used by remote MCP clients
-- **MCP** Streamable HTTP endpoint for JSON-RPC tool calls
+## MCP tools
 
-Use Customer REST endpoints for server-to-server integrations. Use MCP setup from the [API & MCP](/using-traxy/integrations/api-mcp) page when an AI client should connect to `traxy` tools.
+The current catalog has 42 scope-gated tools.
 
-The current MCP surface exposes 31 tools. Current clients use protocol version `2025-11-25`; `2025-06-18` remains supported for compatibility.
+### Connection and workspace
+
+- `traxy_get_mcp_connection_status`
+- `traxy_get_workspace_access`
+
+### Leads and accounts
+
+- `traxy_list_leads`
+- `traxy_get_lead_counts`
+- `traxy_get_lead_stats`
+- `traxy_get_lead`
+- `traxy_enrich_lead_contact`
+- `traxy_list_lead_engagements`
+- `traxy_list_lead_signals`
+- `traxy_apply_lead_action`
+- `traxy_list_account_reports`
+- `traxy_get_account_report`
+
+`traxy_apply_lead_action` supports `snooze`, `done`, `good`, `bad`, and `client`. The `done` action requires the user to confirm and the call to include `confirmDone: true`.
+
+### Agent
+
+- `traxy_get_agent_status`
+- `traxy_get_agent_budget_status`
+- `traxy_start_agent_run`
+- `traxy_list_agent_runs`
+- `traxy_list_agent_candidates`
+
+Starting a run requires `confirmCreditSpend: true`. The client should ask before it makes the call.
+
+### ICP and Watchlist
+
+- `traxy_get_active_icp`
+- `traxy_list_watchlist_profiles`
+- `traxy_get_watchlist_profile`
+- `traxy_get_watchlist_summary`
+- `traxy_list_watchlist_recommendations`
+- `traxy_add_watchlist_profile`
+- `traxy_update_watchlist_profile`
+- `traxy_remove_watchlist_profile`
+- `traxy_restore_watchlist_profile`
+
+Watchlist management supports teammate, competitor, influencer, investor, and custom relationships. A custom relationship requires its label.
+
+### Content and analytics
+
+- `traxy_get_analytics_dashboard`
+- `traxy_list_analytics_posts`
+- `traxy_get_post_summary`
+- `traxy_list_post_qualified_leads`
+- `traxy_list_content_feed`
+
+### Integrations and sync
+
+- `traxy_get_integrations_status`
+- `traxy_get_lead_delivery_state`
+- `traxy_create_webhook_destination`
+- `traxy_set_webhook_destination_enabled`
+- `traxy_deliver_lead_to_webhook_destination`
+- `traxy_get_sync_status`
+- `traxy_get_latest_qualification_run`
+
+Webhook-style destination tools support Webhook, Clay, n8n, and Zapier. Delivery requires the user to select the lead and destination.
+
+### Audience and post qualification
+
+- `traxy_get_audience_post`
+- `traxy_find_audience`
+- `traxy_qualify_linkedin_post`
+- `traxy_get_organization_audience`
+
+Audience reads return aggregate analytics. Audience discovery and post qualification can start work that uses credits. Post qualification requires `confirmCreditSpend: true`.
+
+## MCP result filters
+
+List tools use the same business filters as their REST counterparts where applicable.
+
+- Lead tools accept ICP range, state, origin, monitored profile, post, engagement, owner, company, query, and date filters.
+- Watchlist tools accept relationship, source, state, query, and sorting.
+- Post tools accept monitored profile, relationship, source, date, ICP, qualification status, query, and sorting.
+- Account reports accept company, ICP range, date, query, and aggregate sorting.
+
+Use the tool schema returned by `tools/list` as the exact contract for the active grant.
 
 ## Errors
 
-REST errors use a stable envelope.
+REST errors use this envelope:
 
 ```json
 {
@@ -123,22 +223,22 @@ REST errors use a stable envelope.
 }
 ```
 
-Common status codes include:
+Common status codes:
 
-- `400` for validation errors
+- `400` for invalid input
 - `401` for invalid, expired, or revoked credentials
-- `402` for insufficient credits or missing capability
-- `404` when a resource is not visible to the key workspace
+- `402` for insufficient credits or access
+- `404` when the requested resource is not available to the workspace
 - `429` for rate limits
 
-Invalid top-level MCP request bodies use the standard HTTP `400` error envelope. Missing or invalid OAuth credentials use the HTTP `401` error envelope and `WWW-Authenticate` challenge.
+Valid JSON-RPC requests use JSON-RPC errors for unknown methods, unknown tools, malformed calls, or missing scopes.
 
-Valid JSON-RPC requests with malformed `tools/call` envelopes, unknown methods/tools, or missing scopes use JSON-RPC error envelopes.
+A known tool with invalid arguments returns `isError: true`. Read `structuredContent.error.issues`, fix the named argument paths, and retry.
 
-A known, authorized tool with invalid arguments returns a normal JSON-RPC result with `isError: true`. Use the safe paths in `result.structuredContent.error.issues` to correct the arguments and retry. Raw invalid values are not echoed.
+## Data safety
 
-## Privacy
-
-Default public responses do not include secrets, authorization headers, raw request bodies, raw scraped data, hidden trial leads, raw Agent candidates, internal orchestration/runtime metadata, or contact fields.
-
-Contact fields require `leads:contact_read`.
+- Store API keys and OAuth tokens as secrets.
+- Do not send credentials in query parameters.
+- Grant contact access only when the workflow needs it.
+- Ask before any tool spends credits or changes workspace data.
+- Revoke keys and disconnect clients that are no longer used.

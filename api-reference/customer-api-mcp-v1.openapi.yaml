@@ -6,12 +6,12 @@ info:
     Public customer-facing read API, Ordinal Audience Analytics endpoints, and
     remote MCP Streamable HTTP endpoint. Customer REST and Ordinal requests use
     bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
-    resource; API-key fallback is disabled by default. Public REST clients must
+    resource; API keys are not accepted by MCP. Public REST clients must
     not send organizationId. Default API keys cover the general read API.
     Ordinal Audience Analytics is self-serve for paid workspaces and requires
     explicitly selected audience_analytics scopes on the key.
-    The current MCP surface exposes 31 tools through tools/list, including
-    agent:read tools for safe automated lead-finding agent visibility. Latest
+    The current MCP surface exposes 42 scope-gated tools through tools/list,
+    including confirmed lead, Agent, Watchlist, post, and delivery actions. Latest
     MCP protocol examples use 2025-11-25; 2025-06-18 remains legacy-compatible.
 servers:
   - url: https://api.traxy.ai/api/v1
@@ -32,7 +32,7 @@ paths:
         - CustomerApiKey: [workspace:read]
       responses:
         '200':
-          description: API-visible workspace capabilities and usage.
+          description: Workspace capabilities and usage available to this key.
           content:
             application/json:
               schema:
@@ -46,7 +46,7 @@ paths:
   /customer/leads:
     get:
       tags: [Customer REST]
-      summary: List API-visible leads.
+      summary: List active leads available to this key.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -88,7 +88,7 @@ paths:
   /customer/leads/signals:
     get:
       tags: [Customer REST]
-      summary: List visible lead signals with safe lead, post, and watched-profile context.
+      summary: List lead signals with safe lead, post, and Watchlist context.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -124,7 +124,7 @@ paths:
   /customer/leads/counts:
     get:
       tags: [Customer REST]
-      summary: Get API-visible lead counts.
+      summary: Get active lead counts.
       security:
         - CustomerApiKey: [leads:read]
       responses:
@@ -160,7 +160,7 @@ paths:
   /customer/leads/{leadId}:
     get:
       tags: [Customer REST]
-      summary: Get one API-visible lead.
+      summary: Get one active lead.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -440,7 +440,7 @@ paths:
   /customer/account-reports:
     get:
       tags: [Customer REST]
-      summary: List account-level summaries derived from visible active leads.
+      summary: List account summaries derived from active leads.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -466,7 +466,7 @@ paths:
   /customer/account-reports/{accountId}:
     get:
       tags: [Customer REST]
-      summary: Get one account summary with top visible leads.
+      summary: Get one account summary with its top active leads.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -766,7 +766,7 @@ paths:
     post:
       tags: [MCP OAuth]
       summary: Approve or cancel MCP OAuth authorization from traxy.
-      description: Approval requires workspace OWNER or ADMIN. Cancellation returns a clean access_denied callback without requiring workspace admin access.
+      description: Any active workspace member can approve a request containing only non-sensitive read scopes. The default OAuth grant includes saved contact and profile access, which requires an owner or admin. Scopes that can change workspace data or spend credits also require an owner or admin. Cancellation returns a clean access_denied callback without requiring admin access.
       security:
         - SupabaseUserJwt: []
       requestBody:
@@ -884,7 +884,7 @@ paths:
                       tools:
                         - name: traxy_get_workspace_access
                           title: Get workspace access
-                          description: Return visible workspace access, usage, and capabilities.
+                          description: Return workspace access, usage, and capabilities for this connection.
                           inputSchema:
                             type: object
                             properties: {}
@@ -920,7 +920,7 @@ paths:
                             additionalProperties: true
                         - name: traxy_list_agent_candidates
                           title: List agent candidates
-                          description: List safe visible candidates for one agent run, the latest agent run, or the latest preview with locked-count availability.
+                          description: List candidate summaries for one Agent run, the latest Agent run, or the latest onboarding preview.
                           inputSchema:
                             type: object
                             properties:
@@ -929,7 +929,7 @@ paths:
                                 format: uuid
                               source:
                                 type: string
-                                enum: [latest_agent_run, latest_preview]
+                                enum: [latest_agent_run, latest_onboarding_preview]
                               limit:
                                 type: number
                                 minimum: 1
@@ -978,7 +978,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: trxy_live_<public_id>_<secret>
-      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST and Ordinal Audience Analytics, not MCP OAuth.
+      description: API key created from Integrations > API. Used for Customer REST and Ordinal Audience Analytics.
     McpOAuth:
       type: http
       scheme: bearer
@@ -1139,11 +1139,11 @@ components:
       in: query
       schema:
         type: string
-        enum: [TEAMMATE, COMPETITOR, INVESTOR, CUSTOM]
+        enum: [TEAMMATE, COMPETITOR, INFLUENCER, INVESTOR, CUSTOM]
     ProfileTypesFilter:
       name: profileTypes
       in: query
-      description: Comma-separated profile types. Accepts up to four values.
+      description: Comma-separated profile types. Accepts up to five values.
       schema:
         type: string
     MonitoredProfileSourceFilter:
@@ -1325,7 +1325,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
     RateLimited:
-      description: Customer API rate limit exceeded. Production-like runtimes fail closed with this response if the distributed limiter is unavailable.
+      description: Customer API rate limit exceeded. Retry after the delay in the Retry-After header.
       content:
         application/json:
           schema:
@@ -1414,15 +1414,23 @@ components:
             enum:
               - workspace:read
               - leads:read
+              - leads:contact_read
+              - leads:contact_enrich
+              - leads:manage
               - analytics:read
               - icp:read
               - watchlist:read
+              - watchlist:manage
               - content:read
               - integrations:read
+              - integrations:manage
+              - integrations:deliver
               - sync:read
               - agent:read
+              - agent:run
               - audience_analytics:read
               - audience_analytics:request
+              - post_qualification:manage
         expiresAt:
           type: string
           format: date-time
@@ -1573,6 +1581,7 @@ components:
             - workspace
             - leads
             - leadContactData
+            - leadContactEnrichment
             - analytics
             - icp
             - watchlist
@@ -1588,6 +1597,8 @@ components:
             leads:
               type: boolean
             leadContactData:
+              type: boolean
+            leadContactEnrichment:
               type: boolean
             analytics:
               type: boolean
@@ -1613,13 +1624,10 @@ components:
           required:
             - apiVisibleLeadCount
             - monitoredProfileCount
-            - monitoredProfileLimit
           properties:
             apiVisibleLeadCount:
               type: integer
             monitoredProfileCount:
-              type: integer
-            monitoredProfileLimit:
               type: integer
     LeadPage:
       allOf:

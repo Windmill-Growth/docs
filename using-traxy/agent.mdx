@@ -1,73 +1,57 @@
 ---
 title: "Agent"
-description: "Use the Agent to scan matching profiles, control daily credit spend, and review saved qualified leads in traxy."
+description: "Run automated lead discovery, set a daily credit budget, and review Agent history."
 ---
 
-Use Agent when you want `traxy` to find qualified leads from the database without choosing each post or profile manually.
+Use Agent when you want traxy to find people that match your approved ICP without choosing each LinkedIn post or profile yourself.
 
-The Agent starts from your approved ICP. It scans matching profiles, saves leads that fit, and tracks profile scans, saved leads, qualified leads, and credits for each run.
+## Check Agent status
 
-## Before you use Agent
+The status switch shows whether Agent is active or paused. Use it to pause or resume scheduled work.
 
-Make sure your workspace has:
+Agent scans every hour while it is active and eligible to run. The **Today** card shows:
 
-- an approved ICP
-- available credits or an active trial allowance
-- enough Watchlist and product context to guide lead quality
+- leads found today
+- the next scheduled run
+- the daily credit budget
+- the current rate per profile
 
-If the Agent is paused or blocked, open the status card first. It shows the plan, trial status when applicable, next run, and current state.
+Use **Run now** to request a run immediately. A run still follows your current access, allowance, and credit rules.
 
-## Set the daily profile-scan plan
+## Set the daily budget
 
-Open **Agent** and use **Daily profile-scan plan** to control how much work the Agent can do each day.
+Use the daily budget control to decide how many credits Agent may use each day.
 
-The daily credit budget decides how many profiles the Agent can scan. A higher budget can find more leads, but it can also use more credits.
+The change saves when you commit the control. There is no separate save button.
 
-Use the estimate in the card to see:
+A larger budget lets Agent examine more profiles. It does not guarantee a fixed number of qualified leads because qualification depends on your ICP and the profiles examined.
 
-- expected profiles scanned per day
-- profiles scanned per run
-- credits the Agent can spend per day
-- whether the daily budget could exceed your monthly plan if it runs every day
+<Info>
+  The Standard Pro Trial includes the Agent allowance shown in the app. After that allowance, Agent uses credits for each unique profile it scans during the billing period.
+</Info>
 
-Click **Save plan** after you change the budget. Unsaved changes apply only after you save.
+## Review targeting
 
-## Tune targeting
+**What it looks for** summarizes the active ICP Agent uses.
 
-Use **Targeting your ICP** to review the approved ICP summary and add buyer-language keywords.
-
-Add focused keywords only when you want the Agent to prioritize specific topics buyers might post, comment, or search for on LinkedIn.
-
-For broader targeting changes, open **ICP Configuration** instead of adding many keywords.
-
-## Run or pause the Agent
-
-Use **Run now** when you want to start a run immediately.
-
-Use the **Agent status** switch when you want to pause or resume scheduled runs. If a run is already in progress, wait for it to finish before changing the status.
-
-The **Today** card shows leads found today, credits spent today, and plan usage. Unused daily Agent budget does not roll over.
+Open **ICP Configuration** when you want to change job titles, departments, seniority, locations, company criteria, keywords, or the company summary. Agent does not keep a separate targeting configuration.
 
 ## Review run history
 
-Use **Agent run history** to inspect each run.
-
-Each row can show:
+Use the calendar and run list to inspect recent work. A run can show:
 
 - profiles scanned
 - leads saved
-- qualified leads
-- credits spent
+- credits used
 - run status
 
-Open a run to review candidate-level details and jump into the lead record or LinkedIn profile when available.
+Open a run when candidate details are available. If a run cannot start, review the status message, daily budget, current credits, and trial or plan access.
 
-## How Agent relates to Watchlist
+## Agent and Watchlist
 
-Agent and Watchlist are separate discovery sources.
+Agent and Watchlist use different discovery paths:
 
-- Agent scans matching profiles from the database based on your ICP and budget.
-- Watchlist monitors selected LinkedIn profiles and their post engagement.
+- Agent scans matching profiles based on your ICP and budget.
+- Watchlist monitors selected LinkedIn profiles and qualifies people who engage with their posts.
 
-Use both when you want broader lead discovery and specific signal monitoring.
-
+Use both when you want broad discovery and account-specific signals.

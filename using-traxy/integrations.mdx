@@ -1,99 +1,73 @@
 ---
 title: "Integrations"
-description: "Connect API & MCP, Ordinal, Slack, HubSpot, Webhook, Zapier, Clay, n8n, HeyReach, and Meta Ads to route qualified leads, audiences, and workspace data out of traxy."
+description: "Connect traxy to AI clients, APIs, CRMs, alerts, outbound tools, and audience workflows."
 ---
 
-Use integrations to send qualified leads, lead alerts, outbound destinations, audience exports, and workspace data into the tools your team already uses.
+Use Integrations to retrieve workspace data, work with traxy through an AI client, or route qualified leads to another system.
 
-<Frame>
-  ![Integrationv4](/images/Integrationv4.png)
-</Frame>
+Owners and admins manage connections and automatic delivery settings.
 
-## Before you connect anything
-
-Owners and admins set up integrations and change delivery settings.
-
-## Available integrations
-
-The current public integrations are:
-
-- **API & MCP** for API keys and OAuth-based MCP access
-- **Ordinal** for connecting Ordinal to traxy with a dedicated integration key
-- **Slack** for qualified lead alerts and workspace activity notifications
-- **HubSpot** for creating or updating CRM contacts, companies, and activity from qualified leads
-- **Webhook** for signed qualified lead alerts and activity notifications sent to another system
-- **Zapier** for sending qualified lead alerts and activity notifications to a Zapier webhook
-- **Clay** for sending qualified lead alerts and activity notifications to a Clay webhook
-- **n8n** for sending qualified lead alerts and activity notifications to an n8n webhook
-- **HeyReach** for sending qualified leads to a campaign or lead list
-- **Meta Ads** for value-based audience CSV exports
+## Data and AI access
 
 <CardGroup cols={2}>
-  <Card title="API & MCP" icon="key" href="/using-traxy/integrations/api-mcp">
-    Create API keys and connect MCP clients with OAuth.
+  <Card title="API" icon="key" href="/using-traxy/integrations/rest-api">
+    Create keys for direct REST access to traxy data.
   </Card>
-
+  <Card title="Claude" icon="sparkles" href="/using-traxy/integrations/claude">
+    Connect Claude web, desktop, or Claude Code with OAuth.
+  </Card>
+  <Card title="Codex" icon="terminal" href="/using-traxy/integrations/codex">
+    Connect ChatGPT, the Codex app, IDE extension, or CLI with OAuth.
+  </Card>
   <Card title="Ordinal" icon="chart-pie" href="/using-traxy/integrations/ordinal">
-    Generate a dedicated key and add it to the traxy integration in Ordinal.
-  </Card>
-
-  <Card title="Slack" icon="slack" href="/using-traxy/integrations/slack">
-    Send qualified lead alerts into a Slack channel.
-  </Card>
-
-  <Card title="HubSpot" icon="hubspot" href="/using-traxy/integrations/hubspot">
-    Create or update HubSpot contacts from qualified leads.
-  </Card>
-
-  <Card title="Webhook" icon="webhook" href="/using-traxy/integrations/webhook">
-    Send signed qualified lead events to another system.
-  </Card>
-
-  <Card title="Zapier" icon="zap" href="/using-traxy/integrations/zapier">
-    Send qualified lead events to a Zapier webhook.
-  </Card>
-
-  <Card title="Clay" icon="database" href="/using-traxy/integrations/clay">
-    Send qualified lead events to a Clay webhook.
-  </Card>
-
-  <Card title="n8n" icon="workflow" href="/using-traxy/integrations/n8n">
-    Send qualified lead events to an n8n webhook.
-  </Card>
-
-  <Card title="HeyReach" icon="send" href="/using-traxy/integrations/heyreach">
-    Send qualified leads to a HeyReach campaign or lead list.
-  </Card>
-
-  <Card title="Meta Ads" icon="megaphone" href="/using-traxy/integrations/meta-ads">
-    Export high-ICP-match leads as a value-based audience CSV.
+    Give Ordinal aggregate audience access with a dedicated key.
   </Card>
 </CardGroup>
 
-## Manual vs automatic delivery
+## Lead delivery and audiences
 
-Slack, HubSpot, Webhook, Zapier, Clay, n8n, and HeyReach delivery can work in two ways:
+<CardGroup cols={2}>
+  <Card title="Slack" icon="slack" href="/using-traxy/integrations/slack">
+    Send qualified lead alerts to a Slack channel.
+  </Card>
+  <Card title="HubSpot" icon="hubspot" href="/using-traxy/integrations/hubspot">
+    Create or update CRM contacts and companies.
+  </Card>
+  <Card title="Webhook" icon="webhook" href="/using-traxy/integrations/webhook">
+    Send signed qualified lead events to your endpoint.
+  </Card>
+  <Card title="Zapier" icon="zap" href="/using-traxy/integrations/zapier">
+    Start a Zap from qualified lead events.
+  </Card>
+  <Card title="Clay" icon="database" href="/using-traxy/integrations/clay">
+    Send qualified lead events to a Clay webhook.
+  </Card>
+  <Card title="n8n" icon="workflow" href="/using-traxy/integrations/n8n">
+    Start an n8n workflow from qualified lead events.
+  </Card>
+  <Card title="HeyReach" icon="send" href="/using-traxy/integrations/heyreach">
+    Send qualified leads to a campaign or lead list.
+  </Card>
+  <Card title="Meta Ads" icon="megaphone" href="/using-traxy/integrations/meta-ads">
+    Export qualified leads as a value-based audience CSV.
+  </Card>
+</CardGroup>
 
-- **Manual delivery** from the leads table when you want to review each lead first
-- **Automatic delivery** when you want `traxy` to route qualified leads as soon as they meet your threshold
-- **Repeat engagement delivery** for Slack, Webhook, Zapier, Clay, and n8n when you want another alert after an existing qualified lead engages again
+## Choose manual or automatic delivery
 
-Automatic delivery is non-retroactive. It sends leads that qualify after auto-send is turned on.
+Slack, HubSpot, Webhook, Zapier, Clay, n8n, and HeyReach support manual delivery from **Leads**.
 
-Repeat engagement delivery only works when the Slack, Webhook, Zapier, Clay, or n8n trigger and auto-send are both enabled. If you turn auto-send off, repeat engagement delivery turns off too.
+They can also route new qualified leads automatically when the lead meets the configured threshold. Automatic delivery starts with leads that qualify after you enable it. It does not backfill older leads.
 
-Use test sends before you go live. Test sends and manual sends are single-attempt checks. Automatic delivery retries after temporary failures and may pause if repeated failures are not fixed.
+Slack, Webhook, Zapier, Clay, and n8n can send repeat-engagement events. Repeat delivery requires the integration trigger and automatic delivery to remain enabled.
 
-If you send manually from **Leads**, you may see states such as queued, delivered, or failed. Fix the underlying integration issue first, then retry from the lead.
+Use a test send before you rely on a destination. A webhook-style test is one immediate request. Lead deliveries can retry temporary failures. Automatic delivery can pause after repeated failures.
 
-Review automatic settings carefully before you enable them for a shared workspace.
+## Choose the right data connection
 
-HubSpot can create or update CRM contacts and add engagement notes. Use [HubSpot](/using-traxy/integrations/hubspot) when you want qualified leads in your CRM.
+- Use **API** for application code that reads REST endpoints.
+- Use **Claude** for Claude web, desktop, or Claude Code.
+- Use **Codex** for ChatGPT and Codex surfaces.
+- Use **Ordinal** for the dedicated aggregate audience workflow.
 
-HeyReach requires a configured campaign or lead list before traxy can send leads. Use [HeyReach](/using-traxy/integrations/heyreach) when you want qualified leads to enter an outbound workflow.
-
-Meta Ads uses an audience export workflow instead of automatic lead delivery. Use [Meta Ads](/using-traxy/integrations/meta-ads) when you want to upload a value-based audience CSV to Meta.
-
-API & MCP does not send leads automatically. Use [API & MCP](/using-traxy/integrations/api-mcp) when you need API keys or MCP access for another tool.
-
-Ordinal uses a dedicated integration key. Use [Ordinal](/using-traxy/integrations/ordinal) to generate the key in traxy, then paste it into the traxy integration in Ordinal.
+API keys are not required for Claude or Codex. Those connections use OAuth.

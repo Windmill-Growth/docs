@@ -1,129 +1,94 @@
 ---
 title: "Billing & Plans"
-description: "Manage subscription details, cancellations, usage history, payment methods, invoices, and plan changes in traxy."
+description: "Manage your traxy subscription, credits, payment methods, and billing history."
 ---
 
-Use Billing & Plans when you need to manage your workspace subscription and billing records.
+Use **Settings** > **Billing** to review your subscription and credit activity.
 
-<Frame>
-  ![Billingv4](/images/Billingv4.png)
-</Frame>
+Owners and admins can make billing changes. Other members can review the usage information available to them.
 
-## What you can manage
+## Use the billing tabs
 
-In **Settings** \> **Billing**, you can manage:
+- **Overview** shows the current plan, credit balance, billing dates, and Watchlist access.
+- **Credit Usage** shows the credit ledger for the current billing window.
+- **Payment Methods** manages saved payment methods.
+- **Billing History** shows invoices and payment history.
+- **Manage Subscription** handles plan and billing interval changes and provides cancellation controls when available.
 
-- your current subscription
-- usage history
-- monitored profile seats
-- payment methods
-- billing history
-- plan changes
+Use the plan and checkout screens in your workspace for current pricing and included credits.
 
-Your workspace sidebar also shows credit usage so you can track consumption without leaving your day-to-day workflow.
+## Understand the Standard Pro Trial
 
-Everyone in the workspace can follow usage from the product, but owners and admins manage billing changes.
+New workspaces can start a card-required seven-day Standard Pro Trial after the onboarding lead preview.
 
-## Use the main billing areas
+The trial includes the Agent allowance and product access shown in the app. There is no permanent free plan. If a trial or paid subscription ends, traxy keeps the workspace data needed for reactivation.
 
-Billing & Plans includes the public areas most teams need:
+## Understand credit windows
 
-- **Overview** for your current plan and billing period
-- **Manage plan →** on the current plan card for Stripe billing tasks, including cancellation
-- **Usage History** for the billing-window credit ledger
-- **Payment Methods** for saved cards
-- **Billing History** for invoices
-- **Manage Subscription** for upgrades, downgrades, and interval changes
+Included credits reset monthly on the workspace billing anniversary in UTC. **Overview** shows the current window and next reset.
 
-The overview also shows profile-seat usage when your plan includes Watchlist monitoring.
+traxy enforces the available balance before new credit-funded work starts. It does not create unpaid overage debt.
 
-Trial workspaces may show trial lead progress instead of shared credit usage. The app shows when discovery is locked at the trial limit and when upgrading unlocks hidden leads, ongoing discovery, shared credits, more monitored profiles, or webhooks.
+When no credits remain:
 
-## How periods and resets work
+- new manual post qualification cannot reserve credits
+- scheduled qualification pauses
+- new enrichment cannot start
+- Agent work that requires credits cannot start
+- existing saved leads and workspace data remain available
 
-Included credits reset monthly.
+## Understand credit charges
 
-When credits are low or unavailable, some product actions can pause until:
+Most credits settle only after traxy saves a successful result.
 
-- your next monthly reset
-- you update billing settings
-- you change plan or credit behavior
+- Qualification uses 1 credit for each unique billable profile in the current billing window.
+- Email enrichment uses 3 credits when a new email is found and saved.
+- Phone enrichment uses 5 credits when a new phone number is found and saved.
 
-Use the billing summary in your workspace as the source of truth for the next reset date and remaining usage.
+Agent is the exception. After the Standard Pro Trial allowance, Agent uses credits for each unique profile it scans in the billing window, even if the profile does not become a qualified lead.
 
-## Review credit usage history
+traxy deduplicates the same person within the relevant billing window. Review **Credit Usage** for the final ledger.
 
-Open **Usage History** when you want a ledger of credit charges in the current billing window.
+## Review credit usage
 
-Use it to:
+Open **Credit Usage** to:
 
-- review qualification, post run, and enrichment charges
-- search by person, post, or lead details
-- filter by activity type, credit type, and date range
-- sort and page through billing-window activity
+- review qualification, Agent, and enrichment charges
+- search by the available lead, person, or post details
+- filter by activity, credit type, and date
+- compare activity within the current billing window
 
-## Common billing tasks
+## Manage your subscription
 
-Use the billing area when you need to:
+Use **Manage Subscription** to review the plan actions available to your workspace.
 
-- review current plan details
-- review credit usage history
-- review or adjust monitored profile seats
-- update a card
-- view invoices and payment history
-- change subscription level
-- switch between monthly and annual billing when available
-- open the billing portal for additional billing tasks
+Depending on the current subscription, you can:
 
-## Cancel a paid subscription
+- change plan
+- change billing interval
+- open Stripe's billing portal
+- cancel the subscription
+- review a scheduled change
 
-Workspace owners and admins can cancel a Stripe-managed subscription from Billing & Plans:
+## Cancel a subscription
 
 1. Open **Settings** > **Billing**.
-2. Stay on the **Overview** tab.
-3. Find the current plan card and select **Manage plan →**. `traxy` opens the Stripe Billing Portal.
-4. In Stripe, open the subscription and select the cancellation option shown for your plan.
-5. Review the effective date and billing details, then confirm the cancellation in Stripe.
-6. Return to `traxy`. The billing status may take a moment to sync.
+2. Select **Manage Subscription**.
+3. Find the cancellation panel.
+4. Click **Cancel Plan**.
+5. Complete the cancellation in Stripe.
+6. Review the effective date before you confirm.
 
-<Note>
-  **Manage Subscription** is the `traxy` tab for changing plans or billing intervals. Subscription cancellation is handled through **Manage plan →** on **Overview**. If that button or a cancellation option is unavailable, ask a workspace owner or admin to check the subscription, or contact support.
-</Note>
+The billing status may take a moment to refresh after you return to traxy.
 
-## Manage profile seats
+If **Cancel Plan** is not available, ask a workspace owner or admin to review the subscription or contact support.
 
-Profile seats control how many LinkedIn profiles your workspace can monitor in Watchlist.
+## Watchlist and members
 
-Use profile seats when you want to add more competitors, teammates, investors, or custom profiles without changing how your team reviews leads.
+Watchlist profiles and workspace members are unlimited. Qualification still follows the workspace credit balance.
 
-If your workspace reaches its profile-seat limit, `traxy` prompts an admin from Watchlist or Billing. On supported plans, admins can add profile seats as an add-on. If you lower profile-seat capacity later, you may need to archive monitored profiles so the workspace fits the new limit.
-
-Profile-seat add-ons become available immediately when the purchase succeeds. If you remove an add-on later, the app may ask you to archive a monitored profile before lowering the quota.
-
-## Review scheduled plan changes
-
-If you schedule a plan change for the next billing period, Billing & Plans shows the pending change and effective date.
-
-Use that banner to confirm the upcoming plan, resume the current plan when available, or choose a different plan before the change takes effect.
-
-Downgrades may ask for a reason before they are scheduled. This helps your team confirm the change before the next billing period.
-
-## Handle payment issues
-
-If a renewal or upgrade payment fails, Billing & Plans shows recovery guidance in the billing area.
-
-Use it to:
-
-- retry checkout verification if Stripe sync is still catching up
-- update your payment method
-- confirm whether your current plan changed or stayed the same
-
-If the sidebar or billing area warns about a failed payment, update billing details before the due date shown in the app.
-
-## Keep billing guidance durable
-
-Your exact pricing, limits, and billing options depend on your current plan. Check the billing screens in your workspace for the current source of truth.
+A plan can still apply separate limits to other resources, such as competitor companies. The app shows those limits where they apply.
 
 <Info>
-  If a qualification or enrichment action is unavailable, check both your credits and your workspace billing status before you troubleshoot anything else. For what happens after credits run out, see [Pay-as-you-go](/using-traxy/usage-based-credits).
+  Use the billing screen in your workspace as the source of truth for your plan, included credits, renewal date, and available subscription actions.
 </Info>
