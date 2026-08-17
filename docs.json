@@ -13,7 +13,7 @@
     "dark": "/logo/dark.svg"
   },
   "navigation": {
-    "pages": [
+    "groups": [
       {
         "group": "Getting started",
         "pages": [
@@ -22,10 +22,10 @@
           "getting-started/define-your-icp",
           "getting-started/join-a-workspace",
           "using-traxy/untitled-page",
-          "using-traxy/untitled-page-2"
+          "using-traxy/untitled-page-2",
+          "using-traxy/connect-claude-to-hey-reach"
         ]
       },
-      "using-traxy/connect-claude-to-hey-reach",
       {
         "group": "Using traxy",
         "pages": [
