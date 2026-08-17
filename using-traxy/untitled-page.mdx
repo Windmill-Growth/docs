@@ -1,0 +1,55 @@
+---
+title: "Connect Claude to traxy"
+---
+
+traxy connects to Claude through a custom MCP (Model Context Protocol) connector. No API key is required — the connection uses secure browser OAuth.
+
+### 1 minute guide on how to connect traxy x Claude!
+
+<video src="/videos/cluade-walkthroughhq.mp4" controls />
+
+<Steps>
+  <Step title="Open the Claude integration in traxy">
+    In the traxy sidebar, go to **Integrations**, find the **Claude** card, and click **Configure**, or simply click [**here**](https://app.traxy.ai/integrations/claude). On the integration page, make sure the **App & browser** tab is selected (use the **Terminal** tab instead if you're connecting Claude Code from the command line).
+  </Step>
+  <Step title="Copy the traxy MCP URL">
+    Click **Copy MCP URL** to copy the connector URL:
+
+    ```text
+    https://api.traxy.ai/api/v1/mcp
+    ```
+
+    You'll paste this into Claude in the next step.
+  </Step>
+  <Step title="Open Claude's connector settings">
+    In Claude (web or desktop), click your profile menu in the bottom left and select **Settings**. Go to **Connectors** in the left sidebar, then click **Add** → **Add custom connector**.
+  </Step>
+  <Step title="Add traxy as a custom connector">
+    In the **Add custom connector** dialog:
+
+    1. Name the connector `traxy.ai` (shown in your connectors list).
+    2. Paste the MCP URL you copied — `https://api.traxy.ai/api/v1/mcp` — into the **Remote MCP server URL** field.
+    3. Leave **Advanced settings** (OAuth Client ID/Secret) blank — they're optional and not required for traxy.
+    4. Click **Add**.
+  </Step>
+  <Step title="Connect and authorize">
+    Claude will show "You are not connected to traxy.ai yet." Click **Connect**. You'll be redirected to traxy's authorization page:
+
+    - Select the **Workspace** you want Claude to access.
+    - Review the **Requested access** scopes (leads, analytics, ICP & Signal Brief, watchlist, integrations, agent tools, and more).
+    - Click **Approve**.
+
+    <Note>
+      If your traxy account belongs to a Team or Enterprise plan, an organization owner may need to approve the connector.
+    </Note>
+  </Step>
+  <Step title="Confirm the connection">
+    You'll see a **Connected** confirmation screen. Click **Open desktop app** if prompted, or simply return to Claude — you can close the browser tab. Back in Claude's **Connectors** settings, `traxy.ai` now appears as connected, with a full list of available tools (e.g. _Get account report_, _Get active ICP_, _Get analytics dashboard_). By default, tool permissions are set to **Needs approval**, so Claude will confirm with you before calling a tool.
+  </Step>
+</Steps>
+
+## Next steps
+
+Once connected, you can ask Claude things like _"What's my traxy lead pipeline look like this week?"_ or _"Pull my top-performing posts from traxy"_ — Claude will call the relevant traxy tools directly.
+
+To disconnect at any time, go to **Settings → Connectors → traxy.ai** and click **Disconnect**.

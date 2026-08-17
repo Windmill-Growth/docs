@@ -1,0 +1,56 @@
+---
+title: "Connect ChatGPT/Codex to traxy"
+---
+
+traxy connects to Codex through a custom Streamable HTTP MCP server. No API key is required — the connection uses secure browser OAuth.
+
+### 1 minute guide on how to connect traxy x ChatGPT/Codex!
+
+<video src="/videos/codex-howto.mp4" controls />
+
+<Steps>
+  <Step title="Open the Codex integration in traxy">
+    In the traxy sidebar, go to [Integrations](https://app.traxy.ai/integrations), find the [Codex](https://app.traxy.ai/integrations/codex) card, and click **Configure**.
+
+    On the integration page, make sure the **App & browser** tab is selected (use the **Terminal** tab instead if you're connecting from the Codex CLI).
+  </Step>
+  <Step title="Copy the traxy MCP URL">
+    Click **Copy MCP URL** to copy the connector URL:
+
+    ```text
+    https://api.traxy.ai/api/v1/mcp
+    ```
+  </Step>
+  <Step title="Open Codex settings">
+    In the Codex app, open **Settings**, then under **Integrations** select **Plugins**.
+  </Step>
+  <Step title="Add the MCP server">
+    On the **Plugins** page, switch to the **MCPs** tab, then click **Add** → **Add MCP server**.
+
+    In the **Connect to a custom MCP** form:
+
+    1. Enter `traxy.ai` as the **Name**.
+    2. Set **Type** to **Streamable HTTP**.
+    3. Paste the MCP URL — `https://api.traxy.ai/api/v1/mcp` — into the **URL** field.
+    4. Leave **Bearer token env var** and **Headers** blank.
+    5. Click **Save**.
+  </Step>
+  <Step title="Authenticate the connection">
+    Back on the **MCPs** tab, `traxy-ai` now appears in your **Servers** list with an **Authenticate** button. Click it.
+
+    You'll be redirected to traxy's authorization page:
+
+    - Select the **Workspace** you want Codex to access.
+    - Review the **Requested access** scopes (leads, analytics, ICP & Signal Brief, watchlist, integrations, agent tools, and more).
+    - Click **Approve**.
+  </Step>
+  <Step title="Confirm the connection">
+    You'll be taken back to Codex settings, where `traxy-ai` now appears in the **Servers** list, toggled on with no pending authentication step — the connection is complete.
+  </Step>
+</Steps>
+
+## Next steps
+
+Once connected, you can ask Codex things like _"What's my traxy lead pipeline look like this week?"_ or _"Pull my top-performing posts from traxy"_ — Codex will call the relevant traxy tools directly.
+
+To disconnect at any time, go to **Settings → Plugins → MCPs**, find `traxy-ai`, and toggle it off or remove it via the gear icon.

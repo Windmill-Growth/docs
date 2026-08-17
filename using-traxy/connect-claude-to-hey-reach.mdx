@@ -1,0 +1,56 @@
+---
+title: "Connect Claude to HeyReach"
+---
+
+HeyReach connects to Claude through its MCP Server (beta), using an MCP key embedded directly in the connection URL — no separate OAuth step required.
+
+### 1 minute guide on how to connect Claude x HeyReach!
+
+<video src="/videos/claude-x-heyreach.mp4" controls />
+
+<Steps>
+  <Step title="Open HeyReach's Integrations settings">
+    In HeyReach, go to [Integrations](https://app.heyreach.io/app/integrations), then select [HeyReach MCP Server](https://app.heyreach.io/app/integrations/public-api/mcp).
+  </Step>
+  <Step title="Generate your MCP key">
+    On the **MCP Server** page, click **New MCP key**.
+
+    HeyReach generates:
+
+    - **Your MCP key** — a standalone key.
+    - **MCP Connection URL** — the key already embedded, e.g. `https://mcp.heyreach.io/mcp?xMcpKey=...`. This URL alone is enough for most connections.
+
+    Click the copy icon next to the **MCP Connection URL** field.
+  </Step>
+  <Step title="Open Claude's connector settings">
+    In Claude (web or desktop), click your profile menu and select **Settings**, then go to **Connectors** in the left sidebar.
+
+    Click **Add** → **Add custom connector**.
+  </Step>
+  <Step title="Add HeyReach as a custom connector">
+    In the **Add custom connector** dialog:
+
+    1. Name the connector `HeyReach`.
+    2. Paste the full MCP Connection URL (including the `xMcpKey` parameter) into the **Remote MCP server URL** field.
+    3. Leave **OAuth Client ID** and **OAuth Client Secret** blank — the key in the URL handles authentication.
+    4. Click **Add**.
+  </Step>
+  <Step title="Connect">
+    Claude will show "You are not connected to HeyReach yet." Click **Connect**.
+
+    Since the MCP key is already part of the URL, no separate authorization screen appears — the connection completes immediately.
+  </Step>
+  <Step title="Confirm the connection">
+    Back in Claude's **Connectors** settings, `HeyReach` now appears as connected with a **Disconnect** option and a full list of available tools (e.g. _Add leads to campaign_, _Create campaign_, _Add tags to lead_ — 43 tools total). By default, tool permissions are set to **Needs approval**, so Claude will confirm with you before calling a tool.
+  </Step>
+</Steps>
+
+## Next steps
+
+Once connected, you can ask Claude things like _"Add these leads to my HeyReach campaign"_ or _"Create a new HeyReach list from this CSV"_ — Claude will call the relevant HeyReach tools directly.
+
+<Warning>
+  Your MCP key grants access to your HeyReach workspace. Treat the connection URL like a credential — re-generating the key in HeyReach will invalidate the old one and require reconnecting in Claude.
+</Warning>
+
+To disconnect at any time, go to **Settings → Connectors → HeyReach** and click **Disconnect**.
