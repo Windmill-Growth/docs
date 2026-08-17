@@ -20,10 +20,7 @@
           "index",
           "quickstart",
           "getting-started/define-your-icp",
-          "getting-started/join-a-workspace",
-          "using-traxy/untitled-page",
-          "using-traxy/untitled-page-2",
-          "using-traxy/connect-claude-to-hey-reach"
+          "getting-started/join-a-workspace"
         ]
       },
       {
@@ -46,8 +43,8 @@
         "pages": [
           "using-traxy/integrations",
           "using-traxy/integrations/rest-api",
-          "using-traxy/integrations/claude",
-          "using-traxy/integrations/codex",
+          "using-traxy/untitled-page",
+          "using-traxy/untitled-page-2",
           "using-traxy/integrations/ordinal",
           "using-traxy/integrations/ordinal/readiness",
           "using-traxy/integrations/ordinal/linkedin-post-audience",
@@ -59,6 +56,7 @@
           "using-traxy/integrations/zapier",
           "using-traxy/integrations/clay",
           "using-traxy/integrations/n8n",
+          "using-traxy/connect-claude-to-hey-reach",
           "using-traxy/integrations/heyreach",
           "using-traxy/integrations/meta-ads"
         ]
