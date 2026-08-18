@@ -43,8 +43,8 @@
         "pages": [
           "using-traxy/integrations",
           "using-traxy/integrations/rest-api",
-          "using-traxy/untitled-page",
-          "using-traxy/untitled-page-2",
+          "using-traxy/connect-claude",
+          "using-traxy/connect-codex",
           "using-traxy/integrations/ordinal",
           "using-traxy/integrations/ordinal/readiness",
           "using-traxy/integrations/ordinal/linkedin-post-audience",
