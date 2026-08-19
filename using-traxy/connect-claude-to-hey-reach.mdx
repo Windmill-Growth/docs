@@ -2,55 +2,57 @@
 title: "Connect Claude to HeyReach"
 ---
 
-HeyReach connects to Claude through its MCP Server (beta), using an MCP key embedded directly in the connection URL — no separate OAuth step required.
+This workflow connects traxy to HeyReach so qualified leads flow straight into your campaigns, then connects HeyReach to Claude so you can manage that pipeline conversationally.
 
-### 1 minute guide on how to connect Claude x HeyReach!
-
-<video src="/videos/claude-x-heyreach.mp4" controls />
+<video src="/videos/connect-claude+heyreach+traxy.mp4" controls />
 
 <Steps>
-  <Step title="Open HeyReach's Integrations settings">
-    In HeyReach, go to [Integrations](https://app.heyreach.io/app/integrations), then select [HeyReach MCP Server](https://app.heyreach.io/app/integrations/public-api/mcp).
+  <Step title="Get your HeyReach API key">
+    In HeyReach, go to **Settings → Integrations**, then select **HeyReach API**.
+
+    Click **New API key** to generate one (this invalidates any previous key), then copy it.
   </Step>
-  <Step title="Generate your MCP key">
-    On the **MCP Server** page, click **New MCP key**.
+  <Step title="Connect traxy to HeyReach">
+    Back in traxy, go to **Integrations → HeyReach**.
 
-    HeyReach generates:
-
-    - **Your MCP key** — a standalone key.
-    - **MCP Connection URL** — the key already embedded, e.g. `https://mcp.heyreach.io/mcp?xMcpKey=...`. This URL alone is enough for most connections.
-
-    Click the copy icon next to the **MCP Connection URL** field.
+    1. Paste your HeyReach API key into the **API connection** field and click **Connect**.
+    2. Under **Destination**, set the **Destination type** to `Campaign` and select (or create) the campaign traxy should send leads to.
+    3. Under **Delivery**, choose **Manual** (send leads yourself from the Leads table) or **Auto** (send every new lead above your ICP match threshold automatically).
+    4. Click **Save settings**.
   </Step>
-  <Step title="Open Claude's connector settings">
-    In Claude (web or desktop), click your profile menu and select **Settings**, then go to **Connectors** in the left sidebar.
+  <Step title="Get your HeyReach MCP connection URL">
+    Still in HeyReach, go to **Settings → Integrations → HeyReach MCP Server**.
 
-    Click **Add** → **Add custom connector**.
+    Copy the **MCP Connection URL** (it already includes your MCP key, e.g. `https://mcp.heyreach.io/mcp?xMcpKey=...`).
   </Step>
-  <Step title="Add HeyReach as a custom connector">
-    In the **Add custom connector** dialog:
+  <Step title="Add HeyReach as a custom connector in Claude">
+    In Claude, open **Settings → Connectors → Add → Add custom connector**.
 
-    1. Name the connector `HeyReach`.
-    2. Paste the full MCP Connection URL (including the `xMcpKey` parameter) into the **Remote MCP server URL** field.
-    3. Leave **OAuth Client ID** and **OAuth Client Secret** blank — the key in the URL handles authentication.
+    1. Name it `heyreach`.
+    2. Paste the MCP Connection URL into the **Remote MCP server URL** field.
+    3. Leave OAuth fields blank — the key is already in the URL.
     4. Click **Add**.
   </Step>
   <Step title="Connect">
-    Claude will show "You are not connected to HeyReach yet." Click **Connect**.
-
-    Since the MCP key is already part of the URL, no separate authorization screen appears — the connection completes immediately.
+    Claude will show "You are not connected to heyreach yet." Click **Connect**. Since the key is embedded in the URL, the connection completes immediately — no separate authorization screen.
   </Step>
-  <Step title="Confirm the connection">
-    Back in Claude's **Connectors** settings, `HeyReach` now appears as connected with a **Disconnect** option and a full list of available tools (e.g. _Add leads to campaign_, _Create campaign_, _Add tags to lead_ — 43 tools total). By default, tool permissions are set to **Needs approval**, so Claude will confirm with you before calling a tool.
+  <Step title="Run your prompt">
+    With traxy delivering leads into your HeyReach campaign and HeyReach connected to Claude, open a new chat and run the following prompt:
+
+    ```text
+    Select the best [X] leads from Traxy for a HeyReach LinkedIn outreach campaign and set up personalized messaging for them.
+    
+    Lead selection: Pull all PRIORITY-tier leads first. Fill remaining slots up to [X] with the highest ICP-match-% leads from QUALIFIED tier. Exclude anything not disposition ACTIVE, and exclude leads without a usable LinkedIn profile URL.
+    
+    Personalization: Use name, title, and company as baseline merge fields ({{firstName}}, {{jobTitle}}, {{companyName}}) for every lead. For leads where Traxy's signal data includes a specific, real reference (e.g. a named post, author, or topic they engaged with — not a generic "active ICP engager" summary), also write a one-line custom field (signalLine) referencing that specific engagement, and weave it into the message. For leads with only generic signal data, skip the signal line and rely on the name/title/company personalization — don't fabricate specificity that isn't there. Flag which leads got which treatment.
+    
+    Build in HeyReach: Add the leads (with their custom fields) to a list or directly to a campaign via add_leads_to_list_v2 / add_leads_to_campaign_v2 (max 100 per call, so this fits in one batch). Draft one message template with the merge tags embedded in natural sentences, not bolted-on greetings. Check the campaign's existing sequence first (get_campaign_sequence) before writing a new one, so the personalized message step fits into whatever connection-request/follow-up structure already exists — build a new one only if none exists. Assign a LinkedIn sender account to the campaign. Preview the merged output on a handful of real leads to catch blank fields or broken sentences before anything goes live. Confirm daily send/invite volume stays within safe LinkedIn limits.
+    
+    Before launching: Show me the selected lead list and the drafted message(s) for approval — don't start the campaign automatically.
+    ```
   </Step>
 </Steps>
 
 ## Next steps
 
-Once connected, you can ask Claude things like _"Add these leads to my HeyReach campaign"_ or _"Create a new HeyReach list from this CSV"_ — Claude will call the relevant HeyReach tools directly.
-
-<Warning>
-  Your MCP key grants access to your HeyReach workspace. Treat the connection URL like a credential — re-generating the key in HeyReach will invalidate the old one and require reconnecting in Claude.
-</Warning>
-
-To disconnect at any time, go to **Settings → Connectors → HeyReach** and click **Disconnect**.
+With both connections in place, traxy pushes qualified leads into your HeyReach campaign automatically (or on your review), and Claude can query and act on that HeyReach data directly — checking campaign status, adding leads, or reporting on outreach performance.
