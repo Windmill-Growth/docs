@@ -7,58 +7,84 @@ description: "Answers to common public user questions about traxy."
   <Accordion title="What is a qualified lead?">
     A qualified lead is a person whose LinkedIn engagement or Agent profile matches your workspace ICP at or above the minimum match.
   </Accordion>
+
   <Accordion title="What is a qualified engagement?">
     Qualified engagement is engagement from people who meet your workspace fit criteria closely enough to matter for lead qualification.
   </Accordion>
+
   <Accordion title="Why did credits change even when I did not get new qualified leads?">
     Most qualification credits settle when traxy saves a successful result. Agent is different: after the trial allowance, it uses credits for each unique profile scanned in the billing window, even when the person does not become a qualified lead.
   </Accordion>
+
+  <Accordion title="Are credits consumed if no phone number or email are available to enrich?">
+    No. Credits will **only** be consumed if there is a phone number or email found.
+  </Accordion>
+
   <Accordion title="Where do I update my ICP?">
     You can update your ICP during onboarding or later in **ICP Configuration** from the main app navigation.
   </Accordion>
+
   <Accordion title="Why is Slack connected but not sending alerts?">
     Slack notifications stay disabled until you select a channel and enable the trigger. If you chose a private channel and it does not appear in the channel list, invite the traxy Slack app to that channel with `/invite @traxy` before you test it.
   </Accordion>
+
   <Accordion title="What does the Webhook integration do?">
     Webhook sends qualified lead events from traxy to your endpoint so another system can receive and act on them.
   </Accordion>
+
   <Accordion title="How are Zapier, Clay, and n8n different from Webhook?">
     Zapier, Clay, and n8n use the same signed webhook delivery model, but each has its own integration page, connection state, and manual send option.
   </Accordion>
+
   <Accordion title="What does the Ordinal integration do?">
-    Ordinal uses a dedicated traxy integration key. Generate the key from **Integrations** > **Ordinal**, then paste it into the traxy integration inside Ordinal.
+    Ordinal uses a dedicated traxy integration key. Generate the key from **Integrations** \> **Ordinal**, then paste it into the traxy integration inside Ordinal.
   </Accordion>
+
   <Accordion title="Why is auto-send not delivering older leads?">
     Auto-send only applies to leads that qualify after it is enabled. Use manual delivery from the leads table if you want to send existing leads.
   </Accordion>
+
   <Accordion title="Why did HubSpot skip a lead?">
     HubSpot can skip records when your settings say to ignore contacts without an email, contacts without a company, or missing CRM records. Review the HubSpot integration settings before retrying.
   </Accordion>
+
   <Accordion title="Do MCP clients need API keys?">
-    No. Connect from **Integrations** > **Claude** or **Integrations** > **Codex**. Both use OAuth. API keys are for direct REST access.
+    No. Connect from **Integrations** \> **Claude** or **Integrations** \> **Codex**. Both use OAuth. API keys are for direct REST access.
   </Accordion>
+
   <Accordion title="Why am I not getting repeat engagement alerts?">
     Repeat engagement alerts only send when the integration trigger, auto-send, and **Send repeat engagement from qualified leads** are all enabled.
   </Accordion>
+
   <Accordion title="Can I use more than one webhook-style integration?">
     Yes. Each workspace can configure Webhook, Zapier, Clay, and n8n separately.
   </Accordion>
+
+  <Accordion title="How many posts does traxy qualifies when you first open your account?">
+    We qualify the most recent 5. To qualify older post you would have to manually select them in [Post Signals](https://app.traxy.ai/post-signals).
+  </Accordion>
+
   <Accordion title="Why can I not qualify a post?">
     The post may have no engagement, qualification data may still be refreshing, or your workspace may not have enough credits for the action.
   </Accordion>
+
   <Accordion title="What happens when the workspace runs out of credits?">
     New credit-funded qualification, enrichment, and Agent work cannot start. Existing saved leads remain available. Work can resume after the monthly credit window resets or the plan changes.
   </Accordion>
+
   <Accordion title="Can I work across multiple workspaces?">
     Yes. If you belong to more than one workspace, use the workspace switcher in the sidebar to move between them.
   </Accordion>
+
   <Accordion title="Where do I manage excluded companies?">
-    Open **Settings** > **Blocklist** to add or remove company domains that should not appear as future leads.
+    Open **Settings** \> **Blocklist** to add or remove company domains that should not appear as future leads.
   </Accordion>
+
   <Accordion title="Where do I manage billing and usage settings?">
-    Open **Settings** > **Billing** for subscription tasks, credit usage, payment methods, invoices, and plan changes.
+    Open **Settings** \> **Billing** for subscription tasks, credit usage, payment methods, invoices, and plan changes.
   </Accordion>
+
   <Accordion title="How do I cancel my subscription?">
-    A workspace owner or admin should open **Settings** > **Billing** > **Manage Subscription**, select **Cancel Plan**, and complete the cancellation in Stripe. Review the effective date before confirming. See [Cancel a subscription](/using-traxy/billing-and-credits#cancel-a-subscription).
+    A workspace owner or admin should open **Settings** \> **Billing** \> **Manage Subscription**, select **Cancel Plan**, and complete the cancellation in Stripe. Review the effective date before confirming. See [Cancel a subscription](/using-traxy/billing-and-credits#cancel-a-subscription).
   </Accordion>
 </AccordionGroup>
