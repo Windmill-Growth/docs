@@ -51,7 +51,6 @@
           "using-traxy/integrations/ordinal/request-audience-discovery",
           "using-traxy/integrations/ordinal/workspace-audience",
           "using-traxy/integrations/slack",
-          "using-traxy/integrations/hubspot",
           "using-traxy/integrations/webhook",
           "using-traxy/integrations/zapier",
           "using-traxy/integrations/clay",
