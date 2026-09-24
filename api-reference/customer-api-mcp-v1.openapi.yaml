@@ -6,13 +6,14 @@ info:
     Public customer-facing read API, Ordinal Audience Analytics endpoints, and
     remote MCP Streamable HTTP endpoint. Customer REST and Ordinal requests use
     bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
-    resource; API keys are not accepted by MCP. Public REST clients must
+    resource; API keys are never accepted by MCP. Public REST clients must
     not send organizationId. Default API keys cover the general read API.
     Ordinal Audience Analytics is self-serve for paid workspaces and requires
     explicitly selected audience_analytics scopes on the key.
-    The current MCP surface exposes 42 scope-gated tools through tools/list,
-    including confirmed lead, Agent, Watchlist, post, and delivery actions. Latest
-    MCP protocol examples use 2025-11-25; 2025-06-18 remains legacy-compatible.
+    The current MCP surface exposes 48 scope-gated tools through tools/list,
+    including multi-workspace selection, confirmed lead, ICP, Signal Brief,
+    Agent, Watchlist, post, Meetings, and delivery actions. MCP protocol
+    versions 2025-11-25 (current) and 2025-06-18 are supported.
 servers:
   - url: https://api.traxy.ai/api/v1
     description: Production
@@ -24,6 +25,108 @@ tags:
   - name: MCP OAuth
   - name: MCP
 paths:
+  /customer/analytics/meetings:
+    get:
+      tags:
+        - Customer REST
+      summary: Get Meetings booked attribution counts.
+      description: Uses the credential workspace and verifies its creator still has
+        workspace read access. The feed omits meetingWith unless
+        leads:contact_read is granted; source calendars and provider payloads are
+        never returned.
+      security:
+        - CustomerApiKey:
+            - analytics:read
+      parameters:
+        - &a1
+          in: query
+          name: range
+          schema:
+            type: string
+            enum:
+              - 7d
+              - 30d
+              - 90d
+              - all
+            default: 30d
+      responses:
+        "200":
+          description: Meetings read result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerMeetingsSummary"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Read capability or active workspace membership required.
+        "503":
+          description: Meetings temporarily unavailable; retry after the Retry-After header.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                example: 1
+  /customer/meetings:
+    get:
+      tags:
+        - Customer REST
+      summary: List attributed Meetings with snapshot cursor pagination.
+      description: Uses the credential workspace and verifies its creator still has
+        workspace read access. The feed omits meetingWith unless
+        leads:contact_read is granted; source calendars and provider payloads are
+        never returned.
+      security:
+        - CustomerApiKey:
+            - leads:read
+      parameters:
+        - *a1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - in: query
+          name: cursor
+          schema:
+            type: string
+            maxLength: 512
+        - in: query
+          name: leadId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: targetType
+          schema:
+            type: string
+            enum:
+              - PERSON
+              - COMPANY
+      responses:
+        "200":
+          description: Meetings read result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerMeetingsFeed"
+        "400":
+          $ref: "#/components/responses/ValidationFailed"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          description: Read capability or active workspace membership required.
+        "503":
+          description: Meetings temporarily unavailable; retry after the Retry-After header.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                example: 1
   /customer/workspace-access:
     get:
       tags: [Customer REST]
@@ -32,7 +135,7 @@ paths:
         - CustomerApiKey: [workspace:read]
       responses:
         '200':
-          description: Workspace capabilities and usage available to this key.
+          description: API-visible workspace capabilities and usage.
           content:
             application/json:
               schema:
@@ -46,7 +149,7 @@ paths:
   /customer/leads:
     get:
       tags: [Customer REST]
-      summary: List active leads available to this key.
+      summary: List API-visible leads.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -72,7 +175,7 @@ paths:
         - $ref: '#/components/parameters/LeadOriginFilter'
       responses:
         '200':
-          description: Lead page. Contact fields are null unless the key has leads:contact_read.
+          description: Lead page. Contact fields are null unless the credential has leads:contact_read.
           content:
             application/json:
               schema:
@@ -88,7 +191,7 @@ paths:
   /customer/leads/signals:
     get:
       tags: [Customer REST]
-      summary: List lead signals with safe lead, post, and Watchlist context.
+      summary: List visible lead signals with safe lead, post, and watched-profile context.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -112,7 +215,11 @@ paths:
         - $ref: '#/components/parameters/LeadOriginFilter'
       responses:
         '200':
-          $ref: '#/components/responses/PageObject'
+          description: Lead engagement page with a nullable canonical signal on each record and lead.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadSignalPage'
         '400':
           $ref: '#/components/responses/ValidationFailed'
         '401':
@@ -124,7 +231,7 @@ paths:
   /customer/leads/counts:
     get:
       tags: [Customer REST]
-      summary: Get active lead counts.
+      summary: Get API-visible lead counts.
       security:
         - CustomerApiKey: [leads:read]
       responses:
@@ -160,7 +267,7 @@ paths:
   /customer/leads/{leadId}:
     get:
       tags: [Customer REST]
-      summary: Get one active lead.
+      summary: Get one API-visible lead.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -324,7 +431,7 @@ paths:
   /customer/analytics/posts:
     get:
       tags: [Customer REST]
-      summary: List post analytics, including safe post contentText.
+      summary: List post analytics, including safe postUrl and contentText.
       security:
         - CustomerApiKey: [analytics:read]
       parameters:
@@ -352,7 +459,7 @@ paths:
   /customer/analytics/posts/{postId}/summary:
     get:
       tags: [Customer REST]
-      summary: Get one post summary, including safe post contentText.
+      summary: Get one post summary, including safe postUrl and contentText.
       security:
         - CustomerApiKey: [analytics:read]
       parameters:
@@ -384,7 +491,7 @@ paths:
   /customer/content-feed:
     get:
       tags: [Customer REST]
-      summary: List content feed posts, including safe post contentText.
+      summary: List content feed posts, including safe postUrl and contentText.
       security:
         - CustomerApiKey: [content:read]
       parameters:
@@ -412,7 +519,7 @@ paths:
   /customer/content/feed:
     get:
       tags: [Customer REST]
-      summary: List content feed posts, including safe post contentText.
+      summary: List content feed posts, including safe postUrl and contentText.
       security:
         - CustomerApiKey: [content:read]
       parameters:
@@ -440,7 +547,7 @@ paths:
   /customer/account-reports:
     get:
       tags: [Customer REST]
-      summary: List account summaries derived from active leads.
+      summary: List account-level summaries derived from visible active leads.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -466,7 +573,7 @@ paths:
   /customer/account-reports/{accountId}:
     get:
       tags: [Customer REST]
-      summary: Get one account summary with its top active leads.
+      summary: Get one account summary with top visible leads.
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -607,8 +714,8 @@ paths:
   /audience-analytics/linkedin-posts/find-audience:
     post:
       tags: [Ordinal Audience Analytics]
-      summary: Queue on-demand audience discovery for a LinkedIn post.
-      description: Starts discovery through the normal traxy post URL qualification pipeline and consumes normal qualification credits only when discovery is actually started.
+      summary: Request on-demand audience discovery for one exact LinkedIn post.
+      description: Resolves the supplied LinkedIn reference to one immutable post, prepares an exact qualification quote, and accepts the request only after its complete credit reservation succeeds. Replays with the same idempotency key and payload reuse the durable request. An incompatible replay returns 409.
       security:
         - CustomerApiKey: [audience_analytics:request]
       requestBody:
@@ -629,13 +736,21 @@ paths:
                   maxLength: 120
       responses:
         '202':
-          $ref: '#/components/responses/AudienceObject'
+          description: Discovery is already available, waiting for quote preparation, or represented by a durable qualification request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudienceDiscoveryResponse'
         '400':
           $ref: '#/components/responses/ValidationFailed'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '402':
-          $ref: '#/components/responses/InsufficientCapability'
+          description: The full exact quote could not be reserved. No qualification request was created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
         '404':
           $ref: '#/components/responses/NotFound'
         '409':
@@ -762,11 +877,37 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+  /mcp/oauth/authorize/permissions:
+    post:
+      tags: [MCP OAuth]
+      summary: Preview current account permissions in selected workspaces.
+      description: Read-only authenticated preview. The request token stays in the body. Each workspace must pass current membership and MCP availability checks.
+      security:
+        - SupabaseUserJwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/McpOAuthAuthorizationPermissionsRequest'
+      responses:
+        '200':
+          description: Available scope ceiling and per-workspace scopes. Response is not cacheable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/McpOAuthAuthorizationPermissions'
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/InsufficientCapability'
   /mcp/oauth/authorize/complete:
     post:
       tags: [MCP OAuth]
       summary: Approve or cancel MCP OAuth authorization from traxy.
-      description: Any active workspace member can approve a request containing only non-sensitive read scopes. The default OAuth grant includes saved contact and profile access, which requires an owner or admin. Scopes that can change workspace data or spend credits also require an owner or admin. Cancellation returns a clean access_denied callback without requiring admin access.
+      description: Every active member may approve the requested actions permitted by their current role and MCP entitlement in the selected workspaces. Submitted scopes cap consent; each tool call also enforces the current role. Cancellation returns an access_denied callback.
       security:
         - SupabaseUserJwt: []
       requestBody:
@@ -855,12 +996,12 @@ paths:
           schema:
             type: string
             example: '2025-11-25'
-          description: Use 2025-11-25 for current clients. 2025-06-18 remains supported for compatibility. The header may be omitted for legacy client compatibility; any supplied value must be supported.
+          description: Use the version negotiated during initialize, either 2025-11-25 (current) or 2025-06-18. The header may be omitted until negotiation completes.
         - name: Origin
           in: header
           schema:
             type: string
-          description: Browser origins must match CUSTOMER_API_MCP_ALLOWED_ORIGINS.
+          description: Requests from a browser origin must come from an origin allowed by traxy. Non-browser clients can omit this header.
       requestBody:
         required: true
         content:
@@ -884,7 +1025,7 @@ paths:
                       tools:
                         - name: traxy_get_workspace_access
                           title: Get workspace access
-                          description: Return workspace access, usage, and capabilities for this connection.
+                          description: Return visible workspace access, usage, and capabilities.
                           inputSchema:
                             type: object
                             properties: {}
@@ -920,7 +1061,7 @@ paths:
                             additionalProperties: true
                         - name: traxy_list_agent_candidates
                           title: List agent candidates
-                          description: List candidate summaries for one Agent run, the latest Agent run, or the latest onboarding preview.
+                          description: List safe visible candidates for one agent run, the latest agent run, or the latest preview with locked-count availability.
                           inputSchema:
                             type: object
                             properties:
@@ -929,7 +1070,8 @@ paths:
                                 format: uuid
                               source:
                                 type: string
-                                enum: [latest_agent_run, latest_onboarding_preview]
+                                enum:
+                                  [latest_agent_run, latest_onboarding_preview]
                               limit:
                                 type: number
                                 minimum: 1
@@ -978,7 +1120,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: trxy_live_<public_id>_<secret>
-      description: API key created from Integrations > API. Used for Customer REST and Ordinal Audience Analytics.
+      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST and Ordinal Audience Analytics, not MCP OAuth.
     McpOAuth:
       type: http
       scheme: bearer
@@ -1039,6 +1181,7 @@ components:
     MinIcpMatchPercentFilter:
       name: minIcpMatchPercent
       in: query
+      description: Minimum ICP match percentage, from 0 to 100. Lead, lead signal, and account report endpoints default to 50 when omitted. Pass a lower value, such as 0, to include lower-scoring qualified engagers.
       schema:
         type: integer
         minimum: 0
@@ -1046,6 +1189,7 @@ components:
     MaxIcpMatchPercentFilter:
       name: maxIcpMatchPercent
       in: query
+      description: Maximum ICP match percentage, from 0 to 100.
       schema:
         type: integer
         minimum: 0
@@ -1073,11 +1217,11 @@ components:
       in: query
       schema:
         type: string
-        enum: [LIKE, COMMENT, REPOST]
+        enum: [LIKE, COMMENT, REPOST, POST_AUTHOR]
     EngagementTypesFilter:
       name: engagementTypes
       in: query
-      description: Comma-separated engagement types. Accepts up to three values.
+      description: Comma-separated engagement types. Accepts up to four values.
       schema:
         type: string
     OwnerIdFilter:
@@ -1275,7 +1419,7 @@ components:
         WWW-Authenticate:
           schema:
             type: string
-            example: Bearer resource_metadata="https://api.traxy.ai/.well-known/oauth-protected-resource/api/v1/mcp" scope="workspace:read leads:read agent:read"
+            example: Bearer resource_metadata="https://api.traxy.ai/.well-known/oauth-protected-resource/api/v1/mcp" scope="workspace:read leads:read leads:contact_read agent:read"
       content:
         application/json:
           schema:
@@ -1325,12 +1469,246 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
     RateLimited:
-      description: Customer API rate limit exceeded. Retry after the delay in the Retry-After header.
+      description: Customer API rate limit exceeded. Production-like runtimes fail closed with this response if the distributed limiter is unavailable.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
   schemas:
+    CustomerMeetingsSummary:
+      type: object
+      properties:
+        qualifiedCompanies:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        attributedMeetings:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        unmatchedBookings:
+          type: integer
+          minimum: 0
+          maximum: 9007199254740991
+        range:
+          default: 30d
+          type: string
+          enum:
+            - 7d
+            - 30d
+            - 90d
+            - all
+        lastAttributedAt:
+          type: string
+          format: date-time
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+          nullable: true
+        windows:
+          type: object
+          properties:
+            7d:
+              type: object
+              properties:
+                qualifiedCompanies:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+                attributedMeetings:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+                unmatchedBookings:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+              required:
+                - qualifiedCompanies
+                - attributedMeetings
+                - unmatchedBookings
+              additionalProperties: false
+            30d:
+              type: object
+              properties:
+                qualifiedCompanies:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+                attributedMeetings:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+                unmatchedBookings:
+                  type: integer
+                  minimum: 0
+                  maximum: 9007199254740991
+              required:
+                - qualifiedCompanies
+                - attributedMeetings
+                - unmatchedBookings
+              additionalProperties: false
+          required:
+            - 7d
+            - 30d
+          additionalProperties: false
+      required:
+        - qualifiedCompanies
+        - attributedMeetings
+        - unmatchedBookings
+        - range
+        - lastAttributedAt
+      additionalProperties: false
+    CustomerMeetingsFeed:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+              meetingCount:
+                type: integer
+                minimum: 0
+                maximum: 9007199254740991
+              targetType:
+                type: string
+                enum:
+                  - PERSON
+                  - COMPANY
+              lifecycleStatus:
+                type: string
+                enum:
+                  - PENDING
+                  - TENTATIVE
+                  - ACCEPTED
+                  - DECLINED
+                  - OCCURRED
+                  - CANCELLED
+              direction:
+                type: string
+                enum:
+                  - INBOUND
+                  - OUTBOUND
+                  - UNKNOWN
+              meetingStartAt:
+                type: string
+                format: date-time
+                pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+              bookedAt:
+                type: string
+                format: date-time
+                pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+              attributedAt:
+                type: string
+                format: date-time
+                pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d(?:\.\d+)?)?(?:Z|([+-](?:[01]\d|2[0-3]):[0-5]\d)))$
+              company:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    nullable: true
+                  domain:
+                    type: string
+                    nullable: true
+                required:
+                  - name
+                  - domain
+                additionalProperties: false
+              leadRelationship:
+                type: string
+                enum:
+                  - DIRECT
+                  - COMPANY
+                nullable: true
+              meetingOutcome:
+                type: string
+                enum:
+                  - already_client
+                  - closed_won
+                nullable: true
+              lead:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  name:
+                    type: string
+                  headline:
+                    type: string
+                    nullable: true
+                  title:
+                    type: string
+                    nullable: true
+                  icpMatchPercent:
+                    type: number
+                  foundAt:
+                    type: string
+                    nullable: true
+                required:
+                  - id
+                  - name
+                  - headline
+                  - title
+                  - icpMatchPercent
+                  - foundAt
+                additionalProperties: false
+                nullable: true
+              meetingWith:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    nullable: true
+                  email:
+                    type: string
+                    nullable: true
+                required:
+                  - name
+                  - email
+                additionalProperties: false
+                nullable: true
+            required:
+              - id
+              - meetingCount
+              - targetType
+              - lifecycleStatus
+              - direction
+              - meetingStartAt
+              - bookedAt
+              - attributedAt
+              - company
+              - leadRelationship
+              - meetingOutcome
+              - lead
+            additionalProperties: false
+        page:
+          type: object
+          properties:
+            limit:
+              type: integer
+              minimum: 1
+              maximum: 100
+            cursor:
+              type: string
+              nullable: true
+            nextCursor:
+              type: string
+              nullable: true
+          required:
+            - limit
+            - cursor
+            - nextCursor
+          additionalProperties: false
+      required:
+        - data
+        - page
+      additionalProperties: false
     McpOAuthClientRegistrationRequest:
       type: object
       additionalProperties: false
@@ -1359,7 +1737,7 @@ components:
         scope:
           type: string
           description: Space-separated OAuth scopes.
-          example: 'workspace:read leads:read agent:read'
+          example: 'workspace:read leads:read leads:contact_read agent:read'
         token_endpoint_auth_method:
           type: string
           enum: [none]
@@ -1399,7 +1777,7 @@ components:
           enum: [none]
         scope:
           type: string
-          example: 'workspace:read leads:read analytics:read agent:read'
+          example: 'workspace:read leads:read leads:contact_read analytics:read agent:read'
     McpOAuthAuthorizationPreview:
       type: object
       required: [clientName, requestedScopes, expiresAt, resource]
@@ -1408,29 +1786,7 @@ components:
           type: string
           example: Codex
         requestedScopes:
-          type: array
-          items:
-            type: string
-            enum:
-              - workspace:read
-              - leads:read
-              - leads:contact_read
-              - leads:contact_enrich
-              - leads:manage
-              - analytics:read
-              - icp:read
-              - watchlist:read
-              - watchlist:manage
-              - content:read
-              - integrations:read
-              - integrations:manage
-              - integrations:deliver
-              - sync:read
-              - agent:read
-              - agent:run
-              - audience_analytics:read
-              - audience_analytics:request
-              - post_qualification:manage
+          $ref: '#/components/schemas/McpConsentScopes'
         expiresAt:
           type: string
           format: date-time
@@ -1438,6 +1794,67 @@ components:
           type: string
           format: uri
           example: https://api.traxy.ai/api/v1/mcp
+    McpConsentScopes:
+      type: array
+      maxItems: 20
+      items:
+        type: string
+        enum:
+          - leads:read
+          - leads:contact_read
+          - leads:contact_enrich
+          - leads:manage
+          - analytics:read
+          - icp:read
+          - icp:manage
+          - watchlist:read
+          - watchlist:manage
+          - content:read
+          - integrations:read
+          - integrations:manage
+          - integrations:deliver
+          - sync:read
+          - agent:read
+          - agent:run
+          - workspace:read
+          - audience_analytics:read
+          - audience_analytics:request
+          - post_qualification:manage
+    McpOAuthAuthorizationPermissionsRequest:
+      type: object
+      additionalProperties: false
+      required: [requestToken, organizationIds]
+      properties:
+        requestToken:
+          type: string
+          minLength: 32
+          maxLength: 256
+        organizationIds:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: string
+            format: uuid
+    McpOAuthAuthorizationPermissions:
+      type: object
+      required: [scopes, workspaces]
+      properties:
+        scopes:
+          $ref: '#/components/schemas/McpConsentScopes'
+        workspaces:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: object
+            required: [organizationId, scopes]
+            properties:
+              organizationId:
+                type: string
+                format: uuid
+              scopes:
+                $ref: '#/components/schemas/McpConsentScopes'
     McpOAuthAuthorizeCompleteRequest:
       oneOf:
         - type: object
@@ -1446,9 +1863,22 @@ components:
           properties:
             requestToken:
               type: string
+              minLength: 32
+              maxLength: 256
             organizationId:
               type: string
               format: uuid
+            organizationIds:
+              type: array
+              minItems: 1
+              maxItems: 50
+              items:
+                type: string
+                format: uuid
+            scopes:
+              allOf:
+                - $ref: '#/components/schemas/McpConsentScopes'
+                - minItems: 1
             approved:
               type: boolean
               enum: [true]
@@ -1458,6 +1888,8 @@ components:
           properties:
             requestToken:
               type: string
+              minLength: 32
+              maxLength: 256
             organizationId:
               type: string
               format: uuid
@@ -1534,7 +1966,7 @@ components:
           description: Opaque refresh token. Store securely; traxy stores only a hash.
         scope:
           type: string
-          example: 'workspace:read leads:read analytics:read agent:read'
+          example: 'workspace:read leads:read leads:contact_read analytics:read agent:read'
     McpOAuthRevokeRequest:
       type: object
       additionalProperties: false
@@ -1600,6 +2032,7 @@ components:
               type: boolean
             leadContactEnrichment:
               type: boolean
+              description: Whether the credential can request credit-consuming contact enrichment.
             analytics:
               type: boolean
             icp:
@@ -1629,6 +2062,36 @@ components:
               type: integer
             monitoredProfileCount:
               type: integer
+    AudienceDiscoveryResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - postId
+      properties:
+        status:
+          type: string
+          enum:
+            - queued
+            - pending
+            - already_available
+        postId:
+          type: string
+          format: uuid
+        quoteId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Exact quote used for the request, or the quote still being prepared.
+        requestId:
+          type: string
+          format: uuid
+          nullable: true
+          description: Durable qualification request. Null only while its quote is still preparing.
+        audience:
+          type: object
+          additionalProperties: true
+          description: Aggregate-only audience data, present when analytics are already available.
     LeadPage:
       allOf:
         - $ref: '#/components/schemas/PageEnvelope'
@@ -1638,12 +2101,126 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Lead'
+    LeadSignalPage:
+      allOf:
+        - $ref: '#/components/schemas/PageEnvelope'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/LeadSignalRecord'
+    LeadSignalRecord:
+      type: object
+      required:
+        - id
+        - engagementType
+        - reactionType
+        - engagedAt
+        - capturedAt
+        - signal
+        - lead
+        - primarySignal
+        - engagedWith
+        - post
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagementType:
+          type: string
+          enum: [LIKE, COMMENT, REPOST, POST_AUTHOR]
+        reactionType:
+          type: string
+          nullable: true
+        engagedAt:
+          type: string
+          format: date-time
+        capturedAt:
+          type: string
+          format: date-time
+        signal:
+          type: object
+          nullable: true
+          allOf:
+            - $ref: '#/components/schemas/LeadSignal'
+        lead:
+          $ref: '#/components/schemas/Lead'
+        primarySignal:
+          type: object
+          additionalProperties: true
+          description: Backward-compatible LinkedIn engagement context.
+        engagedWith:
+          type: object
+          additionalProperties: true
+        post:
+          type: object
+          additionalProperties: true
+    LeadSignal:
+      type: object
+      additionalProperties: false
+      required:
+        - summary
+        - whyRelevant
+        - topic
+        - type
+        - strength
+        - sentiment
+        - occurredAt
+        - source
+      properties:
+        summary:
+          type: string
+          maxLength: 300
+        whyRelevant:
+          type: string
+          maxLength: 500
+        topic:
+          type: string
+          nullable: true
+          maxLength: 160
+        type:
+          type: string
+          enum:
+            [
+              COMPETITOR,
+              PAIN,
+              TRIGGER,
+              TOPIC,
+              CATEGORY_INTEREST,
+              CUSTOM,
+              GENERAL_ENGAGEMENT,
+            ]
+        strength:
+          type: string
+          enum: [DIRECT, CONTEXTUAL, ACTIVITY]
+        sentiment:
+          type: string
+          enum: [NEGATIVE, POSITIVE, MIXED, NEUTRAL, UNKNOWN]
+        occurredAt:
+          type: string
+          format: date-time
+        source:
+          type: object
+          additionalProperties: false
+          required: [name, title, url]
+          properties:
+            name:
+              type: string
+              nullable: true
+            title:
+              type: string
+              nullable: true
+            url:
+              type: string
+              nullable: true
     Lead:
       type: object
       required:
         - id
         - profile
         - contact
+        - signal
       properties:
         id:
           type: string
@@ -1658,12 +2235,70 @@ components:
           nullable: true
         profile:
           type: object
-          additionalProperties: true
+          additionalProperties: false
+          required:
+            - displayName
+            - headline
+            - location
+            - currentCompany
+            - profileUrl
+          properties:
+            displayName:
+              type: string
+              nullable: true
+            headline:
+              type: string
+              nullable: true
+            location:
+              type: string
+              nullable: true
+            currentCompany:
+              type: string
+              nullable: true
+            profileUrl:
+              type: string
+              format: uri
+              nullable: true
+              description: Canonical LinkedIn profile URL; null without leads:contact_read.
         contact:
           nullable: true
-          description: Null unless the key has leads:contact_read.
+          description: Null unless the credential has leads:contact_read.
           type: object
-          additionalProperties: true
+          additionalProperties: false
+          required:
+            - workEmail
+            - workEmailStatus
+            - personalEmail
+            - personalEmailStatus
+            - contactPhone
+            - contactPhoneStatus
+          properties:
+            workEmail:
+              type: string
+              format: email
+              nullable: true
+            workEmailStatus:
+              type: string
+              nullable: true
+            personalEmail:
+              type: string
+              format: email
+              nullable: true
+            personalEmailStatus:
+              type: string
+              nullable: true
+            contactPhone:
+              type: string
+              nullable: true
+            contactPhoneStatus:
+              type: string
+              nullable: true
+        signal:
+          type: object
+          nullable: true
+          description: The lead's strongest current canonical signal, or null when unavailable.
+          allOf:
+            - $ref: '#/components/schemas/LeadSignal'
     PageEnvelope:
       type: object
       required: [data, page]
