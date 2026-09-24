@@ -32,6 +32,8 @@ API access requires Pro, Scale, or Enterprise access.
     ```
 
     The lead is in `data[0]`. If `data` is empty, your workspace does not currently have an active lead that matches the request.
+
+    By default, the API returns leads with an ICP match of at least 50%. Add `minIcpMatchPercent=0` to include qualified engagers with a lower ICP match.
   </Step>
 </Steps>
 
@@ -71,6 +73,7 @@ Add only the permissions your application needs:
 - `leads:contact_read` returns saved contact fields and LinkedIn profile URLs.
 - `leads:contact_enrich` allows contact enrichment and requires lead read and contact read access.
 - `leads:manage` allows lead quick actions.
+- `icp:manage` allows updates to the active ICP and Signal Brief.
 - `watchlist:manage` allows Watchlist changes.
 - `integrations:manage` allows webhook destination changes.
 - `integrations:deliver` allows delivery of a selected lead to a webhook-style destination.

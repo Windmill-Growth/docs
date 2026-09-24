@@ -60,6 +60,7 @@ Optional permissions include:
 - `leads:contact_read`
 - `leads:contact_enrich`
 - `leads:manage`
+- `icp:manage`
 - `watchlist:manage`
 - `integrations:manage`
 - `integrations:deliver`
@@ -88,6 +89,8 @@ Do not decode or construct cursors. A malformed or sort-incompatible cursor retu
 
 `GET /customer/leads` returns active leads by default. Use `disposition` when you want another lead view.
 
+Lead, lead signal, and account report endpoints return leads with an ICP match of at least 50% by default. Pass `minIcpMatchPercent` to change that minimum. For example, `minIcpMatchPercent=0` also returns qualified engagers with a lower ICP match. Use `maxIcpMatchPercent` to set an upper bound.
+
 Useful filters include:
 
 - ICP match range
@@ -96,13 +99,15 @@ Useful filters include:
 - Agent or Watchlist origin
 - monitored profile
 - LinkedIn post
-- engagement type
+- engagement type, including post author
 - owner
 - company
 - text query
 - date range
 
 Use `GET /customer/leads/signals` when you need the engagement, monitored profile, and post context behind the lead.
+
+Use `GET /customer/analytics/meetings` for Meetings booked counts and `GET /customer/meetings` for the attributed meetings list. The meetings list accepts `range`, `leadId`, and `targetType`. Meeting attendee details require `leads:contact_read`.
 
 Contact fields and LinkedIn profile URLs require `leads:contact_read`.
 
@@ -116,16 +121,19 @@ https://api.traxy.ai/api/v1/mcp
 
 Claude and Codex complete OAuth in the browser. The client negotiates the protocol version. traxy supports `2025-11-25` and `2025-06-18`.
 
-The default OAuth grant adds `leads:contact_read` to the standard read scopes. An owner or admin must approve that access. A request containing only non-sensitive read scopes can be approved by any active workspace member.
+Any active workspace member can connect MCP. The approval screen shows the permissions available to your role in each workspace, and you choose what to grant. ICP and Watchlist changes require an owner or admin. Every tool call also checks your current role, so a role change takes effect on the next request.
+
+One connection can include up to 50 workspaces that you select during approval. `traxy_list_workspaces` returns the workspaces available to the connection. Other tools accept an optional `workspaceId`. When you omit it, traxy uses the default workspace from the approval.
 
 `tools/list` returns only the tools allowed by the approved scopes and current workspace access.
 
 ## MCP tools
 
-The current catalog has 42 scope-gated tools.
+The current catalog has 48 scope-gated tools.
 
 ### Connection and workspace
 
+- `traxy_list_workspaces`
 - `traxy_get_mcp_connection_status`
 - `traxy_get_workspace_access`
 
@@ -157,6 +165,9 @@ Starting a run requires `confirmCreditSpend: true`. The client should ask before
 ### ICP and Watchlist
 
 - `traxy_get_active_icp`
+- `traxy_update_active_icp`
+- `traxy_get_active_signal_brief`
+- `traxy_update_active_signal_brief`
 - `traxy_list_watchlist_profiles`
 - `traxy_get_watchlist_profile`
 - `traxy_get_watchlist_summary`
@@ -166,11 +177,15 @@ Starting a run requires `confirmCreditSpend: true`. The client should ask before
 - `traxy_remove_watchlist_profile`
 - `traxy_restore_watchlist_profile`
 
+ICP and Signal Brief updates require `icp:read` and `icp:manage`. Arrays you send replace the current values, and fields you omit stay unchanged.
+
 Watchlist management supports teammate, competitor, influencer, investor, and custom relationships. A custom relationship requires its label.
 
 ### Content and analytics
 
 - `traxy_get_analytics_dashboard`
+- `traxy_get_meetings_summary`
+- `traxy_list_meetings`
 - `traxy_list_analytics_posts`
 - `traxy_get_post_summary`
 - `traxy_list_post_qualified_leads`
@@ -228,8 +243,11 @@ Common status codes:
 - `400` for invalid input
 - `401` for invalid, expired, or revoked credentials
 - `402` for insufficient credits or access
+- `403` when a browser origin is not allowed to call MCP
 - `404` when the requested resource is not available to the workspace
+- `409` for a malformed or unsupported LinkedIn post reference
 - `429` for rate limits
+- `503` when Meetings data is temporarily unavailable. Retry after the `Retry-After` delay.
 
 Valid JSON-RPC requests use JSON-RPC errors for unknown methods, unknown tools, malformed calls, or missing scopes.
 
