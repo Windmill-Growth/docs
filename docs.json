@@ -127,6 +127,12 @@
           "troubleshooting/faq",
           "refund-policy"
         ]
+      },
+      {
+        "group": "Resources",
+        "pages": [
+          "new-to-traxy"
+        ]
       }
     ]
   },
