@@ -13,9 +13,9 @@
     "dark": "/logo/dark.svg"
   },
   "navigation": {
-    "groups": [
+    "dropdowns": [
       {
-        "group": "Getting started",
+        "dropdown": "Getting started",
         "pages": [
           "index",
           "quickstart",
@@ -24,7 +24,7 @@
         ]
       },
       {
-        "group": "Using traxy",
+        "dropdown": "Using traxy",
         "pages": [
           "using-traxy/dashboard",
           "using-traxy/agent",
@@ -39,7 +39,7 @@
         ]
       },
       {
-        "group": "Integrations",
+        "dropdown": "Integrations",
         "pages": [
           "using-traxy/integrations",
           "using-traxy/integrations/rest-api",
@@ -61,8 +61,18 @@
         ]
       },
       {
-        "group": "API reference",
-        "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+        "dropdown": "traxy Guides",
+        "pages": [
+          "product-tour-get-to-know-traxy",
+          "icp-and-signals-define-and-fine-tune",
+          "videos/leads-high-intent-and-warm-leads",
+          "watchlist-and-agent-strategy",
+          "team-and-workspaces-invite-teammates-and-add-new-icps",
+          "account-hygiene-and-credits-blocklists-enrichment-and-usage"
+        ]
+      },
+      {
+        "dropdown": "API reference",
         "pages": [
           "using-traxy/integrations/api-mcp/reference",
           "GET /customer/workspace-access",
@@ -110,7 +120,7 @@
         ]
       },
       {
-        "group": "Outbound playbooks",
+        "dropdown": "Outbound playbooks",
         "pages": [
           "using-traxy/outbound-to-signal-based-leads",
           "using-traxy/signal-cheat-sheet",
@@ -121,17 +131,11 @@
         ]
       },
       {
-        "group": "Troubleshooting",
+        "dropdown": "Troubleshooting",
         "pages": [
           "troubleshooting/no-qualified-leads-yet",
           "troubleshooting/faq",
           "refund-policy"
-        ]
-      },
-      {
-        "group": "Resources",
-        "pages": [
-          "new-to-traxy"
         ]
       }
     ]
