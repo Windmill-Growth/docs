@@ -13,9 +13,9 @@
     "dark": "/logo/dark.svg"
   },
   "navigation": {
-    "dropdowns": [
+    "groups": [
       {
-        "dropdown": "Getting started",
+        "group": "Getting started",
         "pages": [
           "index",
           "quickstart",
@@ -24,7 +24,7 @@
         ]
       },
       {
-        "dropdown": "Using traxy",
+        "group": "Using traxy",
         "pages": [
           "using-traxy/dashboard",
           "using-traxy/agent",
@@ -39,7 +39,7 @@
         ]
       },
       {
-        "dropdown": "Integrations",
+        "group": "Integrations",
         "pages": [
           "using-traxy/integrations",
           "using-traxy/integrations/rest-api",
@@ -61,7 +61,7 @@
         ]
       },
       {
-        "dropdown": "traxy Guides",
+        "group": "traxy Guides",
         "pages": [
           "product-tour-get-to-know-traxy",
           "icp-and-signals-define-and-fine-tune",
@@ -72,7 +72,7 @@
         ]
       },
       {
-        "dropdown": "API reference",
+        "group": "API reference",
         "pages": [
           "using-traxy/integrations/api-mcp/reference",
           "GET /customer/workspace-access",
@@ -120,7 +120,7 @@
         ]
       },
       {
-        "dropdown": "Outbound playbooks",
+        "group": "Outbound playbooks",
         "pages": [
           "using-traxy/outbound-to-signal-based-leads",
           "using-traxy/signal-cheat-sheet",
@@ -131,7 +131,7 @@
         ]
       },
       {
-        "dropdown": "Troubleshooting",
+        "group": "Troubleshooting",
         "pages": [
           "troubleshooting/no-qualified-leads-yet",
           "troubleshooting/faq",
@@ -159,5 +159,8 @@
       "destination": "/using-traxy/billing-and-credits",
       "permanent": true
     }
-  ]
+  ],
+  "interaction": {
+    "drilldown": false
+  }
 }
