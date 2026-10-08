@@ -117,6 +117,12 @@
       "destination": "/using-traxy/billing-and-credits",
       "permanent": true
     }
+,
+    {
+      "source": "/troubleshooting/refund-policy",
+      "destination": "/refund-policy",
+      "permanent": true
+    }
   ],
   "interaction": {
     "drilldown": false
