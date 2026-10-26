@@ -22,11 +22,12 @@
             "pages": [
               "index",
               "quickstart",
+              "getting-started/navigation",
               "getting-started/join-a-workspace"
             ]
           },
           {
-            "group": "Work with the Agent",
+            "group": "Work with trax",
             "pages": [
               "agent/overview",
               "agent/preferences"

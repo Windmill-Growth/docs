@@ -2,40 +2,39 @@
 
 Public, user-facing Mintlify documentation for [docs.traxy.ai](https://docs.traxy.ai).
 
-## Release status: upcoming app release
+## Publication snapshot
 
-This branch prepares documentation for the local app's Agent, Campaigns, Inbox,
-Tracking, saved views, integration routes, and pipeline-capacity experience.
-**Do not publish it ahead of the corresponding application release.** It is a
-local release-preparation commit, not an assertion that these features are live.
-Mintlify can publish automatically when its connected branch is pushed.
+The owner requested publication of the refreshed docs to `main` on 2026-10-26.
+This supersedes the earlier local-only release hold. Mintlify publishes from the
+connected branch; verify the public site after pushing, not only Git status.
 
-Research snapshot (2026-10-25):
+Sources reviewed:
 
-- Frontend: `3b2486e5`, `feat/agent-posts-feed-style`.
-- Backend: `749a2e47`, `development`.
-- Docs baseline: `9df5bc3`, incorporating the 15 upstream commits missing from
-  the original local checkout, including API updates and the refund-policy fix.
-- Latest successful production Deploy runs observed during preparation:
-  [frontend 40020655973](https://github.com/Windmill-Growth/trace-frontend/actions/runs/40020655973)
-  at `b037cdf7` and
-  [backend 40016348833](https://github.com/Windmill-Growth/trace-backend/actions/runs/40016348833)
-  at `b7d1caec`. Those revisions still contain the older product experience.
-  These are workflow observations, not an application-health test.
+- Frontend: `21787176`, `feat/new-navigation`, including the local working-tree
+  updates to navigation, saved views, lead selection, and the ICP review dialog.
+  Those working-tree changes were read only; they were not committed or shipped
+  by this docs task.
+- Backend: `5613df49`, `feat/product-walkthrough`.
+- Previous docs snapshot: `3924e36`, based on upstream `9df5bc3`.
 
-## Before publishing
+This is evidence of documentation/source alignment, not confirmation of a
+production app rollout. The latest successful backend production Deploy observed
+was still [40016348833](https://github.com/Windmill-Growth/trace-backend/actions/runs/40016348833)
+at `b7d1caec` on October 23. The navigation guide includes earlier labels to help
+members whose workspace still uses them.
 
-1. Verify the production frontend and backend release contains the documented
-   experience and public contract. Confirm relevant workspace access gates.
-2. Preview the docs with a matching app revision and verify: onboarding to Agent;
-   targeting and discovery; saved views; campaign test and launch; sender setup;
-   sequence and Inbox; routing; calendar attribution; plan and billing controls.
-3. Re-run the checks below against that backend revision. Verify scope lists,
-   tool count, protocol versions, pagination, and error envelopes as well as the
-   OpenAPI copy and endpoint navigation.
-4. Review the existing refund policy with its owner if checkout terms change.
-   This documentation change preserves that policy's substantive terms.
-5. Publish only after the app release and documentation review are complete.
+## Release checks
+
+1. Compare changed public workflows with the current app source, including local
+   edits when the owner explicitly requests them. Keep unfinished and internal
+   surfaces out of public pages.
+2. Run the checks below against the matching backend checkout. Verify scope
+   lists, tool count, protocol versions, pagination, errors, and endpoint routing.
+3. Preview changed documentation and confirm old guide URLs still redirect.
+4. After an authorized push, verify the exact remote commit and the public site.
+   Report docs publication separately from application deployment.
+5. Recheck screenshots or walkthrough recordings before restoring archived
+   content. Review the refund policy with its owner if checkout terms change.
 
 The canonical conversion specification still labels the capacity changes staged.
 The backend API prose also has stale statements: 46 tools instead of the 50
@@ -54,7 +53,7 @@ changed here.
 
 ## Structure
 
-- **Using traxy:** getting started, Agent, discovery, leads, campaigns,
+- **Using traxy:** getting started, trax, discovery, leads, campaigns,
   conversations, reporting, workspace management, playbooks, troubleshooting.
 - **Integrations:** routing, provider setup, AI clients, calendars, audiences.
 - **API & MCP:** authentication, pagination/errors, workspace selection, public
@@ -87,6 +86,6 @@ references. Mintlify validates MDX and its own configuration and link behavior.
 
 Follow `AGENTS.md`. Keep public pages free of internal release notes, architecture,
 private data, and unfinished features. Use `traxy`, `workspace`, `member`, and
-`admin`. Keep generated API names intact. Do not publish from a release-preparation
-branch before the matching application release. The maintainer README and scripts
+`admin`. Keep generated API names intact. Publish only when authorized by the owner.
+The maintainer README and scripts
 are excluded from Mintlify publication.
