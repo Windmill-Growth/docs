@@ -1,0 +1,29 @@
+---
+title: "Connect Claude"
+description: "Authorize Claude to read traxy data and request supported actions."
+---
+
+Open **Integrations** > **Claude** in traxy and choose the app/browser or terminal instructions for your client.
+
+## Connect with OAuth
+
+1. Copy the MCP URL shown by traxy.
+2. Add it as a remote custom connector in Claude using its available connector settings.
+3. Start the connection and sign in to traxy when prompted.
+4. Choose the default workspace and any additional workspaces.
+5. Review the requested actions and approve the connection.
+6. Return to Claude and confirm that the connector is available.
+
+```text
+https://api.traxy.ai/api/v1/mcp
+```
+
+No traxy REST API key is required. For Claude Code, use the terminal setup shown in traxy's Claude integration page.
+
+## Try a read first
+
+Ask: “List my authorized traxy workspaces, then show five qualified leads from the workspace I select.”
+
+Ask Claude to show proposed changes before applying actions or starting discovery. See [MCP tools](/api-reference/mcp/tools) for the public capabilities.
+
+If a workspace or tool is missing, review the authorization scope and your current role. Disconnect through the client's connector settings when you no longer need the connection.

@@ -1,0 +1,112 @@
+---
+title: "MCP tools"
+description: "Reference the public traxy MCP tool catalog and action requirements."
+---
+
+The public catalog contains 50 tools before scope and workspace filtering. Use `tools/list` to discover the tools and argument schemas your connection can actually use.
+
+Tool names retain `watchlist` and `organization` where those are part of the public contract. In the app, these correspond to tracked profiles and your workspace.
+
+## Workspace and connection
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_list_workspaces` | List accessible, authorized workspaces. |
+| `traxy_get_workspace_access` | Read visible access and usage information. |
+| `traxy_get_mcp_connection_status` | Read safe connection diagnostics. |
+
+## Leads and accounts
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_list_leads` | List visible leads with supported filters. |
+| `traxy_get_lead_counts` | Read lead counts by tier. |
+| `traxy_get_lead_stats` | Read aggregate lead statistics. |
+| `traxy_get_lead` | Read one visible lead. |
+| `traxy_enrich_lead_contact` | Request and read persisted contact results. |
+| `traxy_list_lead_engagements` | Read recorded engagement summaries. |
+| `traxy_list_lead_signals` | Read lead signals with their available context. |
+| `traxy_apply_lead_action` | Apply a selected supported lead action. |
+| `traxy_list_account_reports` | List account reports. |
+| `traxy_get_account_report` | Read one account report. |
+
+## Discovery
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_get_agent_status` | Read lead-discovery status. |
+| `traxy_get_pipeline_capacity` | Read workspace pipeline capacity. |
+| `traxy_start_agent_run` | Start a confirmed discovery run. |
+| `traxy_list_agent_runs` | List discovery runs. |
+| `traxy_list_agent_candidates` | Read candidate summaries for a run. |
+
+## Targeting
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_get_active_icp` | Read the active ICP. |
+| `traxy_update_active_icp` | Update selected active ICP fields. |
+| `traxy_list_icp_revisions` | Read ICP revision history. |
+| `traxy_get_active_signal_brief` | Read the active Signal Brief. |
+| `traxy_update_active_signal_brief` | Update selected Signal Brief fields. |
+| `traxy_list_signal_brief_versions` | Read Signal Brief version history. |
+
+## Tracked profiles
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_list_watchlist_profiles` | List tracked profiles. |
+| `traxy_get_watchlist_profile` | Read one tracked profile. |
+| `traxy_get_watchlist_summary` | Read tracking summary metrics. |
+| `traxy_list_watchlist_recommendations` | Read profile recommendations. |
+| `traxy_add_watchlist_profile` | Add a selected LinkedIn profile. |
+| `traxy_update_watchlist_profile` | Update a tracked profile. |
+| `traxy_remove_watchlist_profile` | Remove a tracked profile. |
+| `traxy_restore_watchlist_profile` | Restore a removed tracked profile. |
+
+## Content and analytics
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_get_analytics_dashboard` | Read aggregate performance metrics. |
+| `traxy_get_meetings_summary` | Read meeting summary counts. |
+| `traxy_list_meetings` | Read attributed meeting records. |
+| `traxy_list_analytics_posts` | Read post analytics. |
+| `traxy_get_post_summary` | Read metrics for one post. |
+| `traxy_list_post_qualified_leads` | List visible qualified leads for a post. |
+| `traxy_list_content_feed` | Read visible feed posts. |
+
+## Integrations and synchronization
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_get_integrations_status` | Read integration status. |
+| `traxy_get_lead_delivery_state` | Read a lead delivery state. |
+| `traxy_create_webhook_destination` | Create a selected webhook-style destination. |
+| `traxy_set_webhook_destination_enabled` | Enable or disable a selected destination. |
+| `traxy_deliver_lead_to_webhook_destination` | Queue one selected lead for delivery. |
+| `traxy_get_sync_status` | Read synchronization status. |
+| `traxy_get_latest_qualification_run` | Read the latest qualification run. |
+
+## Audience and post qualification
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_get_audience_post` | Read aggregate post audience analytics. |
+| `traxy_find_audience` | Request aggregate audience discovery. |
+| `traxy_qualify_linkedin_post` | Request confirmed qualification for a post URL. |
+| `traxy_get_organization_audience` | Read aggregate workspace audience analytics. |
+
+## Confirm actions
+
+Select the workspace, target, and action before making a write request.
+
+- `traxy_start_agent_run` and `traxy_qualify_linkedin_post` require `confirmLeadUsage: true` after the user agrees that new qualified people may consume pipeline capacity.
+- `traxy_apply_lead_action` supports `snooze`, `done`, `good`, `bad`, and `client`. The `done` action needs `confirmDone: true`.
+- Contact enrichment needs an explicit request. Email and phone follow the workspace's entitlements and do not consume pipeline capacity.
+- ICP and Signal Brief updates replace supplied arrays and leave omitted fields unchanged. Inspect the current configuration before sending replacements.
+- Webhook-style destination tools support Webhook, Clay, n8n, and Zapier. Queuing delivery is not proof that the receiver accepted it.
+
+The former `confirmCreditSpend` argument is not accepted. Sending it returns `validation_failed`; use only the current schema. The capacity tool replaces the former Agent budget-status tool.
+
+Manage campaigns, senders, and sequences in the app; those actions are not in this public MCP catalog. See [workspace selection](/api-reference/mcp/workspaces) and [error handling](/api-reference/pagination-and-errors) when building a client.

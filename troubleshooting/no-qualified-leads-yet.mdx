@@ -1,83 +1,30 @@
 ---
-title: "No qualified leads yet"
-description: "Troubleshoot low lead volume or missing qualified leads in traxy."
+title: "No new qualified leads"
+description: "Find out whether discovery is waiting, paused, or finding too few matches."
 ---
 
-If you are seeing little or no qualified lead activity, work through these checks in order.
+Check the workspace and cause before requesting another run.
 
-## 1. Check whether processing is still running
+## Check the view
 
-After onboarding, traxy needs time to process recent activity and match it against your ICP.
+Confirm the workspace, lead view, search, score filter, and date filters. A saved view can hide otherwise visible leads. Look in **Done**, **Snooze**, **Clients**, **Bad fit**, or **Deleted leads** when appropriate.
 
-Start with:
+## Check discovery status
 
-- **Dashboard** for overall progress
-- **Agent** for automated profile-scan status
-- **Leads** for newly added people
-- **Post Signals** for post-level review
-- **Watchlist** for monitored profile status
+Open **Settings** > **Agent runs** and inspect the latest run. A request can be queued, running, finished, or unable to start. A completed run with few matches is different from a run still processing.
 
-If you recently changed your ICP or qualified a post, give the workspace time to refresh.
+## Check capacity and access
 
-## 2. Review your ICP
+Review the pipeline overview. If capacity is reached, new discovery pauses until capacity becomes available. If the workspace is read-only or requires reactivation, restore access through the offered action.
 
-An ICP that is too narrow is the most common reason for low lead volume.
+If capacity remains but supply is low, an upgrade is not the first fix. Review targeting and sources.
 
-Review:
+## Review targeting and sources
 
-- people criteria such as job titles, departments, seniority, and locations
-- company criteria such as size, industry, revenue, funding, and keywords
+Check **Lead criteria** for overly narrow or conflicting requirements. Check **Signals** for relevant topics. Confirm tracked profiles are active and have relevant activity.
 
-If engagement exists but qualified leads do not, broaden one field at a time and monitor the results.
+Inspect any available candidate or lead results. Use concrete mismatch reasons to adjust targeting instead of lowering a display filter and expecting qualification to change.
 
-## 3. Check your fit threshold
+## Check the destination separately
 
-If your workspace uses a high ICP match threshold, borderline matches may never become qualified leads.
-
-If your role allows it, reduce the threshold slightly and watch whether lead volume improves without hurting quality.
-
-## 4. Check source activity
-
-Low posting volume or low engagement can also limit lead discovery.
-
-Look for these dashboard patterns:
-
-- no posts analyzed
-- low engagement
-- engagement without qualified leads
-
-Use Post Signals to search tracked posts, widen the time range, or qualify a LinkedIn post URL directly when appropriate.
-
-You can also use the sidebar lead-discovery actions to track a profile, score a LinkedIn URL, or pick from recent activity.
-
-## 5. Check Agent and Watchlist
-
-Open **Agent** and check whether it is active, paused, blocked by credits, or still running.
-
-If Agent is paused, check the daily credit budget, next run, trial status, and plan usage.
-
-If you rely on Watchlist, confirm at least one profile is active in **Monitor**. The free initial discovery and required trailing-five monitoring show their state in Watchlist and Post Signals.
-
-## 6. Check credits
-
-Trial workspaces use the trial limits shown in the app. Paid workspaces use the credits and billing rules shown in **Billing & Plans**.
-
-If credits are exhausted or billing is paused, lead discovery actions may be limited.
-
-Open [Billing & Plans](/using-traxy/billing-and-credits) and confirm the workspace has credits and active plan access.
-
-## 7. Confirm your downstream setup
-
-If leads exist in traxy but are not reaching Slack or your Webhook, the issue may be in delivery rather than qualification.
-
-Check:
-
-- Slack channel selection
-- Slack app access to private channels
-- trigger status
-- Webhook endpoint configuration
-- test delivery results
-
-<Tip>
-  If you are getting engagement but not enough qualified leads, start by widening your ICP before you change your publishing strategy.
-</Tip>
+If leads appear in traxy but not another tool, discovery worked. Review the [integration route](/integrations/routes), connection, and delivery result instead of restarting discovery.

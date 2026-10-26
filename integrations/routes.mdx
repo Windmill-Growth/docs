@@ -1,0 +1,35 @@
+---
+title: "Route leads to other tools"
+description: "Connect a lead view to a destination and control automatic or manual delivery."
+---
+
+A route connects one audience to one destination. Use separate routes when different lead views should go to different channels, endpoints, campaigns, or lists.
+
+## Add a route
+
+1. Connect the integration and open its **Routes** tab.
+2. Select **Add route**.
+3. Choose **All leads** or a saved view.
+4. Select the destination: a Slack channel, webhook endpoint, or HeyReach campaign or list.
+5. Choose **Auto** or **Manual** delivery. For automatic delivery, review the ICP match threshold.
+6. Review the destination and save.
+
+Selecting your personal view shares it with the workspace when the route is saved. A view used by a route cannot be deleted or made personal until you remove the route's dependency.
+
+## Understand automatic delivery
+
+Automatic routes apply to leads entering the audience from that point onward. Saving or editing a route does not send every lead already in the view. Send existing leads manually when needed.
+
+The route threshold controls delivery to that destination. It does not change qualification or pipeline capacity.
+
+## Send manually
+
+Select the intended leads in **Leads**, open **Send to**, and choose the named route. Check the channel, endpoint, campaign, or list before confirming.
+
+A queued result means the request was accepted for delivery. Inspect the result to distinguish queued, delivered, and failed work.
+
+## Pause, resume, or delete
+
+Use the route menu to pause or resume delivery. A route can also pause after repeated failures. Fix the connection or receiving system before resuming.
+
+Deleting a route stops future routing. Leads already sent remain in the receiving system. Disabling or disconnecting the integration can stop all of its routes.

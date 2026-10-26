@@ -1,0 +1,34 @@
+---
+title: "API and MCP"
+description: "Choose REST reads or an OAuth-authorized MCP connection."
+---
+
+Use the public REST API for application reads. Use MCP when an AI client should read workspace data and perform supported, authorized actions.
+
+| Connection | Authentication | Workspace selection |
+| --- | --- | --- |
+| REST and audience analytics | API key | The key's workspace |
+| MCP | OAuth access token | The authorized default or an explicit `workspaceId` |
+
+<CardGroup cols={2}>
+  <Card title="Make your first REST request" icon="code" href="/api-reference/quickstart">Create a key and read a small lead sample.</Card>
+  <Card title="Connect an AI client" icon="comments" href="/integrations/ai-clients">Authorize workspaces and supported actions through OAuth.</Card>
+  <Card title="MCP tool reference" icon="wrench" href="/api-reference/mcp/tools">Review public tools and action requirements.</Card>
+  <Card title="Handle results and errors" icon="list" href="/api-reference/pagination-and-errors">Use continuation cursors and distinguish error types.</Card>
+</CardGroup>
+
+## Endpoints
+
+REST base URL:
+
+```text
+https://api.traxy.ai/api/v1
+```
+
+MCP endpoint:
+
+```text
+https://api.traxy.ai/api/v1/mcp
+```
+
+Endpoint reference pages describe the public contract. The in-app Agent has additional capabilities that are not necessarily available through public MCP. Use the public tool catalog rather than assuming every app action has an MCP equivalent.

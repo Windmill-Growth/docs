@@ -1,0 +1,35 @@
+---
+title: "n8n"
+description: "Send qualified lead events from traxy to your active n8n workflow."
+---
+
+Use n8n to send signed lead events to your active n8n workflow.
+
+## Prepare the receiver
+
+Create a webhook receiver and copy its HTTPS URL. Make sure the workflow can accept requests outside a temporary test session. Prepare an authentication header only if the receiver requires it.
+
+## Connect and test
+
+1. Open **Integrations** > **n8n**.
+2. Enter a connection name and the HTTPS endpoint.
+3. Add the required authentication header, if any, and save the connection.
+4. Open **Settings** to review triggers and **Payload & help**.
+5. Use **Send test payload** and verify the result at the receiver.
+6. Open **Routes** to connect an audience to an endpoint and choose its delivery mode.
+
+Follow [routing guidance](/integrations/routes) for automatic delivery, manual sends, and pause/resume behavior.
+
+## Map and verify events
+
+Use the payload samples in the app to map event metadata and available lead, company, contact, and engagement fields. First-delivery and repeat-engagement events have different purposes.
+
+Requests include **X-Traxy-Signature** and **X-Traxy-Timestamp**. Follow **Payload & help** to verify signatures with the signing secret. If you rotate that secret, update your receiver before relying on later events.
+
+An existing authentication header stays saved when its edit field is empty. Use the explicit removal action when you want to clear it.
+
+## Handle failures
+
+A test sends one immediate request. Lead delivery can retry temporary failures, so make downstream processing safe for repeated events.
+
+Inspect both the delivery result and the receiver. Fix an expired URL, authentication failure, or unavailable workflow before resuming a paused route. Disconnecting stops future delivery through the connection; it does not delete records already received.

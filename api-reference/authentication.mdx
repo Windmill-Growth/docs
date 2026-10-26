@@ -1,0 +1,53 @@
+---
+title: "Authentication and scopes"
+description: "Authorize the right workspace data and actions for REST or MCP."
+---
+
+## REST API keys
+
+Send the workspace API key in the authorization header:
+
+```http
+Authorization: Bearer trxy_live_...
+```
+
+An admin creates and revokes keys through **Integrations**. Review the scopes selected during creation; do not assume a key can read contact data merely because it can read leads.
+
+## MCP OAuth
+
+Authorize through the browser flow opened by your client. Select workspaces and approve the actions available to your current account permissions. A tool call must satisfy token scopes, the stored grant, current workspace membership, role, and product access.
+
+OAuth refresh does not expand consent. Reauthorize to add workspaces or permissions. Losing access to the default workspace does not silently switch requests to another workspace.
+
+## Supported scopes
+
+A scope authorizes a capability; it does not imply that every capability is a REST endpoint. Read the endpoint or MCP tool contract for its required combination.
+
+| Scope | Capability |
+| --- | --- |
+| `workspace:read` | Read workspace access. |
+| `leads:read` | Read visible leads and supported meeting records. |
+| `leads:contact_read` | Read saved contact details and profile URLs. |
+| `leads:contact_enrich` | Request contact lookups. |
+| `leads:manage` | Apply supported lead actions. |
+| `analytics:read` | Read aggregate performance and meeting analytics. |
+| `icp:read` | Read active targeting and its history. |
+| `icp:manage` | Update the active ICP and Signal Brief. |
+| `watchlist:read` | Read tracked profiles and summaries. |
+| `watchlist:manage` | Manage tracked profiles. |
+| `content:read` | Read content feeds. |
+| `integrations:read` | Read integration and delivery state. |
+| `integrations:manage` | Manage supported webhook destinations. |
+| `integrations:deliver` | Request delivery to a selected destination. |
+| `sync:read` | Read synchronization and qualification status. |
+| `agent:read` | Read discovery status, capacity, runs, and candidates. |
+| `agent:run` | Start an approved discovery run. |
+| `post_qualification:manage` | Request qualification of a specific post. |
+| `audience_analytics:read` | Read aggregate audience analytics. |
+| `audience_analytics:request` | Request audience discovery. |
+
+Contact enrichment also needs `leads:read` and `leads:contact_read`. Delivery needs `integrations:deliver` and `leads:contact_read`. ICP and Signal Brief updates need both `icp:read` and `icp:manage`.
+
+Without contact permission, contact fields and profile URLs are redacted. Audience analytics returns aggregate information rather than individual contacts.
+
+Request only what your integration needs, and review the actual scopes on each key or OAuth grant.

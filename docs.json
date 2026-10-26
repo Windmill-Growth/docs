@@ -13,87 +13,275 @@
     "dark": "/logo/dark.svg"
   },
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Getting started",
-        "pages": [
-          "index",
-          "quickstart",
-          "getting-started/define-your-icp",
-          "getting-started/join-a-workspace"
+        "tab": "Using traxy",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": [
+              "index",
+              "quickstart",
+              "getting-started/join-a-workspace"
+            ]
+          },
+          {
+            "group": "Work with the Agent",
+            "pages": [
+              "agent/overview",
+              "agent/preferences"
+            ]
+          },
+          {
+            "group": "Configure discovery",
+            "pages": [
+              "discovery/lead-criteria",
+              "discovery/signals",
+              "discovery/qualification",
+              "discovery/tracking",
+              "discovery/agent-runs"
+            ]
+          },
+          {
+            "group": "Work with leads",
+            "pages": [
+              "leads/overview",
+              "leads/saved-views",
+              "leads/team-work",
+              "leads/contact-details",
+              "leads/exports-and-recovery"
+            ]
+          },
+          {
+            "group": "Run campaigns",
+            "pages": [
+              "campaigns/create",
+              "campaigns/review-and-launch",
+              "campaigns/manage"
+            ]
+          },
+          {
+            "group": "Manage conversations",
+            "pages": [
+              "outreach/senders",
+              "outreach/sequences",
+              "outreach/inbox",
+              "outreach/do-not-contact"
+            ]
+          },
+          {
+            "group": "Measure results",
+            "pages": [
+              "reporting/performance",
+              "reporting/meetings"
+            ]
+          },
+          {
+            "group": "Manage your workspace",
+            "pages": [
+              "workspace/team",
+              "workspace/plan-and-capacity",
+              "workspace/billing",
+              "workspace/blocklist",
+              "workspace/account",
+              "refund-policy"
+            ]
+          },
+          {
+            "group": "Playbooks",
+            "expanded": false,
+            "pages": [
+              "using-traxy/outbound-to-signal-based-leads",
+              "using-traxy/signal-cheat-sheet",
+              "using-traxy/outbound-playbook-content-led",
+              "using-traxy/outbound-playbook-saas",
+              "using-traxy/outbound-playbook-agencies",
+              "using-traxy/outbound-playbook-events"
+            ]
+          },
+          {
+            "group": "Troubleshooting",
+            "pages": [
+              "troubleshooting/no-qualified-leads-yet",
+              "troubleshooting/campaigns-and-messages",
+              "troubleshooting/connections",
+              "troubleshooting/faq"
+            ]
+          }
         ]
       },
       {
-        "group": "Using traxy",
-        "pages": [
-          "using-traxy/dashboard",
-          "using-traxy/agent",
-          "using-traxy/icp-configuration",
-          "using-traxy/qualification",
-          "using-traxy/leads",
-          "using-traxy/content-calendar",
-          "using-traxy/watchlist",
-          "using-traxy/blocklist",
-          "using-traxy/workspace-and-team",
-          "using-traxy/billing-and-credits"
+        "tab": "Integrations",
+        "groups": [
+          {
+            "group": "Connect your tools",
+            "pages": [
+              "integrations/overview"
+            ]
+          },
+          {
+            "group": "Route leads",
+            "pages": [
+              "integrations/routes",
+              "integrations/slack",
+              "integrations/heyreach",
+              "integrations/webhook",
+              "integrations/clay",
+              "integrations/n8n",
+              "integrations/zapier"
+            ]
+          },
+          {
+            "group": "Connect AI clients",
+            "pages": [
+              "integrations/ai-clients",
+              "integrations/claude",
+              "integrations/codex",
+              "integrations/claude-and-heyreach"
+            ]
+          },
+          {
+            "group": "Calendars",
+            "pages": [
+              "integrations/google-calendar"
+            ]
+          },
+          {
+            "group": "Audience workflows",
+            "pages": [
+              "integrations/ordinal",
+              "integrations/meta-ads"
+            ]
+          }
         ]
       },
       {
-        "group": "Integrations",
-        "pages": [
-          "using-traxy/integrations",
-          "using-traxy/integrations/rest-api",
-          "using-traxy/connect-claude",
-          "using-traxy/connect-codex",
-          "using-traxy/integrations/ordinal",
-          "using-traxy/integrations/ordinal/readiness",
-          "using-traxy/integrations/ordinal/linkedin-post-audience",
-          "using-traxy/integrations/ordinal/request-audience-discovery",
-          "using-traxy/integrations/ordinal/workspace-audience",
-          "using-traxy/integrations/slack",
-          "using-traxy/integrations/webhook",
-          "using-traxy/integrations/zapier",
-          "using-traxy/integrations/clay",
-          "using-traxy/integrations/n8n",
-          "using-traxy/connect-claude-to-hey-reach",
-          "using-traxy/integrations/heyreach",
-          "using-traxy/integrations/meta-ads"
-        ]
-      },
-      {
-        "group": "traxy Guides",
-        "pages": [
-          "product-tour-get-to-know-traxy",
-          "icp-and-signals-define-and-fine-tune",
-          "videos/leads-high-intent-and-warm-leads",
-          "watchlist-and-agent-strategy",
-          "team-and-workspaces-invite-teammates-and-add-new-icps",
-          "account-health-and-credits-blocklists-enrichment-and-usage"
-        ]
-      },
-      {
-        "group": "API reference",
-        "pages": [
-          "using-traxy/integrations/api-mcp/reference"
-        ]
-      },
-      {
-        "group": "Outbound playbooks",
-        "pages": [
-          "using-traxy/outbound-to-signal-based-leads",
-          "using-traxy/signal-cheat-sheet",
-          "using-traxy/outbound-playbook-content-led",
-          "using-traxy/outbound-playbook-saas",
-          "using-traxy/outbound-playbook-agencies",
-          "using-traxy/outbound-playbook-events"
-        ]
-      },
-      {
-        "group": "Troubleshooting",
-        "pages": [
-          "troubleshooting/no-qualified-leads-yet",
-          "troubleshooting/faq",
-          "refund-policy"
+        "tab": "API & MCP",
+        "groups": [
+          {
+            "group": "Start building",
+            "pages": [
+              "api-reference/overview",
+              "api-reference/quickstart",
+              "api-reference/authentication",
+              "api-reference/pagination-and-errors"
+            ]
+          },
+          {
+            "group": "MCP",
+            "pages": [
+              "api-reference/mcp/workspaces",
+              "api-reference/mcp/tools"
+            ]
+          },
+          {
+            "group": "Workspace",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "GET /customer/workspace-access"
+            ]
+          },
+          {
+            "group": "Leads",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "GET /customer/leads",
+              "GET /customer/leads/signals",
+              "GET /customer/leads/counts",
+              "GET /customer/leads/stats",
+              "GET /customer/leads/{leadId}",
+              "GET /customer/leads/{leadId}/engagements"
+            ]
+          },
+          {
+            "group": "Targeting and tracking",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "GET /customer/icp",
+              "GET /customer/icp/active",
+              "GET /customer/watchlist/profiles",
+              "GET /customer/watchlist/profiles/{monitoredProfileId}",
+              "GET /customer/watchlist/summary",
+              "GET /customer/watchlist/recommendations"
+            ]
+          },
+          {
+            "group": "Performance and meetings",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "GET /customer/analytics/meetings",
+              "GET /customer/meetings",
+              "GET /customer/analytics/dashboard",
+              "GET /customer/analytics/posts",
+              "GET /customer/analytics/posts/{postId}/summary",
+              "GET /customer/analytics/posts/{postId}/qualified-leads"
+            ]
+          },
+          {
+            "group": "Content and accounts",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "GET /customer/content-feed",
+              "GET /customer/content/feed",
+              "GET /customer/account-reports",
+              "GET /customer/account-reports/{accountId}"
+            ]
+          },
+          {
+            "group": "Integrations and sync",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "GET /customer/integrations",
+              "GET /customer/integrations/status",
+              "GET /customer/integrations/leads/{leadId}/delivery",
+              "GET /customer/integrations/lead-delivery-state",
+              "GET /customer/sync/status",
+              "GET /customer/qualification/runs/latest"
+            ]
+          },
+          {
+            "group": "Audience analytics",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "GET /audience-analytics/health",
+              "GET /audience-analytics/linkedin-posts",
+              "POST /audience-analytics/linkedin-posts/find-audience",
+              "GET /audience-analytics/organization"
+            ]
+          },
+          {
+            "group": "OAuth and MCP transport",
+            "openapi": "api-reference/customer-api-mcp-v1.openapi.yaml",
+            "expanded": false,
+            "pages": [
+              "POST /mcp/oauth/register",
+              "GET /mcp/oauth/authorize",
+              "GET /mcp/oauth/authorize/request",
+              "POST /mcp/oauth/authorize/permissions",
+              "POST /mcp/oauth/authorize/complete",
+              "POST /mcp/oauth/token",
+              "POST /mcp/oauth/revoke",
+              "GET /mcp",
+              "POST /mcp"
+            ]
+          },
+          {
+            "group": "Ordinal endpoint guides",
+            "expanded": false,
+            "pages": [
+              "integrations/ordinal/linkedin-post-audience",
+              "integrations/ordinal/readiness",
+              "integrations/ordinal/request-audience-discovery",
+              "integrations/ordinal/workspace-audience"
+            ]
+          }
         ]
       }
     ]
@@ -108,19 +296,213 @@
   },
   "redirects": [
     {
+      "source": "/account-health-and-credits-blocklists-enrichment-and-usage",
+      "destination": "/workspace/plan-and-capacity",
+      "permanent": true
+    },
+    {
+      "source": "/getting-started/define-your-icp",
+      "destination": "/discovery/lead-criteria",
+      "permanent": true
+    },
+    {
+      "source": "/icp-and-signals-define-and-fine-tune",
+      "destination": "/discovery/lead-criteria",
+      "permanent": true
+    },
+    {
+      "source": "/product-tour-get-to-know-traxy",
+      "destination": "/index",
+      "permanent": true
+    },
+    {
+      "source": "/team-and-workspaces-invite-teammates-and-add-new-icps",
+      "destination": "/workspace/team",
+      "permanent": true
+    },
+    {
+      "source": "/troubleshooting/refund-policy",
+      "destination": "/refund-policy",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/agent",
+      "destination": "/agent/overview",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/billing-and-credits",
+      "destination": "/workspace/plan-and-capacity",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/blocklist",
+      "destination": "/workspace/blocklist",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/connect-claude",
+      "destination": "/integrations/claude",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/connect-claude-to-hey-reach",
+      "destination": "/integrations/claude-and-heyreach",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/connect-codex",
+      "destination": "/integrations/codex",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/content-calendar",
+      "destination": "/discovery/tracking",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/dashboard",
+      "destination": "/reporting/performance",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/icp-configuration",
+      "destination": "/discovery/lead-criteria",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations",
+      "destination": "/integrations/overview",
+      "permanent": true
+    },
+    {
       "source": "/using-traxy/integrations/api-mcp",
-      "destination": "/using-traxy/integrations/rest-api",
+      "destination": "/api-reference/quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/api-mcp/reference",
+      "destination": "/api-reference/overview",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/claude",
+      "destination": "/integrations/claude",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/clay",
+      "destination": "/integrations/clay",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/codex",
+      "destination": "/integrations/codex",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/heyreach",
+      "destination": "/integrations/heyreach",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/hubspot",
+      "destination": "/integrations/overview",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/meta-ads",
+      "destination": "/integrations/meta-ads",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/n8n",
+      "destination": "/integrations/n8n",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/ordinal",
+      "destination": "/integrations/ordinal",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/ordinal/linkedin-post-audience",
+      "destination": "/integrations/ordinal/linkedin-post-audience",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/ordinal/readiness",
+      "destination": "/integrations/ordinal/readiness",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/ordinal/request-audience-discovery",
+      "destination": "/integrations/ordinal/request-audience-discovery",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/ordinal/workspace-audience",
+      "destination": "/integrations/ordinal/workspace-audience",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/rest-api",
+      "destination": "/api-reference/quickstart",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/slack",
+      "destination": "/integrations/slack",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/webhook",
+      "destination": "/integrations/webhook",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/integrations/zapier",
+      "destination": "/integrations/zapier",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/lead-searcher",
+      "destination": "/agent/overview",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/leads",
+      "destination": "/leads/overview",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/qualification",
+      "destination": "/discovery/qualification",
       "permanent": true
     },
     {
       "source": "/using-traxy/usage-based-credits",
-      "destination": "/using-traxy/billing-and-credits",
+      "destination": "/workspace/plan-and-capacity",
       "permanent": true
-    }
-,
+    },
     {
-      "source": "/troubleshooting/refund-policy",
-      "destination": "/refund-policy",
+      "source": "/using-traxy/watchlist",
+      "destination": "/discovery/tracking",
+      "permanent": true
+    },
+    {
+      "source": "/using-traxy/workspace-and-team",
+      "destination": "/workspace/team",
+      "permanent": true
+    },
+    {
+      "source": "/videos/leads-high-intent-and-warm-leads",
+      "destination": "/leads/overview",
+      "permanent": true
+    },
+    {
+      "source": "/watchlist-and-agent-strategy",
+      "destination": "/discovery/tracking",
       "permanent": true
     }
   ],

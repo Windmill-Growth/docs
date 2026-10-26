@@ -1,0 +1,60 @@
+---
+title: "Pagination and errors"
+description: "Read complete result sets and handle REST and MCP failures correctly."
+---
+
+## Paginate results
+
+Cursor-based lists default to 50 results and accept at most 100 unless an endpoint states otherwise.
+
+1. Make the first request without a cursor.
+2. Read `page.nextCursor`.
+3. Pass that exact value as `cursor` on the next request.
+4. Keep the workspace, filters, and sort unchanged.
+5. Stop when `page.nextCursor` is `null`.
+
+Treat cursors as opaque strings. Do not decode, rebuild, or round their timestamp values. Invalid or incompatible cursors return `validation_failed`.
+
+The MCP tool `traxy_list_agent_candidates` uses `limit` and `offset` instead.
+
+## Filter lead results
+
+Lead listing defaults to active leads. Use the documented disposition and filters for other views. A score filter narrows API-visible leads; it does not bypass qualification, deletion, blocklist, or workspace access rules.
+
+Use lead-signal and engagement endpoints when you need the evidence behind a lead. Meeting analytics and meeting listing are separate endpoints; attendee details require contact permission.
+
+## REST errors
+
+REST failures use this envelope:
+
+```json
+{
+  "error": {
+    "code": "invalid_api_key",
+    "message": "Invalid API key.",
+    "status": 401,
+    "request_id": "req_example"
+  }
+}
+```
+
+| Status | What to check |
+| --- | --- |
+| `400` | Input validation and supported arguments. |
+| `401` | Missing, expired, revoked, or inappropriate credentials. |
+| `402` | Workspace access or required capability. |
+| `403` | Scope, role, consent, or allowed origin. |
+| `404` | Whether the resource exists and is visible in this workspace. |
+| `409` | The operation-specific conflict described by the error code. |
+| `429` | Rate limiting; follow retry guidance. |
+| `503` | Temporary unavailability; follow `Retry-After` when supplied. |
+
+## MCP errors
+
+MCP has three error layers:
+
+- Invalid HTTP bodies or authentication can fail at the HTTP layer.
+- Unknown methods, unknown tools, malformed calls, or missing scopes can return a JSON-RPC error.
+- A known, authorized tool with invalid arguments returns a normal result containing `isError: true`. Read `structuredContent.error.issues` for the paths to correct.
+
+Do not treat every HTTP success as a successful tool action. Inspect the tool result and its error flag before continuing. An ambiguous write outcome is a reason to inspect state, not blindly repeat the action.

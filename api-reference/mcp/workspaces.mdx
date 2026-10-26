@@ -1,0 +1,38 @@
+---
+title: "MCP workspaces and protocol"
+description: "Select an authorized workspace for every MCP request."
+---
+
+One MCP connection can authorize up to 50 explicitly selected workspaces. The original default remains the default for calls that omit `workspaceId`.
+
+## Select the workspace
+
+1. Call `traxy_list_workspaces` to resolve accessible names and IDs.
+2. Select the workspace named by the user. If several are available and none is clear, ask which one to use.
+3. Pass its `workspaceId` on every scoped tool call, including pagination and follow-up actions.
+4. Keep entity IDs and cursors tied to the workspace that returned them.
+
+Example arguments for a lead read:
+
+```json
+{
+  "workspaceId": "11111111-1111-4111-8111-111111111111",
+  "limit": 5
+}
+```
+
+Use an actual ID returned by workspace discovery. There is no server-side active-workspace switch. Omitting the ID does not reuse the workspace from the preceding call.
+
+## Handle access changes
+
+If access to a selected workspace is lost, refresh the workspace list and explain the failure. Do not silently substitute another workspace. Reauthorize when the user wants to add a workspace to the consent set.
+
+Listing or comparing several workspaces does not authorize writes to all of them.
+
+## Protocol and tool discovery
+
+traxy uses Streamable HTTP MCP and supports protocol versions `2025-06-18` and `2025-11-25`. Initialization echoes either supported version or selects `2025-11-25` when the requested version is unsupported.
+
+`tools/list` filters the public catalog to the grant and currently accessible workspaces. A listed tool may still be unavailable in one particular workspace; each call rechecks permission there.
+
+The schemas returned by `tools/list` are the exact argument contract for the active connection.

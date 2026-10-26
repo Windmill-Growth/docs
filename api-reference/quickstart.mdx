@@ -1,0 +1,35 @@
+---
+title: "REST quickstart"
+description: "Create an API key and retrieve your first traxy lead."
+---
+
+Create a key for the workspace your application should read.
+
+## Create the key
+
+1. Open **Integrations** > **API** as a workspace admin.
+2. Choose **Create key** and enter a recognizable name.
+3. Review the selected scopes. Include `leads:read` for lead reads and `leads:contact_read` when you need saved contacts or LinkedIn profile URLs.
+4. Create the key, copy it once, and store it securely.
+
+API access must be available to the workspace. If key creation is unavailable, review the displayed role or access requirement.
+
+## Read one lead
+
+Set `TRAXY_API_KEY` securely in your local environment, then request:
+
+```bash
+curl --fail-with-body \
+  'https://api.traxy.ai/api/v1/customer/leads?limit=1' \
+  --header "Authorization: Bearer $TRAXY_API_KEY"
+```
+
+Records appear in `data`, with continuation information in `page`. An empty result means no API-visible lead matched that request; check the workspace, filters, and lead disposition.
+
+Do not add `organizationId` or `workspaceId` to a REST request to select another workspace. Create and use a key for that workspace instead.
+
+## Continue safely
+
+Follow [pagination guidance](/api-reference/pagination-and-errors) for additional results. Store keys outside browser code and source control. Revoke a key through **Integrations** > **API** when it is no longer needed.
+
+MCP uses [OAuth authorization](/api-reference/authentication), not this key.

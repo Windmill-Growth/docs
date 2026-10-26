@@ -6,14 +6,13 @@ info:
     Public customer-facing read API, Ordinal Audience Analytics endpoints, and
     remote MCP Streamable HTTP endpoint. Customer REST and Ordinal requests use
     bearer API keys. MCP uses OAuth access tokens issued for the traxy MCP
-    resource; API keys are never accepted by MCP. Public REST clients must
+    resource; Customer API keys are never accepted by MCP. Public REST clients must
     not send organizationId. Default API keys cover the general read API.
     Ordinal Audience Analytics is self-serve for paid workspaces and requires
     explicitly selected audience_analytics scopes on the key.
-    The current MCP surface exposes 48 scope-gated tools through tools/list,
-    including multi-workspace selection, confirmed lead, ICP, Signal Brief,
-    Agent, Watchlist, post, Meetings, and delivery actions. MCP protocol
-    versions 2025-11-25 (current) and 2025-06-18 are supported.
+    The MCP surface exposes scope-gated tools through tools/list, including
+    agent:read tools for safe automated lead-finding agent visibility. Latest
+    MCP protocol version is 2025-11-25.
 servers:
   - url: https://api.traxy.ai/api/v1
     description: Production
@@ -335,7 +334,7 @@ paths:
   /customer/icp/active:
     get:
       tags: [Customer REST]
-      summary: Get active ICP configuration.
+      summary: Get active ICP configuration through the active alias.
       security:
         - CustomerApiKey: [icp:read]
       responses:
@@ -519,7 +518,7 @@ paths:
   /customer/content/feed:
     get:
       tags: [Customer REST]
-      summary: List content feed posts, including safe postUrl and contentText.
+      summary: List content feed posts through the nested alias.
       security:
         - CustomerApiKey: [content:read]
       parameters:
@@ -607,7 +606,7 @@ paths:
   /customer/integrations/status:
     get:
       tags: [Customer REST]
-      summary: Get safe integration status.
+      summary: Get integration status through the status alias.
       security:
         - CustomerApiKey: [integrations:read]
       responses:
@@ -631,7 +630,7 @@ paths:
   /customer/integrations/lead-delivery-state:
     get:
       tags: [Customer REST]
-      summary: Get lead delivery state.
+      summary: Get lead delivery state by query.
       security:
         - CustomerApiKey: [integrations:read]
       parameters:
@@ -715,7 +714,7 @@ paths:
     post:
       tags: [Ordinal Audience Analytics]
       summary: Request on-demand audience discovery for one exact LinkedIn post.
-      description: Resolves the supplied LinkedIn reference to one immutable post, prepares an exact qualification quote, and accepts the request only after its complete credit reservation succeeds. Replays with the same idempotency key and payload reuse the durable request. An incompatible replay returns 409.
+      description: Resolves the supplied LinkedIn reference to one immutable post, prepares an exact qualification quote, and accepts it as a pipeline-capacity request. Replays with the same idempotency key and payload reuse the durable request. An incompatible replay returns 409.
       security:
         - CustomerApiKey: [audience_analytics:request]
       requestBody:
@@ -996,7 +995,7 @@ paths:
           schema:
             type: string
             example: '2025-11-25'
-          description: Use the version negotiated during initialize, either 2025-11-25 (current) or 2025-06-18. The header may be omitted until negotiation completes.
+          description: Use the version negotiated during initialize (2025-11-25 or 2025-06-18). The header may be omitted until negotiation completes.
         - name: Origin
           in: header
           schema:
@@ -1181,7 +1180,6 @@ components:
     MinIcpMatchPercentFilter:
       name: minIcpMatchPercent
       in: query
-      description: Minimum ICP match percentage, from 0 to 100. Lead, lead signal, and account report endpoints default to 50 when omitted. Pass a lower value, such as 0, to include lower-scoring qualified engagers.
       schema:
         type: integer
         minimum: 0
@@ -1189,7 +1187,6 @@ components:
     MaxIcpMatchPercentFilter:
       name: maxIcpMatchPercent
       in: query
-      description: Maximum ICP match percentage, from 0 to 100.
       schema:
         type: integer
         minimum: 0
@@ -1221,7 +1218,7 @@ components:
     EngagementTypesFilter:
       name: engagementTypes
       in: query
-      description: Comma-separated engagement types. Accepts up to four values.
+      description: Comma-separated engagement types. Accepts up to 4 values.
       schema:
         type: string
     OwnerIdFilter:
@@ -1283,7 +1280,7 @@ components:
       in: query
       schema:
         type: string
-        enum: [TEAMMATE, COMPETITOR, INFLUENCER, INVESTOR, CUSTOM]
+        enum: [TEAMMATE, COMPETITOR, INFLUENCER, INVESTOR, CUSTOM, TARGET_ACCOUNT, CUSTOMER, PARTNER]
     ProfileTypesFilter:
       name: profileTypes
       in: query
@@ -1469,7 +1466,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
     RateLimited:
-      description: Customer API rate limit exceeded. Production-like runtimes fail closed with this response if the distributed limiter is unavailable.
+      description: Customer API rate limit exceeded or rate-limit enforcement is temporarily unavailable. Retry after the delay in Retry-After.
       content:
         application/json:
           schema:
@@ -1963,7 +1960,7 @@ components:
           example: 900
         refresh_token:
           type: string
-          description: Opaque refresh token. Store securely; traxy stores only a hash.
+          description: Opaque refresh token. Store securely.
         scope:
           type: string
           example: 'workspace:read leads:read leads:contact_read analytics:read agent:read'
@@ -2032,7 +2029,7 @@ components:
               type: boolean
             leadContactEnrichment:
               type: boolean
-              description: Whether the credential can request credit-consuming contact enrichment.
+              description: Whether the credential can request contact enrichment.
             analytics:
               type: boolean
             icp:

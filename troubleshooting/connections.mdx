@@ -1,0 +1,26 @@
+---
+title: "Connection and permission issues"
+description: "Resolve missing integrations, tools, workspace access, and delivery failures."
+---
+
+## Integration delivery
+
+Check that the connection is enabled, the route is active, and the destination is valid. Run the available test and inspect the receiving system. Fix authentication or endpoint failures before resuming a paused route.
+
+## MCP authorization
+
+If the client has no tools, check that OAuth completed and the connection is enabled. REST keys do not authenticate MCP.
+
+Ask the client to list authorized workspaces. If the required workspace is absent, authorize again and select it. Existing grants do not expand automatically when you join another workspace.
+
+A tool can be missing because its scope was not granted or your role or workspace access no longer permits it. Reconnect only when you need new consent; fix the underlying role or access issue when that is the cause.
+
+## API keys
+
+Check the key's workspace, revocation state, and scopes. Use a bearer header and the public base URL. Keep keys out of query strings and browser code.
+
+Use [API error guidance](/api-reference/pagination-and-errors) to distinguish authentication, access, validation, and rate-limit failures.
+
+## Missing meetings or replies
+
+For meetings, check [calendar selection and sync](/integrations/google-calendar), the date range, and matching attendee information. For replies, check the connected sender and the conversation's channel. A connection test alone does not prove that a particular event has synchronized.

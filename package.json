@@ -1,0 +1,10 @@
+{
+  "name": "traxy-public-docs",
+  "private": true,
+  "scripts": {
+    "check": "node scripts/check-docs.mjs",
+    "validate": "npx --yes mint@4.2.1125 validate",
+    "check:links": "npx --yes mint@4.2.1125 broken-links",
+    "dev": "npx --yes mint@4.2.1125 dev"
+  }
+}

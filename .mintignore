@@ -5,3 +5,8 @@
 # Draft content
 drafts/
 *.draft.mdx
+
+# Maintainer tooling is not public documentation.
+scripts/
+package.json
+package-lock.json

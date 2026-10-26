@@ -1,0 +1,30 @@
+---
+title: "Connect an AI client"
+description: "Authorize a compatible MCP client to work with selected traxy workspaces."
+---
+
+Connect an AI client through MCP when you want to ask questions about traxy data or request supported actions from another application.
+
+## Use the traxy connection guide
+
+Open **Integrations** and select your client. Follow the setup instructions for its app or terminal interface. traxy provides guides for Claude, Codex, Cursor, Grok, OpenCode, Pi, and Ollama; the available connection method depends on the client.
+
+The remote MCP endpoint is:
+
+```text
+https://api.traxy.ai/api/v1/mcp
+```
+
+Use OAuth authorization. A traxy REST API key is not accepted as an MCP credential. If a client needs a local bridge, follow that client's instructions shown in traxy rather than pasting a REST key into its configuration.
+
+## Authorize workspaces
+
+Choose the default workspace and any additional workspaces you want to authorize. Review the permitted actions for each workspace before approving.
+
+Existing connections do not gain additional workspaces or scopes automatically. Authorize again when you need to expand access. Select the workspace explicitly in your conversation when more than one is connected.
+
+## Confirm the connection
+
+Ask the client to list your authorized workspaces, then read a small lead sample from the intended workspace. Review the result before requesting actions that modify data or start discovery.
+
+Use the [MCP workspace guide](/api-reference/mcp/workspaces) for exact selection behavior and [connection troubleshooting](/troubleshooting/connections) for missing tools.
