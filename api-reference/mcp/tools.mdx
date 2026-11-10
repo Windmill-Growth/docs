@@ -3,9 +3,9 @@ title: "MCP tools"
 description: "Reference the public traxy MCP tool catalog and action requirements."
 ---
 
-The public catalog contains 50 tools before scope and workspace filtering. Use `tools/list` to discover the tools and argument schemas your connection can actually use.
+The tables below list public tools by group. Scope and workspace filtering decide which tools your connection sees, so use `tools/list` to discover the tools and argument schemas your connection can actually use.
 
-Tool names retain `watchlist` and `organization` where those are part of the public contract. In the app, these correspond to tracked profiles and your workspace.
+Tool names retain `watchlist` and `organization` where those are part of the public contract. In the app, these correspond to tracked profiles and your workspace. Tools with `outbound` in the name work with campaigns.
 
 ## Workspace and connection
 
@@ -97,6 +97,49 @@ Tool names retain `watchlist` and `organization` where those are part of the pub
 | `traxy_qualify_linkedin_post` | Request confirmed qualification for a post URL. |
 | `traxy_get_organization_audience` | Read aggregate workspace audience analytics. |
 
+## Campaigns and sequences
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_get_outbound_planner` | Read the workspace's campaigns in priority order and the current draft. |
+| `traxy_inspect_campaign_leads` | Read up to 10 sample leads from the views a campaign would use. |
+| `traxy_draft_campaign` | Write or change a draft campaign. Nothing is tested or sent. |
+| `traxy_test_outbound_plan` | Test the draft on sample leads. Nothing is sent. |
+| `traxy_get_outbound_launch_preview` | Read who will join a tested campaign and what each step sends. |
+| `traxy_approve_outbound_plan` | Approve a tested draft campaign. |
+| `traxy_launch_campaign` | Approve a tested draft, create its sequence, and turn the campaign on. |
+| `traxy_get_outbound_performance` | Read campaign status, lead states, and outreach results. |
+| `traxy_archive_outbound_campaign` | Archive a campaign so no new leads start in it. |
+| `traxy_list_sequences` | List outreach sequences with their status, channels, and step count. |
+| `traxy_get_sequence` | Read one sequence with its steps, senders, and activation issues. |
+| `traxy_list_sequence_templates` | List saved sequence templates. |
+| `traxy_create_sequence_template` | Save a reusable sequence template from steps or an existing sequence. |
+| `traxy_get_campaign_sequence_templates` | List the templates that fit a campaign. |
+| `traxy_set_campaign_sequence` | Copy a template into an approved campaign as its sequence. |
+| `traxy_preview_switch_campaign_sequence` | Preview which leads move when a paused campaign changes template. |
+| `traxy_switch_campaign_sequence` | Move a paused campaign's not-started leads to a new template. |
+
+## Senders
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_list_senders` | List sender names with their LinkedIn and email accounts and status. |
+| `traxy_set_sequence_senders` | Set the sender names that send a sequence. |
+
+## Messages and inbox
+
+| Tool | Purpose |
+| --- | --- |
+| `traxy_preview_outreach_message` | Read what one sender can send one lead right now. |
+| `traxy_draft_outreach_message` | Draft one message for one lead without sending it. |
+| `traxy_send_outreach_message` | Send one approved email, LinkedIn message, or connection request to one lead. |
+| `traxy_list_inbox_conversations` | List inbox conversations, newest first. |
+| `traxy_get_inbox_conversation` | Read one conversation with its messages and sequence state. |
+| `traxy_reply_inbox_conversation` | Send one approved plain-text reply in a conversation. |
+| `traxy_pause_inbox_sequence` | Pause one lead's sequence. The lead keeps its place. |
+| `traxy_resume_inbox_sequence` | Resume one lead's paused sequence. |
+| `traxy_stop_inbox_sequence` | Stop one lead's sequence for good. |
+
 ## Confirm actions
 
 Select the workspace, target, and action before making a write request.
@@ -106,7 +149,11 @@ Select the workspace, target, and action before making a write request.
 - Contact enrichment needs an explicit request. Email and phone follow the workspace's entitlements and do not consume pipeline capacity.
 - ICP and Signal Brief updates replace supplied arrays and leave omitted fields unchanged. Inspect the current configuration before sending replacements.
 - Webhook-style destination tools support Webhook, Clay, n8n, and Zapier. Queuing delivery is not proof that the receiver accepted it.
+- Actions that launch or change a campaign or sequence, send a message, reply, or use capacity are confirmed with the user first. The AI client shows what it will do and waits for a yes before it calls the tool.
+- `traxy_send_outreach_message` and `traxy_reply_inbox_conversation` require `confirmSend: true` after the user approves the exact message. Each call sends one message to one lead.
+- Drafting and testing a campaign sends nothing. A campaign's delivery mode is `HUMAN` (the user approves each lead's messages) or `AUTO` (messages go out as written). Ask the user which one to use.
+- `traxy_launch_campaign` needs a fresh `operationId`. If the launch fails partway, retry with the same `operationId`; the result names the step that failed.
 
 The former `confirmCreditSpend` argument is not accepted. Sending it returns `validation_failed`; use only the current schema. The capacity tool replaces the former Agent budget-status tool.
 
-Manage campaigns, senders, and sequences in the app; those actions are not in this public MCP catalog. See [workspace selection](/api-reference/mcp/workspaces) and [error handling](/api-reference/pagination-and-errors) when building a client.
+See [workspace selection](/api-reference/mcp/workspaces) and [error handling](/api-reference/pagination-and-errors) when building a client.
