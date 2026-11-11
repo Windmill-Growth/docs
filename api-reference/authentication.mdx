@@ -25,11 +25,11 @@ A scope authorizes a capability; it does not imply that every capability is a RE
 
 | Scope | Capability |
 | --- | --- |
-| `workspace:read` | Read workspace access. |
+| `workspace:read` | Read workspace access, settings, and supported campaign, sender, and inbox information. |
 | `leads:read` | Read visible leads and supported meeting records. |
 | `leads:contact_read` | Read saved contact details and profile URLs. |
 | `leads:contact_enrich` | Request contact lookups. |
-| `leads:manage` | Apply supported lead actions. |
+| `leads:manage` | Manage leads, saved views, notes, tags, company research, and supported exports. |
 | `analytics:read` | Read aggregate performance and meeting analytics. |
 | `icp:read` | Read active targeting and its history. |
 | `icp:manage` | Update the active ICP and Signal Brief. |
@@ -37,16 +37,16 @@ A scope authorizes a capability; it does not imply that every capability is a RE
 | `watchlist:manage` | Manage tracked profiles. |
 | `content:read` | Read content feeds. |
 | `integrations:read` | Read integration and delivery state. |
-| `integrations:manage` | Manage supported webhook destinations. |
+| `integrations:manage` | Manage supported connections, delivery routes, webhook destinations, and integration settings. |
 | `integrations:deliver` | Request delivery to a selected destination. |
 | `sync:read` | Read synchronization and qualification status. |
 | `agent:read` | Read discovery status, capacity, runs, and candidates. |
-| `agent:run` | Start an approved discovery run. |
+| `agent:run` | Run discovery and supported campaign, outreach, inbox, memory, and workspace-setting actions. |
 | `post_qualification:manage` | Request qualification of a specific post. |
 | `audience_analytics:read` | Read aggregate audience analytics. |
 | `audience_analytics:request` | Request audience discovery. |
 
-Contact enrichment also needs `leads:read` and `leads:contact_read`. Delivery needs `integrations:deliver` and `leads:contact_read`. ICP and Signal Brief updates need both `icp:read` and `icp:manage`.
+Contact enrichment also needs `leads:read` and `leads:contact_read`. Sending a lead to a webhook destination needs `integrations:deliver` and `leads:contact_read`. Creating, changing, or enabling a delivery route or webhook destination can also require `integrations:manage` and `leads:read`. ICP and Signal Brief updates need both `icp:read` and `icp:manage`.
 
 Without contact permission, contact fields and profile URLs are redacted. Audience analytics returns aggregate information rather than individual contacts.
 

@@ -1,112 +1,335 @@
 ---
 title: "MCP tools"
-description: "Reference the public traxy MCP tool catalog and action requirements."
+description: "Reference the public traxy MCP tool catalog, required scopes, and action requirements."
 ---
 
-The public catalog contains 50 tools before scope and workspace filtering. Use `tools/list` to discover the tools and argument schemas your connection can actually use.
+The public catalog contains 234 tools before scope and workspace filtering. Use `tools/list` to discover the tools and argument schemas your connection can actually use.
 
-Tool names retain `watchlist` and `organization` where those are part of the public contract. In the app, these correspond to tracked profiles and your workspace.
+Each row lists all required scopes. Current workspace roles, product access, and action-specific checks still apply. Seeing a tool in the catalog does not grant permission to use it in every workspace.
 
-## Workspace and connection
+Tool names retain `watchlist`, `organization`, and other established names where those are part of the public contract. In the app, watchlist profiles are tracked people or companies, and an organization is a workspace.
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_list_workspaces` | List accessible, authorized workspaces. |
-| `traxy_get_workspace_access` | Read visible access and usage information. |
-| `traxy_get_mcp_connection_status` | Read safe connection diagnostics. |
+## Workspace, members, and profile
 
-## Leads and accounts
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_list_workspaces` | List accessible, authorized workspaces. | `workspace:read` |
+| `traxy_get_workspace_access` | Read visible access and usage information. | `workspace:read` |
+| `traxy_get_mcp_connection_status` | Read safe connection diagnostics. | `workspace:read` |
+| `traxy_get_workspace_settings` | Read workspace settings. | `workspace:read` |
+| `traxy_get_workspace_team` | Read the team. | `workspace:read` |
+| `traxy_get_my_profile` | Read your profile. | `workspace:read` |
+| `traxy_get_invite` | Read the invitation. | `workspace:read` |
+| `traxy_get_member` | Read the member. | `workspace:read` |
+| `traxy_set_auto_enrich_email` | Turn automatic email enrichment on or off. | `agent:run` |
+| `traxy_backfill_lead_emails` | Queue email lookup for existing leads. | `agent:run` |
+| `traxy_set_workspace_name` | Rename workspace. | `agent:run` |
+| `traxy_update_my_profile` | Update my profile. | `agent:run` |
+| `traxy_update_my_email_preferences` | Update my email preferences. | `agent:run` |
+| `traxy_invite_teammates` | Invite members. | `agent:run` |
+| `traxy_resend_invite` | Resend invitation. | `agent:run` |
+| `traxy_revoke_invite` | Revoke invitation. | `agent:run` |
+| `traxy_change_pending_invite_role` | Change pending invitation role. | `agent:run` |
+| `traxy_change_member_role` | Change member role. | `agent:run` |
+| `traxy_remove_member` | Remove member. | `agent:run` |
+| `traxy_rename_team` | Rename team. | `agent:run` |
+| `traxy_add_team_member` | Add team member. | `agent:run` |
+| `traxy_change_team_member_role` | Change team member role. | `agent:run` |
+| `traxy_remove_team_member` | Remove team member. | `agent:run` |
+| `traxy_archive_my_chat` | Archive or restore my chat. | `agent:run` |
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_list_leads` | List visible leads with supported filters. |
-| `traxy_get_lead_counts` | Read lead counts by tier. |
-| `traxy_get_lead_stats` | Read aggregate lead statistics. |
-| `traxy_get_lead` | Read one visible lead. |
-| `traxy_enrich_lead_contact` | Request and read persisted contact results. |
-| `traxy_list_lead_engagements` | Read recorded engagement summaries. |
-| `traxy_list_lead_signals` | Read lead signals with their available context. |
-| `traxy_apply_lead_action` | Apply a selected supported lead action. |
-| `traxy_list_account_reports` | List account reports. |
-| `traxy_get_account_report` | Read one account report. |
+## Memory and daily brief
 
-## Discovery
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_list_memories` | List memories. | `workspace:read` |
+| `traxy_remember_for_me` | Remember for me. | `agent:run` |
+| `traxy_remember_for_workspace` | Remember for the workspace. | `agent:run` |
+| `traxy_forget_memory` | Forget a memory. | `agent:run` |
+| `traxy_get_daily_brief` | Get daily brief settings. | `workspace:read` |
+| `traxy_set_daily_brief` | Set daily brief. | `agent:run` |
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_get_agent_status` | Read lead-discovery status. |
-| `traxy_get_pipeline_capacity` | Read workspace pipeline capacity. |
-| `traxy_start_agent_run` | Start a confirmed discovery run. |
-| `traxy_list_agent_runs` | List discovery runs. |
-| `traxy_list_agent_candidates` | Read candidate summaries for a run. |
+## Leads, views, and contact data
 
-## Targeting
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_list_leads` | List visible leads with supported filters. | `leads:read` |
+| `traxy_get_lead_counts` | Read lead counts by tier. | `leads:read` |
+| `traxy_get_lead_stats` | Read aggregate lead statistics. | `leads:read` |
+| `traxy_find_leads` | Search existing workspace leads and return a matching count and ranked sample. | `leads:read` |
+| `traxy_show_leads` | Show a selected set of workspace leads. | `leads:read` |
+| `traxy_get_filter_values` | Get filter values. | `leads:read` |
+| `traxy_list_lead_views` | List lead views. | `leads:read` |
+| `traxy_save_lead_view` | Save a filter-based or fixed lead audience. | `leads:manage` |
+| `traxy_get_lead` | Read one visible lead. | `leads:read` |
+| `traxy_preview_lead_contact` | Preview lead contact lookup. | `leads:read`, `leads:contact_read` |
+| `traxy_enrich_lead_contact` | Request and read persisted contact results. | `leads:contact_enrich`, `leads:read`, `leads:contact_read` |
+| `traxy_list_lead_engagements` | Read recorded engagement summaries. | `leads:read` |
+| `traxy_list_lead_signals` | Read lead signals with their available context. | `leads:read` |
+| `traxy_apply_lead_action` | Apply a selected supported lead action. | `leads:manage` |
+| `traxy_preview_bulk_lead_action` | Preview a bulk lead action. | `leads:read` |
+| `traxy_bulk_lead_action` | Apply a lead action in bulk. | `leads:manage` |
+| `traxy_list_account_reports` | List account reports. | `leads:read` |
+| `traxy_get_account_report` | Read one account report. | `leads:read` |
+| `traxy_add_lead` | Add a lead from LinkedIn. | `leads:manage` |
+| `traxy_preview_set_lead_contact` | Preview a lead contact change. | `leads:read`, `leads:contact_read` |
+| `traxy_set_lead_contact` | Set a lead's contact details. | `leads:manage`, `leads:contact_read` |
+| `traxy_list_lead_tags` | List lead tags. | `leads:read` |
+| `traxy_tag_leads` | Tag leads. | `leads:manage` |
+| `traxy_update_lead_tag` | Rename or recolor a lead tag. | `leads:manage` |
+| `traxy_delete_lead_tag` | Delete a lead tag. | `leads:manage` |
+| `traxy_list_lead_notes` | List lead notes. | `leads:read` |
+| `traxy_add_lead_note` | Add a lead note. | `leads:manage` |
+| `traxy_update_lead_note` | Edit a lead note. | `leads:manage` |
+| `traxy_delete_lead_note` | Delete a lead note. | `leads:manage` |
+| `traxy_list_saved_lead_views` | List saved lead views. | `leads:read` |
+| `traxy_update_saved_lead_view` | Edit a saved lead view. | `leads:manage`, `leads:read` |
+| `traxy_delete_saved_lead_view` | Delete a saved lead view. | `leads:manage`, `leads:read` |
+| `traxy_restore_deleted_leads` | Restore deleted leads. | `leads:manage` |
+| `traxy_restore_done_leads` | Restore Done leads. | `leads:manage` |
+| `traxy_delete_leads` | Delete leads. | `leads:manage`, `leads:read` |
+| `traxy_export_leads` | Export leads to CSV. | `leads:manage` |
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_get_active_icp` | Read the active ICP. |
-| `traxy_update_active_icp` | Update selected active ICP fields. |
-| `traxy_list_icp_revisions` | Read ICP revision history. |
-| `traxy_get_active_signal_brief` | Read the active Signal Brief. |
-| `traxy_update_active_signal_brief` | Update selected Signal Brief fields. |
-| `traxy_list_signal_brief_versions` | Read Signal Brief version history. |
+## Company research
 
-## Tracked profiles
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_check_company_research` | Request Meta ads and website-traffic research for companies. | `leads:manage` |
+| `traxy_get_company_research` | Get company research. | `leads:read` |
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_list_watchlist_profiles` | List tracked profiles. |
-| `traxy_get_watchlist_profile` | Read one tracked profile. |
-| `traxy_get_watchlist_summary` | Read tracking summary metrics. |
-| `traxy_list_watchlist_recommendations` | Read profile recommendations. |
-| `traxy_add_watchlist_profile` | Add a selected LinkedIn profile. |
-| `traxy_update_watchlist_profile` | Update a tracked profile. |
-| `traxy_remove_watchlist_profile` | Remove a tracked profile. |
-| `traxy_restore_watchlist_profile` | Restore a removed tracked profile. |
+## Discovery and search
 
-## Content and analytics
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_find_hiring_people` | Find people who are hiring. | `leads:read` |
+| `traxy_find_posts` | Find LinkedIn posts for a topic. | `leads:read` |
+| `traxy_read_post` | Read post. | `leads:read` |
+| `traxy_find_company_people` | Find people at a company. | `watchlist:read` |
+| `traxy_get_agent_status` | Read lead-discovery status. | `agent:read` |
+| `traxy_get_pipeline_capacity` | Read workspace pipeline capacity. | `agent:read` |
+| `traxy_start_agent_run` | Start a confirmed discovery run. | `agent:run` |
+| `traxy_list_agent_runs` | List discovery runs. | `agent:read` |
+| `traxy_get_agent_run` | Get agent run. | `agent:read` |
+| `traxy_cancel_agent_run` | Cancel agent run. | `agent:run` |
+| `traxy_list_agent_candidates` | Read candidate summaries for a run. | `agent:read` |
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_get_analytics_dashboard` | Read aggregate performance metrics. |
-| `traxy_get_meetings_summary` | Read meeting summary counts. |
-| `traxy_list_meetings` | Read attributed meeting records. |
-| `traxy_list_analytics_posts` | Read post analytics. |
-| `traxy_get_post_summary` | Read metrics for one post. |
-| `traxy_list_post_qualified_leads` | List visible qualified leads for a post. |
-| `traxy_list_content_feed` | Read visible feed posts. |
+## Targeting and blocklists
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_get_active_icp` | Read the active ICP. | `icp:read` |
+| `traxy_update_active_icp` | Update selected active ICP fields. | `icp:manage`, `icp:read` |
+| `traxy_list_icp_revisions` | Read ICP revision history. | `icp:read` |
+| `traxy_get_active_signal_brief` | Read the active Signal Brief. | `icp:read` |
+| `traxy_update_active_signal_brief` | Update selected Signal Brief fields. | `icp:manage`, `icp:read` |
+| `traxy_list_signal_brief_versions` | Read Signal Brief version history. | `icp:read` |
+| `traxy_get_discovery_agent_settings` | Get discovery Agent settings. | `agent:read` |
+| `traxy_update_discovery_agent_settings` | Update discovery Agent settings. | `agent:run` |
+| `traxy_generate_signal_brief` | Generate the Signal Brief. | `icp:manage`, `icp:read` |
+| `traxy_list_company_blocklist` | List company blocklist. | `workspace:read` |
+| `traxy_preview_company_blocklist` | Preview company blocklist changes. | `workspace:read` |
+| `traxy_add_company_blocklist` | Add companies to blocklist. | `leads:manage`, `workspace:read` |
+| `traxy_remove_company_blocklist` | Remove a company from blocklist. | `leads:manage`, `workspace:read` |
+| `traxy_list_people_blocklist` | List people blocklist. | `workspace:read` |
+| `traxy_preview_people_blocklist` | Preview people blocklist changes. | `workspace:read` |
+| `traxy_add_people_blocklist` | Add people to blocklist. | `leads:manage`, `workspace:read` |
+| `traxy_remove_people_blocklist` | Remove a person from blocklist. | `leads:manage`, `workspace:read` |
+| `traxy_list_tracking_tags` | List Tracking tags. | `watchlist:read` |
+| `traxy_create_tracking_tag` | Create a Tracking tag. | `watchlist:manage`, `watchlist:read` |
+| `traxy_recolor_tracking_tag` | Recolor a Tracking tag. | `watchlist:manage`, `watchlist:read` |
+| `traxy_set_content_calendar_auto_scan` | Set automatic post scanning. | `post_qualification:manage`, `content:read` |
+
+## Tracking
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_track_profiles` | Track profiles. | `watchlist:manage` |
+| `traxy_track_companies` | Track companies. | `watchlist:manage` |
+| `traxy_track_posts` | Add single posts. | `watchlist:manage` |
+| `traxy_list_watchlist_profiles` | List tracked people or companies with filtered totals. | `watchlist:read` |
+| `traxy_get_watchlist_profile` | Read one tracked profile. | `watchlist:read` |
+| `traxy_get_watchlist_summary` | Read tracking summary metrics. | `watchlist:read` |
+| `traxy_list_watchlist_recommendations` | Read profile recommendations. | `watchlist:read` |
+| `traxy_discover_profiles` | Discover profiles to track. | `watchlist:read` |
+| `traxy_add_watchlist_profile` | Add a selected LinkedIn profile. | `watchlist:manage` |
+| `traxy_update_watchlist_profile` | Update a tracked profile. | `watchlist:manage` |
+| `traxy_remove_watchlist_profile` | Remove a tracked profile. | `watchlist:manage` |
+| `traxy_restore_watchlist_profile` | Restore a removed tracked profile. | `watchlist:manage` |
+| `traxy_list_tracked_posts` | List individual posts added by link. | `watchlist:read` |
+
+## Content, analytics, and meetings
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_get_analytics_dashboard` | Read aggregate performance metrics. | `analytics:read` |
+| `traxy_get_meetings_summary` | Read meeting summary counts. | `analytics:read` |
+| `traxy_list_meetings` | Read attributed meeting records. | `leads:read` |
+| `traxy_list_analytics_posts` | Read tracked-profile posts, with profile totals when requested. | `analytics:read` |
+| `traxy_get_post_summary` | Read metrics for one post. | `analytics:read` |
+| `traxy_list_post_qualified_leads` | List visible qualified leads for a post. | `analytics:read` |
+| `traxy_list_content_feed` | Read visible feed posts. | `content:read` |
+
+## Campaigns
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_get_outbound_planner` | Get the campaign plan. | `workspace:read` |
+| `traxy_get_outbound_launch_preview` | Preview the campaign launch. | `workspace:read` |
+| `traxy_inspect_campaign_leads` | Inspect campaign leads. | `workspace:read` |
+| `traxy_probe_campaign_research` | Probe a research source. | `agent:run` |
+| `traxy_draft_campaign` | Draft the campaign. | `agent:run` |
+| `traxy_launch_campaign` | Launch the campaign. | `agent:run` |
+| `traxy_get_lead_comments` | Get a lead's LinkedIn comments. | `workspace:read` |
+| `traxy_test_outbound_plan` | Test the campaign. | `agent:run` |
+| `traxy_approve_outbound_plan` | Approve the campaign. | `agent:run` |
+| `traxy_set_outbound_play_live` | Turn the campaign on or off. | `agent:run` |
+| `traxy_list_outbound_destinations` | List campaign destinations. | `workspace:read` |
+| `traxy_set_outbound_destination` | Set the campaign destination. | `agent:run`, `integrations:deliver`, `leads:contact_read` |
+| `traxy_set_outbound_delivery_mode` | Set the campaign delivery mode. | `agent:run` |
+| `traxy_get_outbound_performance` | Get campaign performance. | `workspace:read` |
+| `traxy_archive_outbound_campaign` | Remove a campaign. | `agent:run` |
+| `traxy_reorder_outbound_campaigns` | Set campaign priority. | `agent:run` |
+| `traxy_get_outbound_settings` | Get campaign outbound settings. | `workspace:read` |
+| `traxy_set_outbound_sequence_destination` | Set a campaign native sequence destination. | `agent:run` |
+| `traxy_set_outbound_runs_enabled` | Turn campaign outbound runs on or off. | `agent:run` |
+| `traxy_create_outbound_heyreach` | Create a HeyReach campaign. | `agent:run` |
+| `traxy_update_outbound_heyreach` | Update HeyReach campaign settings. | `agent:run` |
+| `traxy_refresh_outbound_heyreach` | Refresh HeyReach campaign status. | `agent:run` |
+
+## Messages, sequences, and senders
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_list_sequences` | List sequences. | `workspace:read` |
+| `traxy_list_sequence_templates` | List sequence templates. | `workspace:read` |
+| `traxy_get_sequence_template` | Get sequence template. | `workspace:read` |
+| `traxy_create_sequence_template` | Create sequence template. | `agent:run` |
+| `traxy_update_sequence_template` | Update sequence template. | `agent:run` |
+| `traxy_archive_sequence_template` | Archive sequence template. | `agent:run` |
+| `traxy_get_campaign_sequence_templates` | Get campaign sequence templates. | `workspace:read` |
+| `traxy_set_campaign_sequence` | Set campaign sequence. | `agent:run` |
+| `traxy_preview_switch_campaign_sequence` | Preview campaign sequence change. | `workspace:read` |
+| `traxy_switch_campaign_sequence` | Switch campaign sequence. | `agent:run` |
+| `traxy_get_sequence` | Get sequence. | `workspace:read` |
+| `traxy_draft_outreach_message` | Draft a message. | `agent:run` |
+| `traxy_list_outreach_senders` | List outreach senders. | `workspace:read` |
+| `traxy_get_outreach_status` | Get outreach status. | `workspace:read` |
+| `traxy_preview_outreach_message` | Preview a one-off message. | `workspace:read` |
+| `traxy_send_outreach_message` | Send a one-off message. | `agent:run` |
+| `traxy_list_senders` | List senders. | `workspace:read` |
+| `traxy_open_sender_connect` | Open the connect flow. | `agent:run` |
+| `traxy_set_sequence_senders` | Set who sends a sequence. | `agent:run` |
+| `traxy_update_senders` | Change sender accounts. | `agent:run` |
+| `traxy_remove_senders` | Remove sender accounts. | `agent:run` |
+
+## Lead research and drafts
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_work_on_leads` | Research leads and draft messages. | `agent:run`, `leads:read` |
+| `traxy_get_lead_jobs` | Get lead jobs. | `leads:read` |
+| `traxy_rewrite_lead_message` | Rewrite a lead job's message. | `agent:run` |
+| `traxy_stop_lead_jobs` | Stop lead jobs. | `agent:run` |
+| `traxy_send_lead_jobs` | Send lead jobs to an integration. | `integrations:deliver`, `leads:contact_read` |
+
+## Inbox and suppression
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_list_do_not_contact` | List do-not-contact entries. | `workspace:read` |
+| `traxy_add_do_not_contact` | Add do-not-contact entry. | `agent:run`, `workspace:read` |
+| `traxy_remove_do_not_contact` | Remove do-not-contact entry. | `agent:run`, `workspace:read` |
+| `traxy_list_inbox_conversations` | List inbox conversations. | `workspace:read` |
+| `traxy_get_inbox_conversation` | Read an inbox conversation. | `workspace:read` |
+| `traxy_mark_inbox_conversations` | Mark inbox conversations read or unread. | `agent:run` |
+| `traxy_archive_inbox_conversations` | Archive or unarchive inbox conversations. | `agent:run` |
+| `traxy_pause_inbox_sequence` | Pause a lead sequence from the inbox. | `agent:run` |
+| `traxy_resume_inbox_sequence` | Resume a lead sequence from the inbox. | `agent:run` |
+| `traxy_stop_inbox_sequence` | Stop a lead sequence from the inbox. | `agent:run` |
+| `traxy_unsubscribe_inbox_lead` | Unsubscribe a lead from the inbox. | `agent:run` |
+| `traxy_reply_inbox_conversation` | Reply to an inbox conversation. | `agent:run` |
+| `traxy_react_inbox_message` | React to a LinkedIn inbox message. | `agent:run` |
+| `traxy_remove_sequence_enrollment` | Remove a lead from a sequence. | `agent:run` |
+| `traxy_preview_instagram_contact` | Check an Instagram inbox contact. | `workspace:read` |
+| `traxy_message_instagram_contact` | Message an Instagram contact. | `agent:run` |
+
+## Billing
+
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_get_billing_summary` | Get billing summary. | `workspace:read` |
+| `traxy_preview_billing_action` | Preview billing action. | `workspace:read` |
+| `traxy_preview_billing_selection` | Preview billing selection. | `workspace:read` |
+| `traxy_change_billing_selection` | Change billing plan and add-ons. | `agent:run` |
+| `traxy_preview_legacy_phone_addon` | Preview legacy phone add-on. | `workspace:read` |
+| `traxy_set_legacy_phone_addon` | Turn the legacy phone add-on on or off. | `agent:run` |
+| `traxy_cancel_billing_subscription` | Cancel subscription. | `agent:run` |
+| `traxy_pause_billing_subscription` | Pause subscription. | `agent:run` |
+| `traxy_preview_billing_unpause` | Preview unpausing subscription. | `workspace:read` |
+| `traxy_unpause_billing_subscription` | Unpause subscription. | `agent:run` |
+| `traxy_resume_billing_subscription` | Resume cancelled subscription. | `agent:run` |
+| `traxy_cancel_billing_scheduled_change` | Cancel scheduled billing change. | `agent:run` |
 
 ## Integrations and synchronization
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_get_integrations_status` | Read integration status. |
-| `traxy_get_lead_delivery_state` | Read a lead delivery state. |
-| `traxy_create_webhook_destination` | Create a selected webhook-style destination. |
-| `traxy_set_webhook_destination_enabled` | Enable or disable a selected destination. |
-| `traxy_deliver_lead_to_webhook_destination` | Queue one selected lead for delivery. |
-| `traxy_get_sync_status` | Read synchronization status. |
-| `traxy_get_latest_qualification_run` | Read the latest qualification run. |
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_get_integrations_status` | Read integration status. | `integrations:read` |
+| `traxy_get_lead_delivery_state` | Read a lead delivery state. | `integrations:read` |
+| `traxy_create_webhook_destination` | Create a selected webhook-style destination. | `integrations:manage`, `leads:read`, `leads:contact_read`, `integrations:deliver` |
+| `traxy_set_webhook_destination_enabled` | Enable or disable a selected destination. | `integrations:manage`, `leads:read`, `leads:contact_read`, `integrations:deliver` |
+| `traxy_deliver_lead_to_webhook_destination` | Queue one selected lead for delivery. | `integrations:deliver`, `leads:contact_read` |
+| `traxy_get_sync_status` | Read synchronization status. | `sync:read` |
+| `traxy_get_latest_qualification_run` | Read the latest qualification run. | `sync:read` |
+| `traxy_get_hubspot_integration_settings` | Read HubSpot settings. | `integrations:read` |
+| `traxy_get_slack_integration_settings` | Read Slack settings. | `integrations:read` |
+| `traxy_list_slack_channels` | List Slack channels. | `integrations:read` |
+| `traxy_get_google_calendar_settings` | Read Google Calendar settings. | `integrations:read` |
+| `traxy_get_meta_ads_settings` | Read Meta Ads connection state. | `integrations:read` |
+| `traxy_preview_meta_ads_export` | Preview Meta Ads export. | `integrations:read` |
+| `traxy_update_hubspot_integration_settings` | Update HubSpot settings. | `integrations:manage` |
+| `traxy_update_slack_integration_settings` | Update Slack settings. | `integrations:manage` |
+| `traxy_create_slack_channel` | Create a Slack channel. | `integrations:manage` |
+| `traxy_update_google_calendar_selection` | Select Google Calendars. | `integrations:manage` |
+| `traxy_refresh_google_calendar_calendars` | Refresh Google Calendars. | `integrations:manage` |
+| `traxy_update_google_calendar_notifications` | Update Google Calendar notifications. | `integrations:manage` |
+| `traxy_start_meta_ads_export` | Start Meta Ads export. | `integrations:manage` |
+| `traxy_list_webhook_destinations` | List webhook destinations. | `integrations:read` |
+| `traxy_get_webhook_destination` | Get webhook destination. | `integrations:read` |
+| `traxy_edit_webhook_destination` | Edit webhook destination. | `integrations:manage`, `leads:read`, `leads:contact_read`, `integrations:deliver` |
+| `traxy_delete_webhook_destination` | Delete webhook destination. | `integrations:manage` |
+| `traxy_list_delivery_routes` | List delivery routes. | `integrations:read` |
+| `traxy_get_delivery_route` | Get delivery route. | `integrations:read` |
+| `traxy_create_delivery_route` | Create delivery route. | `integrations:manage`, `leads:read`, `leads:contact_read`, `integrations:deliver` |
+| `traxy_edit_delivery_route` | Edit delivery route. | `integrations:manage`, `leads:read`, `leads:contact_read`, `integrations:deliver` |
+| `traxy_set_delivery_route_enabled` | Pause or resume delivery route. | `integrations:manage`, `leads:read`, `leads:contact_read`, `integrations:deliver` |
+| `traxy_delete_delivery_route` | Delete delivery route. | `integrations:manage` |
+| `traxy_get_heyreach_integration` | Get HeyReach integration settings. | `integrations:read` |
+| `traxy_update_heyreach_integration` | Update HeyReach integration settings. | `integrations:manage` |
+| `traxy_create_heyreach_list` | Create HeyReach list. | `integrations:manage` |
+| `traxy_create_heyreach_campaign` | Create HeyReach campaign draft. | `integrations:manage` |
 
 ## Audience and post qualification
 
-| Tool | Purpose |
-| --- | --- |
-| `traxy_get_audience_post` | Read aggregate post audience analytics. |
-| `traxy_find_audience` | Request aggregate audience discovery. |
-| `traxy_qualify_linkedin_post` | Request confirmed qualification for a post URL. |
-| `traxy_get_organization_audience` | Read aggregate workspace audience analytics. |
+| Tool | Purpose | Required scopes |
+| --- | --- | --- |
+| `traxy_get_audience_post` | Read aggregate post audience analytics. | `audience_analytics:read` |
+| `traxy_find_audience` | Request aggregate audience discovery. | `audience_analytics:request` |
+| `traxy_qualify_linkedin_post` | Request confirmed qualification for a post URL. | `post_qualification:manage` |
+| `traxy_get_organization_audience` | Read aggregate workspace audience analytics. | `audience_analytics:read` |
 
 ## Confirm actions
 
-Select the workspace, target, and action before making a write request.
+Select the workspace, target, and action before making a write request. Use the returned preview and current schema rather than copying arguments from another tool.
 
 - `traxy_start_agent_run` and `traxy_qualify_linkedin_post` require `confirmLeadUsage: true` after the user agrees that new qualified people may consume pipeline capacity.
-- `traxy_apply_lead_action` supports `snooze`, `done`, `good`, `bad`, and `client`. The `done` action needs `confirmDone: true`.
-- Contact enrichment needs an explicit request. Email and phone follow the workspace's entitlements and do not consume pipeline capacity.
-- ICP and Signal Brief updates replace supplied arrays and leave omitted fields unchanged. Inspect the current configuration before sending replacements.
-- Webhook-style destination tools support Webhook, Clay, n8n, and Zapier. Queuing delivery is not proof that the receiver accepted it.
+- `traxy_apply_lead_action` supports `snooze`, `done`, `good`, `bad`, and `client`. The `done` action needs `confirmDone: true`. Preview bulk changes before applying them.
+- Contact lookup needs an explicit request. Phone lookup applies only to eligible leads after activation. Saving manually supplied contact details is separate from enrichment.
+- Read the current ICP or Signal Brief before updating it. Use its revision in requests that require one. Supplied arrays replace their earlier values; omitted fields stay unchanged.
+- Preview campaign launch, message sending, billing, and destructive actions before confirming the intended change. A draft or preview does not authorize execution.
+- Webhook destinations and delivery routes can send contact data outside traxy. Confirm the user’s intended host, audience, and destination before creating, changing, enabling, or sending to them.
+- A queued delivery or lookup is not proof of completion. Read the resulting state before repeating a request.
 
 The former `confirmCreditSpend` argument is not accepted. Sending it returns `validation_failed`; use only the current schema. The capacity tool replaces the former Agent budget-status tool.
 
-Manage campaigns, senders, and sequences in the app; those actions are not in this public MCP catalog. See [workspace selection](/api-reference/mcp/workspaces) and [error handling](/api-reference/pagination-and-errors) when building a client.
+See [workspace selection](/api-reference/mcp/workspaces), [authentication and scopes](/api-reference/authentication), and [error handling](/api-reference/pagination-and-errors) when building a client.

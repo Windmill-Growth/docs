@@ -20,6 +20,7 @@ export function publicOpenApi(backend) {
     .replace(/\bcredential organization\b/g, 'credential workspace')
     .replace(/\bkey organization\b/g, 'key workspace')
     .replace(/\bcross-organization\b/g, 'cross-workspace')
+    .replace('API key created from Integrations > API & MCP > API keys. Used for Customer REST and Ordinal Audience Analytics, not MCP OAuth.', 'API key created in traxy for Customer REST or Ordinal Audience Analytics. Use Integrations > API for a general API key, or the Ordinal connection page for an Ordinal key. MCP requires OAuth instead.')
     .replace('  - url: http://localhost:4000/api/v1\n    description: Local development\n', '')
     .replace('Browser origins must match CUSTOMER_API_MCP_ALLOWED_ORIGINS.', 'Requests from a browser origin must come from an origin allowed by traxy. Non-browser clients can omit this header.')
     .replace('Customer API rate limit exceeded. Production-like runtimes fail closed with this response if the distributed limiter is unavailable.', 'Customer API rate limit exceeded or rate-limit enforcement is temporarily unavailable. Retry after the delay in Retry-After.')
@@ -37,7 +38,20 @@ export function publicOpenApi(backend) {
     ['/customer/integrations/status', 'Get integration status through the status alias.'],
     ['/customer/integrations/lead-delivery-state', 'Get lead delivery state by query.'],
   ]);
+  // Keep existing generated account-reference URLs stable when upstream moves
+  // extra contract detail into its summaries. Preserve that detail as prose.
+  const stableAccountSummaries = new Map([
+    ['/customer/account-reports', 'List account-level summaries derived from visible active leads.'],
+    ['/customer/account-reports/{accountId}', 'Get one account summary with top visible leads.'],
+  ]);
   spec = spec.replace(/^  (\/[^:]+):\n[\s\S]*?(?=^  \/|^components:)/gm, (block, route) => {
+    const stableSummary = stableAccountSummaries.get(route);
+    if (stableSummary) {
+      return block.replace(/^      summary: (.+)$/m, (_line, upstreamSummary) =>
+        upstreamSummary === stableSummary
+          ? `      summary: ${stableSummary}`
+          : `      summary: ${stableSummary}\n      description: ${JSON.stringify(upstreamSummary)}`);
+    }
     const summary = aliasSummaries.get(route);
     return summary ? block.replace(/^      summary: .+$/m, `      summary: ${summary}`) : block;
   });

@@ -1,6 +1,7 @@
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { resolve, relative, join } from 'node:path';
 import { publicOpenApi } from './public-openapi.mjs';
+import { publicMcpCatalog } from './public-mcp-catalog.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const config = JSON.parse(readFileSync(join(root, 'docs.json'), 'utf8'));
@@ -81,13 +82,19 @@ const backend = process.argv[2];
 if (backend) {
   const canonical = publicOpenApi(backend);
   if (canonical !== spec) errors.push('OpenAPI differs from the public projection of the supplied backend checkout');
-  const catalog = readFileSync(join(backend, 'src/modules/workspace-tools/workspace-tool.catalog.ts'), 'utf8').split('export const WORKSPACE_TOOLS = [')[1];
-  const entries = [...catalog.matchAll(/^    name: '(traxy_[^']+)'/gm)];
-  const publicTools = entries.filter((entry, index) => !catalog.slice(entry.index, entries[index + 1]?.index).includes('agentOnly: true')).map(entry => entry[1]);
+  const catalog = publicMcpCatalog(backend);
+  const publicTools = catalog.map(tool => tool.name);
   const toolPage = readFileSync(join(root, 'api-reference/mcp/tools.mdx'), 'utf8');
   const documentedTools = [...toolPage.matchAll(/^\| `(traxy_[^`]+)` \|/gm)].map(match => match[1]);
   for (const tool of publicTools) if (!documentedTools.includes(tool)) errors.push(`Public MCP tool missing: ${tool}`);
   for (const tool of documentedTools) if (!publicTools.includes(tool)) errors.push(`Non-public or removed MCP tool documented: ${tool}`);
+  const documentedToolScopes = new Map([...toolPage.matchAll(/^\| `(traxy_[^`]+)` \| [^\n]+? \| ([^\n]+) \|$/gm)]
+    .map(match => [match[1], [...match[2].matchAll(/`([^`]+)`/g)].map(scope => scope[1]).sort()]));
+  for (const tool of catalog) {
+    if (JSON.stringify(documentedToolScopes.get(tool.name)) !== JSON.stringify([...tool.scopes].sort())) {
+      errors.push(`MCP tool scopes differ: ${tool.name}`);
+    }
+  }
   if (new Set(documentedTools).size !== documentedTools.length) errors.push('Duplicate MCP tool rows');
   const statedCount = toolPage.match(/catalog contains (\d+) tools/);
   if (!statedCount || Number(statedCount[1]) !== publicTools.length) errors.push('MCP catalog count is out of date');

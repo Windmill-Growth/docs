@@ -5,3 +5,5 @@ openapi: "api-reference/customer-api-mcp-v1.openapi.yaml POST /audience-analytic
 ---
 
 Use this endpoint when Ordinal needs traxy to discover the aggregate audience for a LinkedIn post.
+
+Set `requalify: true` to evaluate the already-synced audience of a post against your current ICP when aggregate analytics already exist. This can use additional pipeline capacity for newly qualified leads. People already counted are not charged again. An in-progress request is returned instead of starting another.

@@ -1,9 +1,11 @@
 ---
-title: "Connect Codex"
+title: "Connect ChatGPT or Codex"
 description: "Configure the traxy MCP connection in Codex and complete OAuth authorization."
 ---
 
-Use a Streamable HTTP MCP connection to work with traxy from Codex. The connection uses browser OAuth, not a traxy REST API key.
+Use a Streamable HTTP MCP connection to work with traxy from a supported ChatGPT desktop or Codex client. The connection uses browser OAuth.
+
+In traxy, open **Integrations** and select **ChatGPT**. The connection page is titled **Codex** and provides app and terminal setup instructions.
 
 ## Connect from the CLI
 
@@ -23,7 +25,7 @@ Choose the default workspace, any additional workspaces, and the actions you wan
 
 ## Connect from a desktop or IDE client
 
-Open the client's MCP server settings, add a **Streamable HTTP** server, and use the same URL. Save it and use **Authenticate** when offered. Leave bearer-token and custom authorization-header settings empty for this OAuth connection.
+Open the client's settings and find **MCP servers** or the **MCPs** tab under **Plugins**, depending on your client version. Add a **Streamable HTTP** server named `traxy` and use the same URL. Save it, restart the connection if requested, and select **Authenticate** when offered. Leave bearer-token and custom authorization-header settings empty for this OAuth connection.
 
 Codex clients on the same host can share MCP configuration. ChatGPT web uses its own plugin connection flow; a local CLI configuration does not connect the web client. See [OpenAI's MCP setup guide](https://learn.chatgpt.com/docs/extend/mcp) for the current client-specific steps.
 

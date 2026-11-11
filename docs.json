@@ -38,6 +38,7 @@
             "pages": [
               "discovery/lead-criteria",
               "discovery/signals",
+              "discovery/linkedin-activity",
               "discovery/qualification",
               "discovery/tracking",
               "discovery/agent-runs"
@@ -47,6 +48,7 @@
             "group": "Work with leads",
             "pages": [
               "leads/overview",
+              "leads/companies",
               "leads/saved-views",
               "leads/team-work",
               "leads/contact-details",

@@ -353,6 +353,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Limit'
         - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/WatchlistEntityTypeFilter'
         - $ref: '#/components/parameters/ProfileTypeFilter'
         - $ref: '#/components/parameters/ProfileTypesFilter'
         - $ref: '#/components/parameters/MonitoredProfileSourceFilter'
@@ -364,7 +365,7 @@ paths:
         - $ref: '#/components/parameters/SortDirectionFilter'
       responses:
         '200':
-          $ref: '#/components/responses/PageObject'
+          $ref: '#/components/responses/WatchlistProfilePage'
         '400':
           $ref: '#/components/responses/ValidationFailed'
         '401':
@@ -431,6 +432,12 @@ paths:
     get:
       tags: [Customer REST]
       summary: List post analytics, including safe postUrl and contentText.
+      description: >-
+        With monitoredProfileId, the page also carries `totals` (posts, reactions,
+        comments and reposts of every post of that profile the other filters
+        match, across all pages; never another profile's from monitoredProfileIds)
+        and `latestPostAt` (that profile's latest recorded post, whatever the
+        date filters).
       security:
         - CustomerApiKey: [analytics:read]
       parameters:
@@ -547,6 +554,7 @@ paths:
     get:
       tags: [Customer REST]
       summary: List account-level summaries derived from visible active leads.
+      description: "List company-level account summaries derived from visible active leads. Linked leads use Company UUID account IDs and unlinked leads retain legacy encoded name IDs."
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -573,6 +581,7 @@ paths:
     get:
       tags: [Customer REST]
       summary: Get one account summary with top visible leads.
+      description: "Get one company account summary with top visible leads. Accepts a Company UUID or a legacy encoded company-name account ID."
       security:
         - CustomerApiKey: [leads:read]
       parameters:
@@ -733,6 +742,9 @@ paths:
                 idempotencyKey:
                   type: string
                   maxLength: 120
+                requalify:
+                  type: boolean
+                  description: Re-score the already-synced engagers of a post that already has analytics with the workspace's current ICP, instead of answering `already_available`. May use more leads from the pipeline-capacity allowance; people already counted are not charged again. A request in flight for the post is still returned, and a post never qualified gets the ordinary discovery. Without an idempotency key, repeats under the same ICP return the same requalification.
       responses:
         '202':
           description: Discovery is already available, waiting for quote preparation, or represented by a durable qualification request.
@@ -1119,7 +1131,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: trxy_live_<public_id>_<secret>
-      description: API key created from Integrations > API & MCP > API keys. Used for Customer REST and Ordinal Audience Analytics, not MCP OAuth.
+      description: API key created in traxy for Customer REST or Ordinal Audience Analytics. Use Integrations > API for a general API key, or the Ordinal connection page for an Ordinal key. MCP requires OAuth instead.
     McpOAuth:
       type: http
       scheme: bearer
@@ -1275,6 +1287,13 @@ components:
         type: string
         enum: [agent, watchlist, all]
         default: all
+    WatchlistEntityTypeFilter:
+      name: entityType
+      in: query
+      description: Tracked people (PERSON) or tracked companies (COMPANY), as Tracking's People and Companies tabs. Both when omitted.
+      schema:
+        type: string
+        enum: [PERSON, COMPANY]
     ProfileTypeFilter:
       name: profileType
       in: query
@@ -1315,9 +1334,10 @@ components:
     WatchlistSortFilter:
       name: sort
       in: query
+      description: '`qualifiedLeads` ranks by each profile''s leads, the count in Tracking''s leads column (`qualifiedLeadsTotal` on each row).'
       schema:
         type: string
-        enum: [createdAt, followers, lastEngagementSyncAt, displayName]
+        enum: [createdAt, followers, lastEngagementSyncAt, displayName, qualifiedLeads]
         default: createdAt
     ContentStatusFilter:
       name: status
@@ -1397,6 +1417,27 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PageEnvelope'
+    WatchlistProfilePage:
+      description: Paginated watchlist profiles with how many match the filters across all pages.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/PageEnvelope'
+              - type: object
+                required: [total, totalByEntityType]
+                properties:
+                  total:
+                    type: integer
+                    description: Profiles matching the filters across all pages.
+                  totalByEntityType:
+                    type: object
+                    required: [PERSON, COMPANY]
+                    properties:
+                      PERSON:
+                        type: integer
+                      COMPANY:
+                        type: integer
     AudienceObject:
       description: Aggregate-only audience response.
       content:

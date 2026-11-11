@@ -15,7 +15,15 @@ Cursor-based lists default to 50 results and accept at most 100 unless an endpoi
 
 Treat cursors as opaque strings. Do not decode, rebuild, or round their timestamp values. Invalid or incompatible cursors return `validation_failed`.
 
-The MCP tool `traxy_list_agent_candidates` uses `limit` and `offset` instead.
+Some MCP tools use a ranked sample, an offset, or a bounded selection instead. Follow each tool's schema. `traxy_list_agent_candidates` uses `limit` and `offset`; `traxy_find_leads` returns a matching total and a ranked sample. Do not treat a sample as a complete export.
+
+### Count tracked profiles and posts
+
+`GET /customer/watchlist/profiles` accepts `entityType=PERSON` or `entityType=COMPANY`. Its `total` and `totalByEntityType` describe matches across pages. Use `sort=qualifiedLeads` to rank tracked profiles by their qualified lead count.
+
+For `GET /customer/analytics/posts`, supplying `monitoredProfileId` adds `totals` for all matching posts from that profile. `latestPostAt` identifies its latest recorded post even when it falls outside the requested date range.
+
+Account reports use a company UUID as `accountId` when the leads are linked to a company. Unlinked leads can retain an encoded company-name ID. Pass the returned ID unchanged when reading the account report.
 
 ## Filter lead results
 
