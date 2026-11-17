@@ -6,7 +6,7 @@ description: "Create personal or shared lead views for review, campaigns, and ro
 Use a saved view when you want to return to the same audience without rebuilding its filters.
 
 1. Open **Leads** and choose a built-in or saved view from its menu. When that menu is hidden, use the view picker above the table.
-2. Add filters for the people, companies, signals, or workflow state you need.
+2. Use **Add filter** to choose the people, companies, signals, or workflow state you need.
 3. Review the matching leads.
 4. Choose **New view** or **Save as new view**, give it a recognizable name, and choose its sharing setting.
 
@@ -19,6 +19,22 @@ A view saved while a post's lead scope is selected keeps that post scope. Check 
 The page heading identifies the open view. A **Filtered** badge indicates changed filters; it does not mean those changes have been saved.
 
 Use the menu beside a saved view to **Edit**, **Duplicate**, or **Delete** it. Shared and personal views appear in separate groups.
+
+## Combine audience rules
+
+Choose **Match all** when every rule must match. Choose **Match any** when one matching rule is enough.
+
+Use **Add group** to combine related rules. Each group has its own **Match all** or **Match any** setting. You can add groups to the main filter, but cannot nest a group inside another group.
+
+For example, use **Match all** for your location rule and an **Any group** containing two job-title rules. The audience must match the location and either title.
+
+Available fields include company relationships, engagement counts, workflow information, and saved computed columns. Choose an operator and value for each rule, then inspect the resulting leads before saving. An empty group does not narrow the audience.
+
+The current rules remain in the page URL when you reload or return to it. Save the view to make those rules its reusable audience. Filters do not grant access to otherwise unavailable leads.
+
+## Save selected people
+
+Select the leads you want and choose **Save as view** in the bulk actions to keep a fixed audience. This creates a tag for those people. New leads do not join automatically; adding or removing that tag changes the audience later.
 
 ## Personal and shared views
 

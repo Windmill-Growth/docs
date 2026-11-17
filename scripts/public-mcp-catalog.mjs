@@ -5,6 +5,7 @@ import { join } from 'node:path';
 
 // Import the assembled catalog, including settings spreads and helper-created
 // entries. Source-text matching misses both and cannot evaluate visibility.
+// MCP hides both feature-gated and paused definitions from public discovery.
 // This loads definitions only; it does not construct or call application services.
 export function publicMcpCatalog(backend) {
   const cwd = realpathSync(backend);
@@ -14,7 +15,7 @@ export function publicMcpCatalog(backend) {
     const module = await import('./src/modules/workspace-tools/workspace-tool.catalog.ts');
     const catalog = module.WORKSPACE_TOOLS ?? module.default?.WORKSPACE_TOOLS;
     if (!Array.isArray(catalog) || !catalog.length) throw new Error('Missing tool catalog');
-    console.log('${marker}' + JSON.stringify(catalog.filter(tool => !tool.feature).map(tool => ({
+    console.log('${marker}' + JSON.stringify(catalog.filter(tool => !tool.feature && !tool.paused).map(tool => ({
       name: tool.name,
       scopes: [tool.requiredScope, ...(tool.additionalRequiredScopes ?? [])],
     }))));

@@ -5,3 +5,9 @@ openapi: "api-reference/customer-api-mcp-v1.openapi.yaml GET /audience-analytics
 ---
 
 Use this endpoint to read aggregate-only audience data for a tracked LinkedIn post.
+
+Supply `postUrn`, or pass the `quoteId` returned by an audience-discovery request. At least one is required. Reading the result does not start discovery or consume pipeline capacity.
+
+When discovery is pending, poll with the returned `quoteId`. Inspect `quote` and `latestRequest` for progress. A `requestId` appears after the prepared quote is accepted. If `quote.replacedByQuoteId` is present, follow that replacement quote.
+
+An unknown quote or a quote from another workspace returns `404 not_found`.

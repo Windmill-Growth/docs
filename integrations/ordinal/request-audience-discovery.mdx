@@ -6,4 +6,12 @@ openapi: "api-reference/customer-api-mcp-v1.openapi.yaml POST /audience-analytic
 
 Use this endpoint when Ordinal needs traxy to discover the aggregate audience for a LinkedIn post.
 
+Use an idempotency key to identify the request. Repeating the same key and payload reuses the operation. Reusing the key with a different payload returns `409`.
+
+If the post's audience is still loading, the response can be `pending` with a `quoteId` and a `null` `requestId`. traxy starts qualification automatically when the quote is ready and access permits it. Poll [Get LinkedIn post audience](/integrations/ordinal/linkedin-post-audience) with `quoteId`; you do not need to submit a second request to start it.
+
+If `quote.autoAccept` is `refused`, inspect `autoAcceptError`, resolve the stated condition, and retry with the same idempotency key. Existing analytics can return `already_available` without starting new work.
+
 Set `requalify: true` to evaluate the already-synced audience of a post against your current ICP when aggregate analytics already exist. This can use additional pipeline capacity for newly qualified leads. People already counted are not charged again. An in-progress request is returned instead of starting another.
+
+A temporary failure can return `503 post_data_temporarily_unavailable`. Wait for the delay in `Retry-After` before retrying. Do not treat a provider failure as an empty audience.

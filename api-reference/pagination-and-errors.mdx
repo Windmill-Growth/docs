@@ -31,6 +31,16 @@ Lead listing defaults to active leads. Use the documented disposition and filter
 
 Use lead-signal and engagement endpoints when you need the evidence behind a lead. Meeting analytics and meeting listing are separate endpoints; attendee details require contact permission.
 
+Lead-signal and engagement records can include `commentText`: the lead's own saved comment, limited to 2,000 characters. It is `null` for engagements other than `COMMENT`. A reaction to someone else's comment does not expose that comment here.
+
+### Build MCP audience rules
+
+Use `traxy_list_lead_fields` to discover available fields. Supply `field` and optional `search` to look up values and counts before building rules for `traxy_find_leads` or a saved view.
+
+Rules support `all` or `any` matching and one level of groups. Use the argument shape returned by `tools/list`. Searches using topics, a name query, or an exact ICP range save a fixed audience when saved as a view.
+
+If a search returns `engaged_topics_too_broad`, narrow the topics or add audience filters before retrying.
+
 ## REST errors
 
 REST failures use this envelope:

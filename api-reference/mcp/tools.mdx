@@ -3,7 +3,7 @@ title: "MCP tools"
 description: "Reference the public traxy MCP tool catalog, required scopes, and action requirements."
 ---
 
-The public catalog contains 234 tools before scope and workspace filtering. Use `tools/list` to discover the tools and argument schemas your connection can actually use.
+The public catalog contains 233 tools before scope and workspace filtering. Use `tools/list` to discover the tools and argument schemas your connection can actually use.
 
 Each row lists all required scopes. Current workspace roles, product access, and action-specific checks still apply. Seeing a tool in the catalog does not grant permission to use it in every workspace.
 
@@ -38,7 +38,7 @@ Tool names retain `watchlist`, `organization`, and other established names where
 | `traxy_remove_team_member` | Remove team member. | `agent:run` |
 | `traxy_archive_my_chat` | Archive or restore my chat. | `agent:run` |
 
-## Memory and daily brief
+## Memory
 
 | Tool | Purpose | Required scopes |
 | --- | --- | --- |
@@ -46,8 +46,6 @@ Tool names retain `watchlist`, `organization`, and other established names where
 | `traxy_remember_for_me` | Remember for me. | `agent:run` |
 | `traxy_remember_for_workspace` | Remember for the workspace. | `agent:run` |
 | `traxy_forget_memory` | Forget a memory. | `agent:run` |
-| `traxy_get_daily_brief` | Get daily brief settings. | `workspace:read` |
-| `traxy_set_daily_brief` | Set daily brief. | `agent:run` |
 
 ## Leads, views, and contact data
 
@@ -56,9 +54,9 @@ Tool names retain `watchlist`, `organization`, and other established names where
 | `traxy_list_leads` | List visible leads with supported filters. | `leads:read` |
 | `traxy_get_lead_counts` | Read lead counts by tier. | `leads:read` |
 | `traxy_get_lead_stats` | Read aggregate lead statistics. | `leads:read` |
-| `traxy_find_leads` | Search existing workspace leads and return a matching count and ranked sample. | `leads:read` |
+| `traxy_find_leads` | Search existing workspace leads with audience rules and return a matching count and ranked sample. | `leads:read` |
 | `traxy_show_leads` | Show a selected set of workspace leads. | `leads:read` |
-| `traxy_get_filter_values` | Get filter values. | `leads:read` |
+| `traxy_list_lead_fields` | List audience-rule fields, or look up a field's available values and counts. | `leads:read` |
 | `traxy_list_lead_views` | List lead views. | `leads:read` |
 | `traxy_save_lead_view` | Save a filter-based or fixed lead audience. | `leads:manage` |
 | `traxy_get_lead` | Read one visible lead. | `leads:read` |
@@ -313,10 +311,15 @@ Tool names retain `watchlist`, `organization`, and other established names where
 
 | Tool | Purpose | Required scopes |
 | --- | --- | --- |
-| `traxy_get_audience_post` | Read aggregate post audience analytics. | `audience_analytics:read` |
+| `traxy_get_audience_post` | Read aggregate post audience analytics or poll a discovery quote. | `audience_analytics:read` |
 | `traxy_find_audience` | Request aggregate audience discovery. | `audience_analytics:request` |
+| `traxy_preview_post_engagers` | Preview post engagers and estimated matches without using pipeline capacity; adds the post to the workspace and starts reading it. | `audience_analytics:request` |
 | `traxy_qualify_linkedin_post` | Request confirmed qualification for a post URL. | `post_qualification:manage` |
 | `traxy_get_organization_audience` | Read aggregate workspace audience analytics. | `audience_analytics:read` |
+
+The post-engager preview is not a read-only action, even though it uses no pipeline capacity. If it returns `PREPARING`, retry after a few seconds. Qualification remains a separate confirmed action.
+
+When qualification returns `pending` with a `quoteId` and a `null` `requestId`, poll `traxy_get_audience_post` with that quote ID. traxy starts the run when the quote is ready. If automatic acceptance is refused, resolve the reason in `autoAcceptError` before retrying the qualification request with the same idempotency key.
 
 ## Confirm actions
 

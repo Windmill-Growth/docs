@@ -16,12 +16,14 @@ A successful test does not mean a message was sent. Review the resulting preview
 When the test finishes, open **Launch** and review:
 
 - who will join the campaign
-- leads excluded because another unfinished campaign holds them
+- leads not joining because they are **Done**, **Snoozed**, or **Client**
 - people contacted by a completed campaign before
 - the selected sender or destination
 - message steps and delivery mode
 
 Confirm **Launch** only when these settings are correct. This is the campaign launch approval.
+
+If a lead list is already used by another campaign, change that campaign or choose an available list. Leads held by another campaign do not appear as this campaign's waiting audience.
 
 ## Review messages that need approval
 
@@ -32,3 +34,9 @@ You can edit a message before approving it. After an edit, choose **Save**, then
 Changing the delivery mode to automatic does not release messages already waiting for approval. Review those messages separately.
 
 Approval allows the next work to proceed; delivery can still wait for sender availability, schedule, limits, or other eligibility conditions. Check each lead's status to confirm the outcome.
+
+## Receive approvals in Slack
+
+For a campaign that requires human approval and sends through a traxy sequence, open **Approval notifications** to choose Slack, the channel, and whether to receive each message or batches. When Slack is connected, eligible new campaigns enable these notifications by default; review the setting at launch.
+
+You can approve, rewrite, or skip from Slack. Batched notifications let you review individual leads or open the full queue in traxy. See [Slack campaign approvals](/integrations/slack#review-campaign-messages).

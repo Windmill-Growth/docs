@@ -698,8 +698,8 @@ paths:
       parameters:
         - name: postUrn
           in: query
-          required: true
-          description: LinkedIn post URN (`urn:li:activity:...`, `urn:li:share:...`, `urn:li:ugcPost:...`) or a LinkedIn `feed/update` URL containing one of those URNs.
+          required: false
+          description: LinkedIn post URN (`urn:li:activity:...`, `urn:li:share:...`, `urn:li:ugcPost:...`) or a LinkedIn `feed/update` URL containing one of those URNs. Required unless `quoteId` is sent.
           schema:
             type: string
             maxLength: 1024
@@ -708,6 +708,13 @@ paths:
               value: urn:li:activity:123456789
             feedUpdateUrl:
               value: https://www.linkedin.com/feed/update/urn:li:share:123456789/
+        - name: quoteId
+          in: query
+          required: false
+          description: The `quoteId` a find-audience call returned. Shows that quote's run (`quote.requestId`), which traxy starts by itself once the quote is ready.
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           $ref: '#/components/responses/AudienceObject'
@@ -768,6 +775,17 @@ paths:
           $ref: '#/components/responses/UnresolvedUrn'
         '429':
           $ref: '#/components/responses/RateLimited'
+        '503':
+          description: The LinkedIn post provider did not answer, or a transient database failure interrupted the call (`post_data_temporarily_unavailable`); retry after the Retry-After header.
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+                example: 60
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
   /audience-analytics/organization:
     get:
       tags: [Ordinal Audience Analytics]
@@ -2171,6 +2189,10 @@ components:
         reactionType:
           type: string
           nullable: true
+        commentText:
+          type: string
+          nullable: true
+          description: The lead's own saved comment, at most 2,000 characters; null unless engagementType is COMMENT.
         engagedAt:
           type: string
           format: date-time

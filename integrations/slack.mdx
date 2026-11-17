@@ -29,6 +29,16 @@ When **Reply from Slack** is enabled, the notification includes a reply box and 
 
 ## Review notifications
 
+### Review campaign messages
+
+For campaigns that require human approval and send through a traxy sequence, configure **Approval notifications** on the campaign. Choose a channel or use the workspace's default. Choose each-message notifications or batched reviews.
+
+An individual notification includes **Approve**, **Rewrite**, **Skip**, and **Open in traxy**. In a batch, choose **Review** for one lead or **Review all in traxy**. Review the saved text before approving. Your Slack email must match a confirmed email for an active member of the traxy workspace.
+
+Turning notifications on posts new approvals from that point; it does not send the existing queue to Slack. Previously posted messages continue to reflect edits and decisions made in Slack or traxy. If a message changed while you were reviewing it, refresh and review the latest version.
+
+### Review lead alerts and summaries
+
 Use **Settings** to configure repeat-engagement events and daily summaries. Repeat engagement concerns new activity from a qualified lead; it is not another newly delivered lead.
 
 If notifications stop, check the connection, trigger, route state, and channel access. Fix the issue before resuming a paused route. A successful test confirms the test request, not all future deliveries.
